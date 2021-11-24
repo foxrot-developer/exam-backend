@@ -2,12 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
-const HttpError = require('../helpers/http-error');
-const User = require('../models/user');
-
-const getUsers = async (req, res, next) => {
-    res.send('All users api working');
-};
+const HttpError = require('../../helpers/http-error');
+const User = require('../../models/user');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -82,6 +78,5 @@ const login = async (req, res, next) => {
     res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username });
 };
 
-exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;

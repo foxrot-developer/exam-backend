@@ -1,7 +1,7 @@
 const express = require('express');
 const { check } = require('express-validator');
 
-const freeExamController = require('../controllers/free-exam-controller');
+const freeExamController = require('../../controllers/user/free-exam-controller');
 
 const router = express.Router();
 

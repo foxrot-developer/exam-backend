@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const HttpError = require('./helpers/http-error');
-const userRoutes = require('./routes/user-routes');
-const freeExamRoutes = require('./routes/free-exam-routes');
+const userRoutes = require('./routes/user/user-routes');
+const freeExamRoutes = require('./routes/user/free-exam-routes');
+const userSubscriptionRoutes = require('./routes/user/user-subscription-routes');
+const adminRoutes = require('./routes/admin/admin-routes');
 
 const app = express();
 
@@ -18,6 +20,9 @@ app.use((req, res, next) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/free-exam', freeExamRoutes);
+app.use('/api/user-subscriptions', userSubscriptionRoutes);
+
+app.use('/api/admin', adminRoutes);
 
 app.use((req, res, next) => {
     throw new HttpError('Could not find the route', 404);

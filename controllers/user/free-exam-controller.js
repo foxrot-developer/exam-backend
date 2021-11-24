@@ -1,8 +1,8 @@
 const { validationResult } = require('express-validator');
 const { Promise } = require('mongoose');
 
-const HttpError = require('../helpers/http-error');
-const FreeExam = require('../models/free-exam');
+const HttpError = require('../../helpers/http-error');
+const FreeExam = require('../../models/free-exam');
 
 const getFreeExam = async (req, res, next) => {
     let allFreeQuestion;
@@ -34,9 +34,9 @@ const getFreeExam = async (req, res, next) => {
 
 const freeExamScore = async (req, res, next) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(new HttpError('Invalid data received', 422));
-    }
+        if (!errors.isEmpty()) {
+            return next(new HttpError('Invalid data received', 422));
+        }
 
     const { answers } = req.body;
 
@@ -56,7 +56,6 @@ const freeExamScore = async (req, res, next) => {
         }
     })
     const results = await Promise.all(questionAnswers);
-    console.log({ results });
     res.json({ results });
 };
 

@@ -5,11 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mollie/api-client": "^3.5.1",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "express-validator": "^6.13.0",
