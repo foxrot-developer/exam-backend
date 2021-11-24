@@ -44,12 +44,36 @@ const updateUser = async (req, res, next) => {
     try {
         await existingUser.save();
     } catch (error) {
-        return console.log({ error });
+        console.log({ error });
         return next(new HttpError('Error updating user', 500));
     }
 
     res.status(200).json({ user: existingUser.toObject({ getters: true }) });
 };
 
+const deleteUser = async (req, res, next) => {
+    const userId = req.params.userId;
+
+    let existingUser;
+    try {
+        existingUser = await User.findById(userId);
+    } catch (error) {
+        return next(new HttpError('Error fetching user', 500));
+    }
+
+    if (!existingUser) {
+        return next(new HttpError('No user found', 422));
+    }
+
+    try {
+        await existingUser.remove();
+    } catch (error) {
+        return next(new HttpError('Error deleting user', 500));
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
+exports.deleteUser = deleteUser;

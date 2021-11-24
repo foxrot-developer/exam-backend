@@ -12,4 +12,6 @@ router.patch('/update-user/:userId', [
     check('email').normalizeEmail().isEmail(),
 ], adminController.updateUser);
 
+router.delete('/delete-user/:userId', adminController.deleteUser);
+
 module.exports = router;
