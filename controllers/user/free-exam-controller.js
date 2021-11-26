@@ -34,13 +34,16 @@ const getFreeExam = async (req, res, next) => {
 
 const freeExamScore = async (req, res, next) => {
     const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return next(new HttpError('Invalid data received', 422));
-        }
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
 
     const { answers } = req.body;
 
     const questionAnswers = answers.map(async answer => {
+        if (!answer.id) {
+            return next(new HttpError('Question id is required', 422));
+        }
         const finalAnswers = await FreeExam.findById(answer.id);
         if (answer.answer === finalAnswers.answer) {
             return {
