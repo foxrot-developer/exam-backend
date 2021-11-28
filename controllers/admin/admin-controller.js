@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
+const Package = require('../../models/package');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -74,6 +75,42 @@ const deleteUser = async (req, res, next) => {
     res.status(200).json({ message: 'User deleted successfully' });
 };
 
+const createPackage = async (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        throw new HttpError('Invalid data received from frontend!', 422);
+    }
+
+    const { package_name, price, description, duration } = req.body;
+
+    let existingPackage;
+    try {
+        existingPackage = await Package.findOne({package_name: package_name});
+    } catch(error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if(existingPackage) {
+        return next(new HttpError('Package name already exists', 422));
+    }
+
+    const newPackage = new Package({
+        package_name,
+        price,
+        description,
+        duration
+    });
+
+    try {
+        await newPackage.save();
+    } catch(error) {
+        return next(new HttpError('Cannot create new package', 500));
+    };
+
+    res.status(201).json({ newPackage });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
+exports.createPackage = createPackage;

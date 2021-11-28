@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
+const Package = require('../../models/package');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -78,5 +79,21 @@ const login = async (req, res, next) => {
     res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username });
 };
 
+const getPackages = async (req, res, next) => {
+    let allPackages;
+    try {
+        allPackages = await Package.find({});
+    } catch (error) {
+        return next(new HttpError('Error accessing the database', 500));
+    };
+
+    if (!allPackages || allPackages.length === 0) {
+        return next(new HttpError('No packages found', 500));
+    }
+
+    res.json({ packages: allPackages.map(package => package.toObject({ getters: true })) });
+};
+
 exports.signup = signup;
 exports.login = login;
+exports.getPackages = getPackages;

@@ -14,4 +14,11 @@ router.patch('/update-user/:userId', [
 
 router.delete('/delete-user/:userId', adminController.deleteUser);
 
+router.post('/create-package', [
+    check('package_name').not().isEmpty(),
+    check('price').not().isEmpty(),
+    check('description').not().isEmpty(),
+    check('duration').not().isEmpty(),
+], adminController.createPackage);
+
 module.exports = router;

@@ -5,6 +5,8 @@ const userController = require('../../controllers/user/user-controller');
 
 const router = express.Router();
 
+router.get('/all-packages', userController.getPackages);
+
 router.post('/signup', [
     check('username').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
