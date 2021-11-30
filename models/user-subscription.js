@@ -4,9 +4,9 @@ const uniqueValidator = require('mongoose-unique-validator');
 const Schema = mongoose.Schema;
 
 const userSubscription = new Schema({
-    customer: { type: Object, required: true },
     subscription: { type: Object, required: true },
-    user: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
+    user: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
+    package: { type: mongoose.Types.ObjectId, required: true, ref: 'Package' }
 });
 
 userSubscription.plugin(uniqueValidator);

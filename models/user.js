@@ -6,7 +6,11 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, minlength: 8 }
+    password: { type: String, required: true, minlength: 8 },
+    packageId: { type: mongoose.Types.ObjectId, required: true, ref: 'Package' },
+    freeAccess: { type: Boolean, required: true },
+    customerId: { type: String },
+    specialCode: { type: String, required: true }
 });
 
 // userSchema.plugin(uniqueValidator);
