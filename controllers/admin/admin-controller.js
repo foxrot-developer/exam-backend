@@ -5,6 +5,7 @@ const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
 const Package = require('../../models/package');
 const userSubscription = require('../../models/user-subscription');
+const Admin = require('../../models/admin');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -194,9 +195,135 @@ const createUser = async (req, res, next) => {
     res.status(201).json({ message: 'User created successfully' });
 };
 
+const adminLogin = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { email, password } = req.body;
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (error) {
+        return next(new HttpError('Password hashing failed. Try again', 500));
+    }
+
+    let existingAdmin;
+    try {
+        existingAdmin = await Admin.findOne({ email: email });
+    } catch (error) {
+        return next(new HttpError('Error fetching admin', 500));
+    };
+
+    if (!existingAdmin) {
+        return next(new HttpError('Email not found', 422));
+    }
+
+    let validPassword;
+    try {
+        validPassword = await bcrypt.compare(password, existingAdmin.password);
+    } catch (error) {
+        return next(new HttpError('Error validating password', 500));
+    };
+
+    if (!validPassword) {
+        return next(new HttpError('Password incorrect', 422));
+    }
+
+    res.json({ adminId: existingAdmin.id, name: existingAdmin.name, email: existingAdmin.email });
+};
+
+const adminUpdatePassword = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { oldpassword, newPassword } = req.body;
+    const adminId = req.params.adminId;
+
+    let existingAdmin;
+    try {
+        existingAdmin = await Admin.findById(adminId);
+    } catch (error) {
+        return next(new HttpError('Error fetching admin data from database', 500));
+    };
+
+    if (!existingAdmin) {
+        return next(new HttpError('Admin not found against provided id', 422));
+    }
+
+    let prevPassword;
+    try {
+        prevPassword = bcrypt.compare(oldpassword, existingAdmin.password);
+    } catch (error) {
+        return next(new HttpError('Error retrieving password', 500));
+    };
+
+    if (!prevPassword) {
+        return next(new HttpError('Old password is incorrect', 422));
+    }
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(newPassword, 12);
+    } catch (error) {
+        return next(new HttpError('Password hashing failed. Try again', 500));
+    }
+
+    existingAdmin.password = hashedPassword;
+
+    try {
+        await existingAdmin.save();
+    } catch (error) {
+        return next(new HttpError('Error updating password', 500));
+    };
+
+    res.json({ message: 'Password updated successfully' });
+
+
+};
+
+const adminUpdateProfile = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { email, name } = req.body;
+    const adminId = req.params.adminId;
+
+    let existingAdmin;
+    try {
+        existingAdmin = await Admin.findById(adminId);
+    } catch (error) {
+        return next(new HttpError('Error fetching admin data from database', 500));
+    };
+
+    if (!existingAdmin) {
+        return next(new HttpError('Admin not found against provided id', 422));
+    }
+
+    existingAdmin.email = email;
+    existingAdmin.name = name;
+
+    try {
+        await existingAdmin.save();
+    } catch (error) {
+        return next(new HttpError('Error updating user', 500));
+    };
+
+    res.json({ adminId: existingAdmin.id, name: existingAdmin.name, email: existingAdmin.email });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
 exports.createPackage = createPackage;
 exports.createUser = createUser;
 exports.deletePackage = deletePackage;
+exports.adminLogin = adminLogin;
+exports.adminUpdatePassword = adminUpdatePassword;
+exports.adminUpdateProfile = adminUpdateProfile;

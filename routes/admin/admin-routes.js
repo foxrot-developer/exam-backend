@@ -31,4 +31,19 @@ router.post('/register-user', [
     check('password').isLength({ min: 8 })
 ], adminController.createUser);
 
+router.post('/login', [
+    check('email').normalizeEmail().isEmail(),
+    check('password').not().isEmpty().isLength({ min: 8 })
+], adminController.adminLogin);
+
+router.patch('/update-password/:adminId', [
+    check('oldPassword').not().isEmpty(),
+    check('newPassword').not().isEmpty()
+], adminController.adminUpdatePassword);
+
+router.patch('/update-profile/:adminId', [
+    check('name').not().isEmpty(),
+    check('email').normalizeEmail().isEmail(),
+], adminController.adminUpdateProfile);
+
 module.exports = router;
