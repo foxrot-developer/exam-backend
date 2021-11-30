@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
@@ -171,13 +172,6 @@ const createUser = async (req, res, next) => {
         specialCode
     });
 
-    try {
-        await newUser.save();
-    } catch (error) {
-        console.log({ error });
-        return next(new HttpError('Cannot create user. Try again', 500));
-    }
-
     const newSubscription = new userSubscription({
         subscription: {
             free: true
@@ -187,9 +181,13 @@ const createUser = async (req, res, next) => {
     });
 
     try {
-        await newSubscription.save();
-    } catch (error) {
-        return next(new HttpError('Cannot create subscription. Try again', 500));
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await newUser.save({ session: session });
+        await newSubscription.save({ session: session });
+        await session.commitTransaction();
+    } catch(error) {
+        return next(new HttpError('Error saving data in database', 500));
     }
 
     res.status(201).json({ message: 'User created successfully' });
