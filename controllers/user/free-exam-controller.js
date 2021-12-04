@@ -7,7 +7,7 @@ const FreeExam = require('../../models/free-exam');
 const getFreeExam = async (req, res, next) => {
     let allFreeQuestion;
     try {
-        allFreeQuestion = await FreeExam.find({}, '-answer');
+        allFreeQuestion = await FreeExam.find({});
     } catch (error) {
         return next(new HttpError('Error fetching questions', 500));
     }
