@@ -238,7 +238,45 @@ const changePassword = async (req, res, next) => {
     res.json({ message: 'Password updated successfully' });
 };
 
+const userForgetPassword = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { email, password } = req.body;
+
+    let findUser;
+    try {
+        findUser = await User.findOne({ email: email });
+    } catch (error) {
+        return next(new HttpError('Error fetching user from database', 500));
+    };
+
+    if (!findUser) {
+        return next(new HttpError('No user found against the email', 422));
+    }
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (error) {
+        return next(new HttpError('Password hashing failed. Try again', 500));
+    }
+
+    findUser.password = hashedPassword;
+
+    try {
+        await findUser.save();
+    } catch (error) {
+        return next(new HttpError('Error saving password to database', 500));
+    };
+
+    res.json({ message: 'Password updated successfully' });
+};
+
 exports.signup = signup;
 exports.login = login;
 exports.getPackages = getPackages;
 exports.changePassword = changePassword;
+exports.userForgetPassword = userForgetPassword;

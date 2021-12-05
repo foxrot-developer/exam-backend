@@ -26,4 +26,9 @@ router.patch('/change-password/:userId', [
     check('newPassword').not().isEmpty()
 ], userController.changePassword);
 
+router.patch('/forget-password', [
+    check('email').normalizeEmail().isEmail(),
+    check('password').not().isEmpty().isLength({ min: 8 })
+], userController.userForgetPassword);
+
 module.exports = router;
