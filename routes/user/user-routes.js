@@ -10,7 +10,6 @@ router.get('/all-packages', userController.getPackages);
 router.post('/signup', [
     check('username').not().isEmpty(),
     check('packageId').not().isEmpty(),
-    // check('cardToken').not().isEmpty(),
     check('paymentMethod').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
     check('password').isLength({ min: 8 })

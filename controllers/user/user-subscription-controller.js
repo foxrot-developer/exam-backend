@@ -1,6 +1,4 @@
 const { validationResult } = require('express-validator');
-const { createMollieClient } = require('@mollie/api-client');
-const mollieClient = createMollieClient({ apiKey: 'test_AMt6z2jyeDycDgPHPb6chye5w39RWM' });
 
 const HttpError = require('../../helpers/http-error');
 const UserSubscription = require('../../models/user-subscription');

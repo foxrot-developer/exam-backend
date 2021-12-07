@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
@@ -56,6 +57,11 @@ const updateUser = async (req, res, next) => {
 };
 
 const deletePackage = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
     const pkgId = req.params.pkgId;
 
     let existingPackage;
@@ -68,6 +74,30 @@ const deletePackage = async (req, res, next) => {
     if (!existingPackage) {
         return next(new HttpError('No package found', 422));
     }
+
+    let existingPlan;
+    try {
+        existingPlan = await stripe.plans.del(
+            existingPackage.planid
+        );
+    } catch (error) {
+        return next(new HttpError('Stripe deletion error', 500));
+    };
+
+    if (!existingPlan) {
+        return next(new HttpError('Cannot delete plan', 500));
+    }
+
+    let existingProduct;
+    try {
+        existingProduct = await stripe.products.del(
+            existingPackage.productid
+        );
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Stripe error deleting product'));
+    };
+
 
     try {
         await existingPackage.remove();
@@ -120,11 +150,40 @@ const createPackage = async (req, res, next) => {
         return next(new HttpError('Package name already exists', 422));
     }
 
+    let product;
+    try {
+        product = await stripe.products.create({
+            name: package_name,
+        });
+    } catch (error) {
+        return next(new HttpError('Stripe error creating product'));
+    };
+
+    let plan;
+    try {
+        plan = await stripe.plans.create({
+            amount: price,
+            currency: 'eur',
+            interval: duration,
+            product: product.id
+        });
+    } catch (error) {
+        console.log('Stripe error', error);
+        return next(new HttpError('Stripe plan creation error', 500));
+    };
+
+    if (!plan) {
+        return next(new HttpError('Cannot create plan', 500));
+    }
+
+
     const newPackage = new Package({
         package_name,
         price,
         description,
-        duration
+        duration,
+        planid: plan.id,
+        productid: product.id
     });
 
     try {
@@ -169,7 +228,8 @@ const createUser = async (req, res, next) => {
         packageId,
         freeAccess: true,
         customerId: '',
-        specialCode
+        specialCode,
+        subscriptionid: ''
     });
 
     const newSubscription = new userSubscription({
@@ -177,7 +237,8 @@ const createUser = async (req, res, next) => {
             free: true
         },
         user: newUser.id,
-        package: packageId
+        package: packageId,
+        subscriptionid: ''
     });
 
     try {
@@ -186,7 +247,8 @@ const createUser = async (req, res, next) => {
         await newUser.save({ session: session });
         await newSubscription.save({ session: session });
         await session.commitTransaction();
-    } catch(error) {
+    } catch (error) {
+        console.log(error);
         return next(new HttpError('Error saving data in database', 500));
     }
 

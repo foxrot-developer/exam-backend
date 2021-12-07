@@ -10,7 +10,8 @@ const userSchema = new Schema({
     packageId: { type: mongoose.Types.ObjectId, required: true, ref: 'Package' },
     freeAccess: { type: Boolean, required: true },
     customerId: { type: String },
-    specialCode: { type: String, required: true }
+    specialCode: { type: String, required: true },
+    subscriptionid: { type: String }
 });
 
 // userSchema.plugin(uniqueValidator);

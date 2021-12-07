@@ -1,12 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const { createMollieClient } = require('@mollie/api-client');
-const mollieClient = createMollieClient({ apiKey: 'test_AMt6z2jyeDycDgPHPb6chye5w39RWM' });
+const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
 const Package = require('../../models/package');
+const UserSubscription = require('../../models/user-subscription');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -14,7 +14,7 @@ const signup = async (req, res, next) => {
         return next(new HttpError('Invalid data received', 422));
     }
 
-    const { username, email, password, packageId, cardToken, paymentMethod } = req.body;
+    const { username, email, password, packageId, paymentMethod } = req.body;
 
     let existingUser;
     try {
@@ -27,6 +27,17 @@ const signup = async (req, res, next) => {
         return next(new HttpError('Email already registered', 422));
     }
 
+    let existingPackage;
+    try {
+        existingPackage = await Package.findById(packageId);
+    } catch (error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if (!existingPackage) {
+        return next(new HttpError('Cannot find package against provided package id', 422));
+    }
+
     let hashedPassword;
     try {
         hashedPassword = await bcrypt.hash(password, 12);
@@ -36,91 +47,68 @@ const signup = async (req, res, next) => {
 
     let customer;
     try {
-        customer = await mollieClient.customers.create({
-            name: username,
-            email
+        customer = await stripe.customers.create({
+            payment_method: paymentMethod,
+            email: email,
+            invoice_settings: {
+                default_payment_method: paymentMethod
+            }
         });
     } catch (error) {
-        return next(new HttpError('Unable to create mollie client', 500));
-    }
-
-    if (!customer) {
-        return next(new HttpError('Error creating mollie customer', 422));
-    }
-
-    let firstPayment;
-    try {
-        firstPayment = await mollieClient.customers_payments.create({
-            customerId: customer.id,
-            method: 'ideal',
-            amount: {
-                currency: 'EUR',
-                value: '1.00',
-            },
-            description: 'First payment',
-            sequenceType: "first",
-            redirectUrl: 'http://localhost:5000/',
-
-        });
-    } catch (error) {
-        console.log({ error });
-        return next(new HttpError('Error creating first payment', 500));
-    }
-
-    console.log({ firstPayment });
-
-    let getMandate;
-    try {
-        getMandate = await mollieClient.customers_mandates.get(
-            firstPayment.mandateId,
-            { customerId: firstPayment.customerId }
-        );
-    } catch (error) {
-        console.log({ error });
-        return next(new HttpError('Error getting mandate', 500));
+        console.log(error);
+        return next(new HttpError('Stripe error creating customer', 500));
     };
-
-    console.log({ getMandate });
 
     let subscription;
     try {
-        subscription = await mollieClient.customers_subscriptions.create({
-            customerId: customer.id,
-            amount: {
-                currency: 'USD',
-                value: '100.00'
-            },
-            interval: '1 month',
-            mandateId: getMandate.id,
-            description: 'User subscription',
-            webhookUrl: 'https://webshop.example.org/subscriptions/webhook/'
+        subscription = await stripe.subscriptions.create({
+            customer: customer.id,
+            items: [
+                { plan: existingPackage.planid }
+            ],
+            expand: ['latest_invoice.payment_intent']
         });
     } catch (error) {
-        console.log({ error });
-        return next(new HttpError('Unable to subscribe', 500));
+        console.log(error);
+        return next(new HttpError('Stripe error creating subscription', 500));
+    };
+
+    const status = subscription['latest_invoice']['payment_intent']['status'];
+    const client_secret = subscription['latest_invoice']['payment_intent']['client_secret'];
+
+    const newSubscription = new UserSubscription({
+        subscription: {
+            free: false
+        },
+        user: newUser.id,
+        package: packageId,
+        subscriptionid: subscription.id
+    });
+
+    const newUser = new User({
+        username,
+        email,
+        password: hashedPassword,
+        packageId,
+        freeAccess: false,
+        customerId: customer.id,
+        specialCode: '',
+        subscriptionid: newSubscription.id
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await newUser.save({ session: session });
+        await newSubscription.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error saving data in database', 500));
     }
 
-    if (!subscription) {
-        return next(new HttpError('Error creating subscription'));
-    }
+    res.json({ userId: newUser.id, username: newUser.username, email: newUser.email, freeAccess: newUser.freeAccess, subscriptionid: newUser.subscriptionid, status, client_secret });
 
-    console.log({ subscription });
-
-    // const newUser = new User({
-    //     username,
-    //     email,
-    //     password: hashedPassword
-    // });
-
-    // try {
-    //     await newUser.save();
-    // } catch (error) {
-    //     return next(new HttpError('Cannot create user. Try again', 500));
-    // }
-
-    // res.status(201).json({ userId: newUser.id, email: newUser.email, username: newUser.username })
-
-    res.json({ firstPayment });
 };
 
 const login = async (req, res, next) => {
@@ -156,7 +144,7 @@ const login = async (req, res, next) => {
         if (!validPassword) {
             return next(new HttpError('Password incorrect', 422));
         }
-        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username });
+        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid });
     } else {
         let validPassword;
         try {
@@ -168,7 +156,7 @@ const login = async (req, res, next) => {
         if (!validPassword) {
             return next(new HttpError('Password incorrect', 422));
         }
-        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username });
+        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid });
     }
 
 };
