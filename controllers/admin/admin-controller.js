@@ -122,9 +122,39 @@ const deleteUser = async (req, res, next) => {
         return next(new HttpError('No user found', 422));
     }
 
+    let existingSubs;
     try {
-        await existingUser.remove();
+        existingSubs = await userSubscription.findOne({ user: userId });
     } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching subscription data from database', 500));
+    };
+
+    if (!existingSubs) {
+        return next(new HttpError('No subscription found', 422));
+    }
+
+    if (!existingUser.freeAccess && existingSubs.subscriptionid !== '') {
+
+        let deleteSubs;
+        try {
+            deleteSubs = await stripe.subscriptions.del(
+                existingSubs.subscriptionid
+            );
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Stripe error canceling subscription'));
+        };
+    }
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingUser.remove();
+        await existingSubs.remove();
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
         return next(new HttpError('Error deleting user', 500));
     }
 
@@ -230,8 +260,7 @@ const createUser = async (req, res, next) => {
         freeAccess: true,
         block: false,
         customerId: '',
-        specialCode,
-        subscriptionid: ''
+        specialCode
     });
 
     const newSubscription = new userSubscription({
@@ -432,6 +461,28 @@ const activePackage = async (req, res, next) => {
         return next(new HttpError('No package found against provided package id', 422));
     }
 
+    let existingPlan;
+    try {
+        existingPlan = await stripe.plans.update(
+            existingPackage.planid,
+            { active: active }
+        );
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Stripe plan activation error', 500));
+    };
+
+    let existingProduct;
+    try {
+        existingProduct = await stripe.products.update(
+            existingPackage.productid,
+            { active: active }
+        );
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Stripe product activation error', 500));
+    };
+
     existingPackage.active = active;
 
     try {
@@ -441,6 +492,61 @@ const activePackage = async (req, res, next) => {
     };
 
     res.json({ message: 'Package updated successfully' });
+};
+
+const userSubscriptionDetails = async (req, res, next) => {
+    const userId = req.params.userId;
+
+    let existingUser;
+    try {
+        existingUser = await User.findById(userId);
+    } catch (error) {
+        return next(new HttpError('Error fetching user', 500));
+    }
+
+    if (!existingUser) {
+        return next(new HttpError('No user found', 422));
+    }
+
+    let existingSubs;
+    try {
+        existingSubs = await userSubscription.findOne({ user: userId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching subscription data from database', 500));
+    };
+
+    if (!existingSubs) {
+        return next(new HttpError('No subscription found', 422));
+    }
+
+    let existingPackage;
+    try {
+        existingPackage = await Package.findById(existingSubs.package);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting package from database', 500));
+    };
+
+    if (!existingPackage) {
+        return next(new HttpError('No package found against package id', 500));
+    }
+
+    if (!existingUser.freeAccess && existingSubs.subscriptionid !== '') {
+        let getSubs;
+        try {
+            getSubs = await stripe.subscriptions.retrieve(
+                existingSubs.subscriptionid
+            );
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Stripe error getting subscription details', 500));
+        };
+
+        res.json({ subscription_details: getSubs, package_details: existingPackage });
+    } else {
+        res.json({ package_details: existingPackage, subscription_details: 'free' });
+    }
 };
 
 exports.getUsers = getUsers;
@@ -454,3 +560,4 @@ exports.adminUpdatePassword = adminUpdatePassword;
 exports.adminUpdateProfile = adminUpdateProfile;
 exports.adminUserBlock = adminUserBlock;
 exports.activePackage = activePackage;
+exports.userSubscriptionDetails = userSubscriptionDetails;

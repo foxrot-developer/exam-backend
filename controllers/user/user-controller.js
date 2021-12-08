@@ -294,6 +294,7 @@ const userForgetPassword = async (req, res, next) => {
     try {
         await findUser.save();
     } catch (error) {
+        console.log(error);
         return next(new HttpError('Error saving password to database', 500));
     };
 

@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get('/all-users', adminController.getUsers);
 
+router.get('/user-subscription/:userId', adminController.userSubscriptionDetails);
+
 router.patch('/update-user/:userId', [
     check('username').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
