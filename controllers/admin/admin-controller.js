@@ -183,6 +183,7 @@ const createPackage = async (req, res, next) => {
         description,
         duration,
         planid: plan.id,
+        active: true,
         productid: product.id
     });
 
@@ -411,6 +412,37 @@ const adminUserBlock = async (req, res, next) => {
 
 };
 
+const activePackage = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { active } = req.body;
+    const pkgId = req.params.pkgId;
+
+    let existingPackage;
+    try {
+        existingPackage = await Package.findById(pkgId);
+    } catch (error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if (!existingPackage) {
+        return next(new HttpError('No package found against provided package id', 422));
+    }
+
+    existingPackage.active = active;
+
+    try {
+        await existingPackage.save();
+    } catch (error) {
+        return next(new HttpError('Error updating package', 500));
+    };
+
+    res.json({ message: 'Package updated successfully' });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
@@ -421,3 +453,4 @@ exports.adminLogin = adminLogin;
 exports.adminUpdatePassword = adminUpdatePassword;
 exports.adminUpdateProfile = adminUpdateProfile;
 exports.adminUserBlock = adminUserBlock;
+exports.activePackage = activePackage;

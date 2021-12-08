@@ -8,6 +8,7 @@ const packageSchema = new Schema({
     price: { type: Number, required: true },
     description: { type: String, required: true },
     duration: { type: String, required: true },
+    active: { type: Boolean, required: true },
     planid: { type: String, required: true },
     productid: { type: String, required: true }
 });

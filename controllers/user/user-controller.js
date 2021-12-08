@@ -80,7 +80,7 @@ const signup = async (req, res, next) => {
         subscription: {
             free: false
         },
-        user: newUser.id,
+        user: '',
         package: packageId,
         subscriptionid: subscription.id
     });
@@ -94,7 +94,7 @@ const signup = async (req, res, next) => {
         block: false,
         customerId: customer.id,
         specialCode: '',
-        subscriptionid: newSubscription.id
+        subscriptionid: ''
     });
 
     try {
@@ -102,6 +102,10 @@ const signup = async (req, res, next) => {
         session.startTransaction();
         await newUser.save({ session: session });
         await newSubscription.save({ session: session });
+        newSubscription.user = newUser.id;
+        await newSubscription.save({ session: session });
+        newUser.subscriptionid = newSubscription.id;
+        await newUser.save({ session: session });
         await session.commitTransaction();
     } catch (error) {
         console.log(error);

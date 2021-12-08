@@ -50,4 +50,8 @@ router.patch('/block-user/:userId', [
     check('block').not().isEmpty().isBoolean()
 ], adminController.adminUserBlock);
 
+router.patch('/active-package/:pkgId', [
+    check('active').not().isEmpty().isBoolean()
+], adminController.activePackage);
+
 module.exports = router;
