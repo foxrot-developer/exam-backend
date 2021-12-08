@@ -156,6 +156,8 @@ const login = async (req, res, next) => {
 
     const { email, password, specialCode } = req.body;
 
+    console.log({ specialCode });
+
     let existingUser;
     try {
         existingUser = await User.findOne({ email: email });
