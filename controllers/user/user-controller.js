@@ -3,11 +3,13 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
 const Package = require('../../models/package');
 const UserSubscription = require('../../models/user-subscription');
+const { text } = require('express');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -107,6 +109,40 @@ const signup = async (req, res, next) => {
         console.log(error);
         return next(new HttpError('Error saving data in database', 500));
     }
+
+    let transporter;
+    try {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'usama.bashirb1@gmail.com',
+                pass: 'ubtutyte'
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Transporter error', 500));
+    };
+
+    let mailDetails
+    try {
+        mailDetails = {
+            from: 'usama.bashirb1@gmail.com',
+            to: email,
+            subject: 'Package subscription confirmation',
+            text: `Your subscription of ${existingPackage.package_name} is confirmed`
+        }
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Mail details error', 500));
+    }
+
+    try {
+        transporter.sendMail(mailDetails);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Mail sending error', 500));
+    };
 
     res.json({ userId: newUser.id, username: newUser.username, email: newUser.email, freeAccess: newUser.freeAccess, subscriptionid: newUser.subscriptionid, status, client_secret });
 
