@@ -168,7 +168,7 @@ const login = async (req, res, next) => {
     }
 
     if (specialCode !== '') {
-        if (specialCode.toLowerCase() !== existingUser.specialCode.toLowerCase()) {
+        if (specialCode !== existingUser.specialCode) {
             return next(new HttpError('Code does not match against the user', 422));
         }
         let validPassword;
