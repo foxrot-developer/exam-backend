@@ -169,7 +169,7 @@ const login = async (req, res, next) => {
         return next(new HttpError('Invalid email', 422));
     }
 
-    if (specialCode !== '') {
+    if (specialCode !== '' && specialCode !== undefined) {
         if (specialCode !== existingUser.specialCode) {
             return next(new HttpError('Code does not match against the user', 422));
         }
