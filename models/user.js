@@ -11,7 +11,7 @@ const userSchema = new Schema({
     freeAccess: { type: Boolean, required: true },
     block: { type: Boolean, required: true },
     customerId: { type: String },
-    specialCode: { type: String, required: true }
+    specialCode: { type: String }
 });
 
 // userSchema.plugin(uniqueValidator);
