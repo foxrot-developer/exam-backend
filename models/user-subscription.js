@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const userSubscription = new Schema({
     subscription: { type: Object, required: true },
-    user: { type: mongoose.Types.ObjectId, ref: 'User' },
+    user: { type: String },
     package: { type: mongoose.Types.ObjectId, required: true, ref: 'Package' },
     subscriptionid: { type: String }
 });
