@@ -76,15 +76,6 @@ const signup = async (req, res, next) => {
     const status = subscription['latest_invoice']['payment_intent']['status'];
     const client_secret = subscription['latest_invoice']['payment_intent']['client_secret'];
 
-    const newSubscription = new UserSubscription({
-        subscription: {
-            free: false
-        },
-        user: '',
-        package: packageId,
-        subscriptionid: subscription.id
-    });
-
     const newUser = new User({
         username,
         email,
@@ -93,8 +84,16 @@ const signup = async (req, res, next) => {
         freeAccess: false,
         block: false,
         customerId: customer.id,
-        specialCode: '',
-        subscriptionid: ''
+        specialCode: ''
+    });
+
+    const newSubscription = new UserSubscription({
+        subscription: {
+            free: false
+        },
+        user: newUser.id,
+        package: packageId,
+        subscriptionid: subscription.id
     });
 
     try {
@@ -102,10 +101,6 @@ const signup = async (req, res, next) => {
         session.startTransaction();
         await newUser.save({ session: session });
         await newSubscription.save({ session: session });
-        newSubscription.user = newUser.id;
-        await newSubscription.save({ session: session });
-        newUser.subscriptionid = newSubscription.id;
-        await newUser.save({ session: session });
         await session.commitTransaction();
     } catch (error) {
         console.log(error);
