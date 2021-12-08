@@ -91,6 +91,7 @@ const signup = async (req, res, next) => {
         password: hashedPassword,
         packageId,
         freeAccess: false,
+        block: false,
         customerId: customer.id,
         specialCode: '',
         subscriptionid: newSubscription.id

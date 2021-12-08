@@ -227,6 +227,7 @@ const createUser = async (req, res, next) => {
         password: hashedPassword,
         packageId,
         freeAccess: true,
+        block: false,
         customerId: '',
         specialCode,
         subscriptionid: ''
@@ -378,6 +379,38 @@ const adminUpdateProfile = async (req, res, next) => {
     res.json({ adminId: existingAdmin.id, name: existingAdmin.name, email: existingAdmin.email });
 };
 
+const adminUserBlock = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { block } = req.body;
+    const userId = req.params.userId;
+
+    let existingUser;
+    try {
+        existingUser = await User.findById(userId);
+    } catch (error) {
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingUser) {
+        return next(new HttpError('No user found against provided user id', 422));
+    }
+
+    existingUser.block = block;
+
+    try {
+        await existingUser.save();
+    } catch (error) {
+        return next(new HttpError('Error updating user', 500));
+    };
+
+    res.json({ message: 'User updated successfully' });
+
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
@@ -387,3 +420,4 @@ exports.deletePackage = deletePackage;
 exports.adminLogin = adminLogin;
 exports.adminUpdatePassword = adminUpdatePassword;
 exports.adminUpdateProfile = adminUpdateProfile;
+exports.adminUserBlock = adminUserBlock;

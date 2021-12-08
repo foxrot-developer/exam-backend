@@ -9,6 +9,7 @@ const userSchema = new Schema({
     password: { type: String, required: true, minlength: 8 },
     packageId: { type: mongoose.Types.ObjectId, required: true, ref: 'Package' },
     freeAccess: { type: Boolean, required: true },
+    block: { type: Boolean, required: true },
     customerId: { type: String },
     specialCode: { type: String, required: true },
     subscriptionid: { type: String }

@@ -46,4 +46,8 @@ router.patch('/update-profile/:adminId', [
     check('email').normalizeEmail().isEmail(),
 ], adminController.adminUpdateProfile);
 
+router.patch('/block-user/:userId', [
+    check('block').not().isEmpty().isBoolean()
+], adminController.adminUserBlock);
+
 module.exports = router;
