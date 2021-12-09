@@ -17,7 +17,7 @@ const getPaidExam = async (req, res, next) => {
         return next(new HttpError('No paid exams found', 500));
     }
 
-    res.json({ questions: allPaidQuestion.map(question => question.toObject({ getters: true })) });
+    res.json({ paid_exams: allPaidQuestion.map(question => question.toObject({ getters: true })) });
 };
 
 const addPaidExam = async (req, res, next) => {
@@ -95,7 +95,7 @@ const addPaidExamQuestion = async (req, res, next) => {
 
     const { question, answer, options, part, examId } = req.body;
 
-    console.log(req.file);
+    console.log({ examId });
 
     let existingPaidExam;
     try {
@@ -111,11 +111,11 @@ const addPaidExamQuestion = async (req, res, next) => {
 
     const paidQuestion = new PaidExamQuestion({
         question,
-        questionImage: req.file.questionImage.path,
+        questionImage: req.file.path,
         answer,
         options,
         part,
-        examid
+        examId
     });
 
     try {
@@ -190,6 +190,7 @@ const editPaidExamQuestion = async (req, res, next) => {
     try {
         await existingQuestion.save();
     } catch (error) {
+        console.log(error);
         return next(new HttpError('Error updating question', 500));
     };
 

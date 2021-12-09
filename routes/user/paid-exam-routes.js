@@ -13,14 +13,14 @@ router.post('/add-paid-exam', [
     check('description').not().isEmpty()
 ], paidExamController.addPaidExam);
 
-router.post('/add-paid-exam-question', [
-    fileUpload.single('questionImage'),
-    check('question').not().isEmpty(),
-    check('answer').not().isEmpty(),
-    check('options').not().isEmpty().isArray({ min: 1 }),
-    check('part').not().isEmpty(),
-    check('examid').not().isEmpty()
-], paidExamController.addPaidExamQuestion);
+router.post('/add-paid-exam-question', fileUpload.single('questionImage'),
+    [
+        check('question').not().isEmpty(),
+        check('answer').not().isEmpty(),
+        check('options').not().isEmpty(),
+        check('part').not().isEmpty(),
+        check('examId').not().isEmpty()
+    ], paidExamController.addPaidExamQuestion);
 
 router.patch('/edit-paid-exam/:examId', [
     check('name').not().isEmpty(),
@@ -30,7 +30,7 @@ router.patch('/edit-paid-exam/:examId', [
 router.patch('/edit-paid-exam-question/:quesId', [
     check('question').not().isEmpty(),
     check('answer').not().isEmpty(),
-    check('options').not().isEmpty().isArray({ min: 1 }),
+    check('options').not().isEmpty(),
     check('part').not().isEmpty(),
 ], paidExamController.editPaidExamQuestion);
 
