@@ -393,7 +393,7 @@ const paidExamResult = async (req, res, next) => {
 
     const newResult = new Result({
         userId,
-        result
+        results: result
     });
 
     try {
@@ -412,6 +412,22 @@ const paidExamResult = async (req, res, next) => {
     res.json({ exam_result: result });
 };
 
+const allExamResults = async (req, res, next) => {
+    let existingResults;
+    try {
+        existingResults = await Result.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting results from the database', 500));
+    };
+
+    if (!existingResults) {
+        return next(new HttpError('No results found', 422));
+    }
+
+    res.json({ results: existingResults.map(result => result.toObject({ getters: true })) });
+};
+
 exports.getPaidExam = getPaidExam;
 exports.addPaidExam = addPaidExam;
 exports.editPaidExam = editPaidExam;
@@ -421,3 +437,4 @@ exports.editPaidExamQuestion = editPaidExamQuestion;
 exports.deletePaidExamQuestion = deletePaidExamQuestion;
 exports.allPaidQuestions = allPaidQuestions;
 exports.paidExamResult = paidExamResult;
+exports.allExamResults = allExamResults;

@@ -10,6 +10,8 @@ router.get('/', paidExamController.getPaidExam);
 
 router.get('/all-paid-questions', paidExamController.allPaidQuestions);
 
+router.get('/all-exam-results', paidExamController.allExamResults);
+
 router.post('/exam-result/:userId', [
     check('examId').not().isEmpty(),
 ], paidExamController.paidExamResult);
