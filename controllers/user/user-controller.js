@@ -87,7 +87,9 @@ const signup = async (req, res, next) => {
         freeAccess: false,
         block: false,
         customerId: customer.id,
-        specialCode: ''
+        specialCode: '',
+        enrolled: [],
+        completed: []
     });
 
     const newSubscription = new UserSubscription({

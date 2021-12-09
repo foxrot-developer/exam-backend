@@ -11,7 +11,9 @@ const userSchema = new Schema({
     freeAccess: { type: Boolean, required: true },
     block: { type: Boolean, required: true },
     customerId: { type: String },
-    specialCode: { type: String }
+    specialCode: { type: String },
+    enrolled: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Paid Exam' }],
+    completed: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Paid Exam' }]
 });
 
 // userSchema.plugin(uniqueValidator);
