@@ -25,6 +25,7 @@ router.post('/create-package', [
     check('price').not().isEmpty(),
     check('description').not().isEmpty(),
     check('duration').not().isEmpty(),
+    check('no_exam').not().isEmpty(),
 ], adminController.createPackage);
 
 router.post('/register-user', [

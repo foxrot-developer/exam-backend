@@ -20,6 +20,11 @@ router.post('/login', [
     check('password').not().isEmpty().isLength({ min: 8 })
 ], userController.login);
 
+router.post('/exam-enrollment', [
+    check('examId').not().isEmpty(),
+    check('userId').not().isEmpty()
+], userController.examEnrollment);
+
 router.patch('/change-password/:userId', [
     check('oldPassword').not().isEmpty(),
     check('newPassword').not().isEmpty()

@@ -9,7 +9,7 @@ const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
 const Package = require('../../models/package');
 const UserSubscription = require('../../models/user-subscription');
-const { text } = require('express');
+const PaidExam = require('../../models/free-exam');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -305,8 +305,54 @@ const userForgetPassword = async (req, res, next) => {
     res.json({ message: 'Password updated successfully' });
 };
 
+const examEnrollment = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { examId, userId } = req.body;
+    console.log({ examId });
+
+    let existingExam;
+    try {
+        existingExam = await PaidExam.findById(examId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from databasse', 500));
+    };
+
+    console.log({ existingExam });
+
+    if (!existingExam) {
+        return next(new HttpError('No exam found against id', 422));
+    }
+
+    let existingUser;
+    try {
+        existingUser = await User.findById(userId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching user from database', 500));
+    };
+
+    if (!existingUser) {
+        return next(new HttpError('No user found against id', 422));
+    }
+
+    try {
+        existingUser.enrolled.push(existingExam);
+        await existingUser.save();
+    } catch (error) {
+        return next(new HttpError('Error saving data to database', 500));
+    };
+
+    res.json({ message: 'User enrolled successfully' });
+};
+
 exports.signup = signup;
 exports.login = login;
 exports.getPackages = getPackages;
 exports.changePassword = changePassword;
 exports.userForgetPassword = userForgetPassword;
+exports.examEnrollment = examEnrollment;

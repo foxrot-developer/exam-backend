@@ -168,7 +168,7 @@ const createPackage = async (req, res, next) => {
         throw new HttpError('Invalid data received from frontend!', 422);
     }
 
-    const { package_name, price, description, duration } = req.body;
+    const { package_name, price, description, duration, no_exam } = req.body;
 
     let existingPackage;
     try {
@@ -215,7 +215,8 @@ const createPackage = async (req, res, next) => {
         duration,
         planid: plan.id,
         active: true,
-        productid: product.id
+        productid: product.id,
+        no_exam
     });
 
     try {

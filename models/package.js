@@ -10,7 +10,8 @@ const packageSchema = new Schema({
     duration: { type: String, required: true },
     active: { type: Boolean, required: true },
     planid: { type: String, required: true },
-    productid: { type: String, required: true }
+    productid: { type: String, required: true },
+    no_exam: { type: Number, required: true }
 });
 
 module.exports = mongoose.model('Package', packageSchema);
