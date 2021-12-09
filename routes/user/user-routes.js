@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get('/all-packages', userController.getPackages);
 
+router.get('/user-details/:userId', userController.getUserDetails);
+
 router.post('/signup', [
     check('username').not().isEmpty(),
     check('packageId').not().isEmpty(),

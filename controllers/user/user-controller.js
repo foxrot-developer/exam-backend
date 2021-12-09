@@ -9,7 +9,7 @@ const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
 const Package = require('../../models/package');
 const UserSubscription = require('../../models/user-subscription');
-const PaidExam = require('../../models/free-exam');
+const PaidExam = require('../../models/paid-exam');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -312,20 +312,17 @@ const examEnrollment = async (req, res, next) => {
     }
 
     const { examId, userId } = req.body;
-    console.log({ examId });
 
-    let existingExam;
+    let existingPaidExam;
     try {
-        existingExam = await PaidExam.findById(examId);
+        existingPaidExam = await PaidExam.findById(examId.toString());
     } catch (error) {
         console.log(error);
-        return next(new HttpError('Error fetching data from databasse', 500));
-    };
+        return next(new HttpError('Error fetching data from database', 500));
+    }
 
-    console.log({ existingExam });
-
-    if (!existingExam) {
-        return next(new HttpError('No exam found against id', 422));
+    if (!existingPaidExam) {
+        return next(new HttpError('Exam not found', 422));
     }
 
     let existingUser;
@@ -341,7 +338,7 @@ const examEnrollment = async (req, res, next) => {
     }
 
     try {
-        existingUser.enrolled.push(existingExam);
+        existingUser.enrolled.push(existingPaidExam);
         await existingUser.save();
     } catch (error) {
         return next(new HttpError('Error saving data to database', 500));
@@ -350,9 +347,28 @@ const examEnrollment = async (req, res, next) => {
     res.json({ message: 'User enrolled successfully' });
 };
 
+const getUserDetails = async (req, res, next) => {
+    const userId = req.params.userId;
+
+    let existingUser;
+    try {
+        existingUser = await User.findById(userId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingUser) {
+        return next(new HttpError('No user found against id', 422));
+    }
+
+    res.json({ user: existingUser });
+}
+
 exports.signup = signup;
 exports.login = login;
 exports.getPackages = getPackages;
 exports.changePassword = changePassword;
 exports.userForgetPassword = userForgetPassword;
 exports.examEnrollment = examEnrollment;
+exports.getUserDetails = getUserDetails;
