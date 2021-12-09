@@ -220,6 +220,22 @@ const deletePaidExamQuestion = async (req, res, next) => {
 
 };
 
+const allPaidQuestions = async (req, res, next) => {
+    let existingPaidQuestions;
+    try {
+        existingPaidQuestions = await PaidExamQuestion.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingPaidQuestions) {
+        return next(new HttpError('No paid questions found', 422));
+    }
+
+    res.json({ paid_questions: existingPaidQuestions.map(ques => ques.toObject({ getters: true })) });
+};
+
 exports.getPaidExam = getPaidExam;
 exports.addPaidExam = addPaidExam;
 exports.editPaidExam = editPaidExam;
@@ -227,3 +243,4 @@ exports.addPaidExamQuestion = addPaidExamQuestion;
 exports.deletePaidExam = deletePaidExam;
 exports.editPaidExamQuestion = editPaidExamQuestion;
 exports.deletePaidExamQuestion = deletePaidExamQuestion;
+exports.allPaidQuestions = allPaidQuestions;
