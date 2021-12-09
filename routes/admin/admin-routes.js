@@ -9,6 +9,8 @@ router.get('/all-users', adminController.getUsers);
 
 router.get('/user-subscription/:userId', adminController.userSubscriptionDetails);
 
+router.get('/all-payments', adminController.allPayments);
+
 router.patch('/update-user/:userId', [
     check('username').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
@@ -55,5 +57,9 @@ router.patch('/block-user/:userId', [
 router.patch('/active-package/:pkgId', [
     check('active').not().isEmpty().isBoolean()
 ], adminController.activePackage);
+
+router.patch('/active-payment/:payId', [
+    check('active').not().isEmpty().isBoolean()
+], adminController.activePaymentMethod);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const freeExamController = require('../../controllers/user/free-exam-controller');
+const fileUpload = require('../../helpers/file-upload');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.post('/exam-score', [
 ], freeExamController.freeExamScore);
 
 router.post('/create-free-exam', [
+    fileUpload.single('questionImage'),
     check('question').not().isEmpty(),
     check('answer').not().isEmpty(),
     check('options').not().isEmpty().isArray({ min: 1 }),

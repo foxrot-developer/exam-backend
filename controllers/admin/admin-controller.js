@@ -8,6 +8,7 @@ const User = require('../../models/user');
 const Package = require('../../models/package');
 const userSubscription = require('../../models/user-subscription');
 const Admin = require('../../models/admin');
+const PaymentMethod = require('../../models/payment-method');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -549,6 +550,56 @@ const userSubscriptionDetails = async (req, res, next) => {
     }
 };
 
+const activePaymentMethod = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received from frontend', 422));
+    }
+
+    const { active } = req.body;
+    const payId = req.params.payId;
+
+    let existingPayment;
+    try {
+        existingPayment = await PaymentMethod.findById(payId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingPayment) {
+        return next(new HttpError('No payment method found against the id', 422));
+    }
+
+    existingPayment.active = active;
+
+    try {
+        await existingPayment.save();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Unable to update payment method', 500));
+    }
+
+    res.json({ message: 'Payment method updated successfully' });
+};
+
+const allPayments = async (req, res, next) => {
+
+    let existingPayments;
+    try {
+        existingPayments = await PaymentMethod.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingPayments) {
+        return next(new HttpError('No payment methods found', 422));;
+    }
+
+    res.json({ payment_methods: existingPayments.map(payment => payment.toObject({ getters: true })) });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
@@ -561,3 +612,5 @@ exports.adminUpdateProfile = adminUpdateProfile;
 exports.adminUserBlock = adminUserBlock;
 exports.activePackage = activePackage;
 exports.userSubscriptionDetails = userSubscriptionDetails;
+exports.activePaymentMethod = activePaymentMethod;
+exports.allPayments = allPayments;

@@ -70,8 +70,11 @@ const createFreeExam = async (req, res, next) => {
 
     const { question, answer, options, part } = req.body;
 
+    console.log(req.file);
+
     const questions = new FreeExam({
         question,
+        questionImage: req.file.questionImage.path,
         answer,
         options,
         part
