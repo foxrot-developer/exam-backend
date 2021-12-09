@@ -12,13 +12,13 @@ router.post('/exam-score', [
     check('answers').not().isEmpty().isArray({ min: 1 })
 ], freeExamController.freeExamScore);
 
-router.post('/create-free-exam', [
-    fileUpload.single('questionImage'),
-    check('question').not().isEmpty(),
-    check('answer').not().isEmpty(),
-    check('options').not().isEmpty().isArray({ min: 1 }),
-    check('part').not().isEmpty(),
-], freeExamController.createFreeExam);
+router.post('/create-free-exam', fileUpload.single('questionImage'),
+    [
+        check('question').not().isEmpty(),
+        check('answer').not().isEmpty(),
+        check('options').not().isEmpty(),
+        check('part').not().isEmpty(),
+    ], freeExamController.createFreeExam);
 
 router.patch('/edit-question/:quesId', [
     check('question').not().isEmpty(),
