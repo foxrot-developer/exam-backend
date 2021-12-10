@@ -262,7 +262,9 @@ const createUser = async (req, res, next) => {
         freeAccess: true,
         block: false,
         customerId: '',
-        specialCode
+        specialCode,
+        enrolled: [],
+        completed: []
     });
 
     const newSubscription = new userSubscription({
