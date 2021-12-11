@@ -9,6 +9,8 @@ const Package = require('../../models/package');
 const userSubscription = require('../../models/user-subscription');
 const Admin = require('../../models/admin');
 const PaymentMethod = require('../../models/payment-method');
+const WebProfile = require('../../models/web-profile');
+const { find } = require('../../models/web-profile');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -603,6 +605,77 @@ const allPayments = async (req, res, next) => {
     res.json({ payment_methods: existingPayments.map(payment => payment.toObject({ getters: true })) });
 };
 
+const updateWebProfile = async (req, res, next) => {
+    const { location, address, contact } = req.body;
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await WebProfile.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    }
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No data found in database', 422));
+    }
+
+    if (location) {
+        existingWebProfile.location = location;
+
+        try {
+            await existingWebProfile.save();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving location to database', 500));
+        };
+
+    }
+
+    if (contact) {
+        existingWebProfile.contact = contact;
+
+        try {
+            await existingWebProfile.save();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving contact to database', 500));
+        };
+
+    }
+
+    if (address) {
+        existingWebProfile.address = address;
+
+        try {
+            await existingWebProfile.save();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving address to database', 500));
+        };
+    }
+
+    res.json({ message: 'Profile updated successfully' });
+
+};
+
+const webProfile = async (req, res, body) => {
+    let existingWebProfile;
+    try {
+        existingWebProfile = await WebProfile.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No data found', 422));
+    }
+
+    res.json({ profileId: existingWebProfile[0].id, address: existingWebProfile[0].address, location: existingWebProfile[0].location, contact: existingWebProfile[0].contact });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
@@ -617,3 +690,5 @@ exports.activePackage = activePackage;
 exports.userSubscriptionDetails = userSubscriptionDetails;
 exports.activePaymentMethod = activePaymentMethod;
 exports.allPayments = allPayments;
+exports.updateWebProfile = updateWebProfile;
+exports.webProfile = webProfile;

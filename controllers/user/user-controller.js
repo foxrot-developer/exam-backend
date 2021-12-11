@@ -79,6 +79,8 @@ const signup = async (req, res, next) => {
     const status = subscription['latest_invoice']['payment_intent']['status'];
     const client_secret = subscription['latest_invoice']['payment_intent']['client_secret'];
 
+    
+
     const newUser = new User({
         username,
         email,

@@ -2,6 +2,7 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const adminController = require('../../controllers/admin/admin-controller');
+const admin = require('../../models/admin');
 
 const router = express.Router();
 
@@ -10,6 +11,8 @@ router.get('/all-users', adminController.getUsers);
 router.get('/user-subscription/:userId', adminController.userSubscriptionDetails);
 
 router.get('/all-payments', adminController.allPayments);
+
+router.get('/web-profile', adminController.webProfile);
 
 router.patch('/update-user/:userId', [
     check('username').not().isEmpty(),
@@ -40,6 +43,8 @@ router.post('/login', [
     check('email').normalizeEmail().isEmail(),
     check('password').not().isEmpty().isLength({ min: 8 })
 ], adminController.adminLogin);
+
+router.patch('/update-web-profile/:profileId', adminController.updateWebProfile);
 
 router.patch('/update-password/:adminId', [
     check('oldPassword').not().isEmpty(),
