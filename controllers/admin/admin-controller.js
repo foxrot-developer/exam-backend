@@ -10,7 +10,8 @@ const userSubscription = require('../../models/user-subscription');
 const Admin = require('../../models/admin');
 const PaymentMethod = require('../../models/payment-method');
 const WebProfile = require('../../models/web-profile');
-const { find } = require('../../models/web-profile');
+const ArWebProfile = require('../../models/ar-web-profile');
+const NlWebProfile = require('../../models/nl-web-profile');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -606,7 +607,7 @@ const allPayments = async (req, res, next) => {
 };
 
 const updateWebProfile = async (req, res, next) => {
-    const { location, address, contact } = req.body;
+    const { location, location_ar, location_nl, address, address_ar, address_nl, contact, contact_ar, contact_nl } = req.body;
     const profileId = req.params.profileId;
 
     let existingWebProfile;
@@ -621,11 +622,45 @@ const updateWebProfile = async (req, res, next) => {
         return next(new HttpError('No data found in database', 422));
     }
 
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArWebProfile.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No ar result found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlWebProfile.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No nl result found against id', 422));
+    }
+
+
     if (location) {
         existingWebProfile.location = location;
+        existingArWebProfile.location = location_ar;
+        existingNlWebProfile.location = location_nl;
 
         try {
-            await existingWebProfile.save();
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await existingWebProfile.save({ session: session });
+            await existingArWebProfile.save({ session: session });
+            await existingNlWebProfile.save({ session: session });
+            await session.commitTransaction();
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error saving location to database', 500));
@@ -635,9 +670,16 @@ const updateWebProfile = async (req, res, next) => {
 
     if (contact) {
         existingWebProfile.contact = contact;
+        existingArWebProfile.contact = contact_ar;
+        existingNlWebProfile.contact = contact_nl;
 
         try {
-            await existingWebProfile.save();
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await existingWebProfile.save({ session: session });
+            await existingArWebProfile.save({ session: session });
+            await existingNlWebProfile.save({ session: session });
+            await session.commitTransaction();
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error saving contact to database', 500));
@@ -647,9 +689,16 @@ const updateWebProfile = async (req, res, next) => {
 
     if (address) {
         existingWebProfile.address = address;
+        existingArWebProfile.address = address_ar;
+        existingNlWebProfile.address = address_nl;
 
         try {
-            await existingWebProfile.save();
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await existingWebProfile.save({ session: session });
+            await existingArWebProfile.save({ session: session });
+            await existingNlWebProfile.save({ session: session });
+            await session.commitTransaction();
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error saving address to database', 500));
@@ -660,20 +709,65 @@ const updateWebProfile = async (req, res, next) => {
 
 };
 
-const webProfile = async (req, res, body) => {
-    let existingWebProfile;
-    try {
-        existingWebProfile = await WebProfile.find({});
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting data from database', 500));
-    };
+const webProfile = async (req, res, next) => {
+    const profileId = req.params.profileId;
 
-    if (!existingWebProfile) {
-        return next(new HttpError('No data found', 422));
+    if (req.headers.lang === 'en') {
+        let existingWebProfile;
+        try {
+            existingWebProfile = await WebProfile.findById(profileId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting data from database', 500));
+        }
+
+        if (!existingWebProfile) {
+            return next(new HttpError('No data found in database', 422));
+        }
+
+        res.json({ profileId: existingWebProfile.id, address: existingWebProfile.address, location: existingWebProfile.location, contact: existingWebProfile.contact });
+
     }
 
-    res.json({ profileId: existingWebProfile[0].id, address: existingWebProfile[0].address, location: existingWebProfile[0].location, contact: existingWebProfile[0].contact });
+    else if (req.headers.lang === 'ar') {
+        // Ar
+        let existingArWebProfile;
+        try {
+            existingArWebProfile = await ArWebProfile.findOne({ enId: profileId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!existingArWebProfile) {
+            return next(new HttpError('No ar result found against id', 422));
+        }
+
+        res.json({ enId: existingArWebProfile.enId, profileId: existingArWebProfile.id, address: existingArWebProfile.address, location: existingArWebProfile.location, contact: existingArWebProfile.contact });
+
+    }
+
+    else if (req.headers.lang === 'nl') {
+        // Nl
+        let existingNlWebProfile;
+        try {
+            existingNlWebProfile = await NlWebProfile.findOne({ enId: profileId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!existingNlWebProfile) {
+            return next(new HttpError('No nl result found against id', 422));
+        }
+
+        res.json({ enId: existingNlWebProfile.enId, profileId: existingNlWebProfile.id, address: existingNlWebProfile.address, location: existingNlWebProfile.location, contact: existingNlWebProfile.contact });
+
+    }
+    else {
+        res.json({ message: 'Invalid language header or no header found' });
+    }
+
 };
 
 exports.getUsers = getUsers;

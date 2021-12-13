@@ -3,7 +3,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 
-const paidExamQuestionSchema = new Schema({
+const nlFreeExamSchema = new Schema({
+    enId: { type: String, required: true },
     question: { type: String, required: true },
     questionImage: { type: String, required: true },
     answer: { type: String, required: true },
@@ -12,4 +13,4 @@ const paidExamQuestionSchema = new Schema({
 });
 
 // freeExamSchema.plugin(uniqueValidator);
-module.exports = mongoose.model('Paid Exam Question', paidExamQuestionSchema);
+module.exports = mongoose.model('Nl Free', nlFreeExamSchema);

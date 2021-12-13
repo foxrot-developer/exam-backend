@@ -12,7 +12,7 @@ router.get('/user-subscription/:userId', adminController.userSubscriptionDetails
 
 router.get('/all-payments', adminController.allPayments);
 
-router.get('/web-profile', adminController.webProfile);
+router.get('/web-profile/:profileId', adminController.webProfile);
 
 router.patch('/update-user/:userId', [
     check('username').not().isEmpty(),

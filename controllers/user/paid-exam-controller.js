@@ -6,6 +6,7 @@ const PaidExam = require('../../models/paid-exam');
 const PaidExamQuestion = require('../../models/paid-exam-question');
 const Result = require('../../models/result');
 const User = require('../../models/user');
+const QuestionAllocation = require('../../models/question-allocation');
 
 const getPaidExam = async (req, res, next) => {
     let allPaidQuestion;
@@ -41,19 +42,75 @@ const addPaidExam = async (req, res, next) => {
     if (existingPaidExam) {
         return next(new HttpError('Exam already exists', 422));
     }
+    // Part 1
+    let existingPaidQuestions;
+    try {
+        existingPaidQuestions = await PaidExamQuestion.find({ part: 'part 1' });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingPaidQuestions || existingPaidQuestions.length < 1) {
+        return next(new HttpError('Not enough part 1 questions in the bank', 422));
+    }
+
+    // Part 2
+
+    let existingPaidQuestions2;
+    try {
+        existingPaidQuestions2 = await PaidExamQuestion.find({ part: 'part 2' });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 1) {
+        return next(new HttpError('Not enough part 2 questions in the bank', 422));
+    }
+
+    // Part 3
+    let existingPaidQuestions3;
+    try {
+        existingPaidQuestions3 = await PaidExamQuestion.find({ part: 'part 3' });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 1) {
+        return next(new HttpError('Not enough part 3 questions in the bank', 422));
+    }
+
+    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 3);
+    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 3);
+    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 3);
+
+
 
     const newPaidExam = new PaidExam({
         name,
         description
     });
 
+    const newQuestionsAllocation = new QuestionAllocation({
+        examId: newPaidExam.id,
+        part1: JSON.stringify(randPart1),
+        part2: JSON.stringify(randPart2),
+        part3: JSON.stringify(randPart3),
+    });
+
     try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
         await newPaidExam.save();
+        await newQuestionsAllocation.save();
+        await session.commitTransaction();
     } catch (error) {
         return next(new HttpError('Error saving paid exam to database', 500));
     };
 
-    res.status(201).json({ paidExamId: newPaidExam.id, paidExamName: newPaidExam.name, paidExamDescription: newPaidExam.description });
+    res.status(201).json({ message: 'Exam created successfully' });
 };
 
 const editPaidExam = async (req, res, next) => {
@@ -95,29 +152,16 @@ const addPaidExamQuestion = async (req, res, next) => {
         return next(new HttpError('Invalid data received from frontend', 422));
     }
 
-    const { question, answer, options, part, examId } = req.body;
+    const { question, answer, options, part } = req.body;
 
-    console.log({ examId });
-
-    let existingPaidExam;
-    try {
-        existingPaidExam = await PaidExam.findById(examId);
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error fetching paid exam from database', 500));
-    };
-
-    if (!existingPaidExam) {
-        return next(new HttpError('No paid exam found against id', 422));
-    }
+    console.log(req.file);
 
     const paidQuestion = new PaidExamQuestion({
         question,
         questionImage: req.file.path,
         answer,
         options,
-        part,
-        examId
+        part
     });
 
     try {
