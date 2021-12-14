@@ -8,6 +8,8 @@ const nodemailer = require('nodemailer');
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
 const Package = require('../../models/package');
+const ArPackage = require('../../models/ar-package');
+const NlPackage = require('../../models/nl-package');
 const UserSubscription = require('../../models/user-subscription');
 const PaidExam = require('../../models/paid-exam');
 
@@ -79,7 +81,7 @@ const signup = async (req, res, next) => {
     const status = subscription['latest_invoice']['payment_intent']['status'];
     const client_secret = subscription['latest_invoice']['payment_intent']['client_secret'];
 
-    
+
 
     const newUser = new User({
         username,
@@ -205,18 +207,53 @@ const login = async (req, res, next) => {
 };
 
 const getPackages = async (req, res, next) => {
-    let allPackages;
-    try {
-        allPackages = await Package.find({});
-    } catch (error) {
-        return next(new HttpError('Error accessing the database', 500));
-    };
 
-    if (!allPackages || allPackages.length === 0) {
-        return next(new HttpError('No packages found', 500));
+    if (req.headers.lang === 'en') {
+        let allPackages;
+        try {
+            allPackages = await Package.find({});
+        } catch (error) {
+            return next(new HttpError('Error accessing the database', 500));
+        };
+
+        if (!allPackages || allPackages.length === 0) {
+            return next(new HttpError('No packages found', 500));
+        }
+
+        res.json({ packages: allPackages.map(package => package.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'ar') {
+        let allArPackages;
+        try {
+            allArPackages = await ArPackage.find({});
+        } catch (error) {
+            return next(new HttpError('Error accessing the database', 500));
+        };
+
+        if (!allArPackages || allArPackages.length === 0) {
+            return next(new HttpError('No packages found', 500));
+        }
+
+        res.json({ packages: allArPackages.map(package => package.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'nl') {
+        let allNlPackages;
+        try {
+            allNlPackages = await NlPackage.find({});
+        } catch (error) {
+            return next(new HttpError('Error accessing the database', 500));
+        };
+
+        if (!allNlPackages || allNlPackages.length === 0) {
+            return next(new HttpError('No packages found', 500));
+        }
+
+        res.json({ packages: allNlPackages.map(package => package.toObject({ getters: true })) });
+    }
+    else {
+        res.json({ message: 'Invalid or no lang header found' });
     }
 
-    res.json({ packages: allPackages.map(package => package.toObject({ getters: true })) });
 };
 
 const changePassword = async (req, res, next) => {

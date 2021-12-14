@@ -81,6 +81,32 @@ const deletePackage = async (req, res, next) => {
         return next(new HttpError('No package found', 422));
     }
 
+    // Ar
+    let existingArPackage;
+    try {
+        existingArPackage = await ArPackage.findOne({ enId: pkgId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingArPackage) {
+        return next(new HttpError('No ar package found against the id', 422));
+    }
+
+    // Nl
+    let existingNlPackage;
+    try {
+        existingNlPackage = await NlPackage.findOne({ enId: pkgId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingNlPackage) {
+        return next(new HttpError('No ar package found against the id', 422));
+    }
+
     let existingPlan;
     try {
         existingPlan = await stripe.plans.del(
@@ -106,7 +132,12 @@ const deletePackage = async (req, res, next) => {
 
 
     try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
         await existingPackage.remove();
+        await existingArPackage.remove();
+        await existingNlPackage.remove();
+        await session.commitTransaction();
     } catch (error) {
         return next(new HttpError('Cannot delete package', 500));
     };
