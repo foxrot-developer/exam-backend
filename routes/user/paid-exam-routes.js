@@ -18,11 +18,11 @@ router.post('/exam-result/:userId', [
 
 router.post('/add-paid-exam', [
     check('name').not().isEmpty(),
-    // check('name_ar').not().isEmpty(),
-    // check('name_nl').not().isEmpty(),
+    check('name_ar').not().isEmpty(),
+    check('name_nl').not().isEmpty(),
     check('description').not().isEmpty(),
-    // check('description_ar').not().isEmpty(),
-    // check('description_nl').not().isEmpty()
+    check('description_ar').not().isEmpty(),
+    check('description_nl').not().isEmpty()
 ], paidExamController.addPaidExam);
 
 router.post('/add-paid-exam-question', fileUpload.single('questionImage'),

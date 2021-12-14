@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 
 const HttpError = require('../../helpers/http-error');
 const PaidExam = require('../../models/paid-exam');
+const ArPaidExam = require('../../models/ar-paid-exam');
+const NlPaidExam = require('../../models/nl-paid-exam');
 const PaidExamQuestion = require('../../models/paid-exam-question');
 const ArPaidExamQuestion = require('../../models/ar-paid-exam-question');
 const NlPaidExamQuestion = require('../../models/nl-paid-exam-question');
@@ -155,32 +157,63 @@ const addPaidExam = async (req, res, next) => {
 
     // Nl Random part 3
     const nlRandPart3 = existingNlQuestions.filter(question => question.enId.includes(randPart3Ids));
-    console.log({ nlRandPart3 });
 
-    res.send('OK');
-    // const newPaidExam = new PaidExam({
-    //     name,
-    //     description
-    // });
 
-    // const newQuestionsAllocation = new QuestionAllocation({
-    //     examId: newPaidExam.id,
-    //     part1: JSON.stringify(randPart1),
-    //     part2: JSON.stringify(randPart2),
-    //     part3: JSON.stringify(randPart3),
-    // });
+    const newPaidExam = new PaidExam({
+        name,
+        description
+    });
 
-    // try {
-    //     const session = await mongoose.startSession();
-    //     session.startTransaction();
-    //     await newPaidExam.save();
-    //     await newQuestionsAllocation.save();
-    //     await session.commitTransaction();
-    // } catch (error) {
-    //     return next(new HttpError('Error saving paid exam to database', 500));
-    // };
+    const newArPaidExam = new ArPaidExam({
+        enId: newPaidExam.id,
+        name: name_ar,
+        description: description_ar
+    });
 
-    // res.status(201).json({ message: 'Exam created successfully' });
+    const newNlPaidExam = new NlPaidExam({
+        enId: newPaidExam.id,
+        name: name_nl,
+        description: description_nl
+    });
+
+    const newQuestionsAllocation = new QuestionAllocation({
+        examId: newPaidExam.id,
+        part1: JSON.stringify(randPart1),
+        part2: JSON.stringify(randPart2),
+        part3: JSON.stringify(randPart3),
+    });
+
+    const newArQuestionsAllocation = new ArQuestionAllocation({
+        enId: newQuestionsAllocation.id,
+        examId: newArPaidExam.id,
+        part1: JSON.stringify(arRandPart1),
+        part2: JSON.stringify(arRandPart2),
+        part3: JSON.stringify(arRandPart3),
+    });
+
+    const newNlQuestionsAllocation = new NlQuestionAllocation({
+        enId: newQuestionsAllocation.id,
+        examId: newNlPaidExam.id,
+        part1: JSON.stringify(nlRandPart1),
+        part2: JSON.stringify(nlRandPart2),
+        part3: JSON.stringify(nlRandPart3),
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await newPaidExam.save({ session: session });
+        await newArPaidExam.save({ session: session });
+        await newNlPaidExam.save({ session: session });
+        await newQuestionsAllocation.save({ session: session });
+        await newArQuestionsAllocation.save({ session: session });
+        await newNlQuestionsAllocation.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        return next(new HttpError('Error saving paid exam to database', 500));
+    };
+
+    res.status(201).json({ message: 'Exam created successfully' });
 };
 
 const editPaidExam = async (req, res, next) => {
@@ -280,13 +313,6 @@ const addPaidExamQuestion = async (req, res, next) => {
 const deletePaidExam = async (req, res, next) => {
     const examId = req.params.examId;
 
-    try {
-        await PaidExamQuestion.remove({ examid: examId });
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error deleting paid questions from database', 500));
-    };
-
     let existingPaidExam;
     try {
         existingPaidExam = await PaidExam.findById(examId);
@@ -298,11 +324,81 @@ const deletePaidExam = async (req, res, next) => {
         return next(new HttpError('No exam id found', 422));
     }
 
+    // Ar paid exam
+    let existingArPaidExam;
+    try {
+        existingArPaidExam = await ArPaidExam.findOne({ enId: examId });
+    } catch (error) {
+        return next(new HttpError('Error fetching paid exam from database', 500));
+    };
+
+    if (!existingArPaidExam) {
+        return next(new HttpError('No exam id found', 422));
+    }
+
+    // Nl paid exam
+    let existingNlPaidExam;
+    try {
+        existingNlPaidExam = await NlPaidExam.findOne({ enId: examId });
+    } catch (error) {
+        return next(new HttpError('Error fetching paid exam from database', 500));
+    };
+
+    if (!existingNlPaidExam) {
+        return next(new HttpError('No exam id found', 422));
+    }
+
+    // En exam allocation
+    let existingQuestionsAllocation;
+    try {
+        existingQuestionsAllocation = await QuestionAllocation.findOne({ examId: existingPaidExam.id });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching en question allocation', 500));
+    };
+
+    if (!existingQuestionsAllocation) {
+        return next(new HttpError('No en question allocation found', 422));
+
+    }
+
+    // Ar exam allocation
+    let existingArQuestionsAllocation;
+    try {
+        existingArQuestionsAllocation = await ArQuestionAllocation.findOne({ examId: existingArPaidExam.id });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching ar question allocation', 500));
+    };
+
+    if (!existingArQuestionsAllocation) {
+        return next(new HttpError('No ar question allocation found', 422));
+
+    }
+
+    // Nl exam allocation
+    let existingNlQuestionsAllocation;
+    try {
+        existingNlQuestionsAllocation = await NlQuestionAllocation.findOne({ examId: existingNlPaidExam.id });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching ar question allocation', 500));
+    };
+
+    if (!existingNlQuestionsAllocation) {
+        return next(new HttpError('No ar question aArQuestionAllocationllocation found', 422));
+
+    }
+
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
-        await PaidExamQuestion.remove({ examid: examId });
         await existingPaidExam.remove();
+        await existingArPaidExam.remove();
+        await existingNlPaidExam.remove();
+        await existingQuestionsAllocation.remove();
+        await existingArQuestionsAllocation.remove();
+        await existingNlQuestionsAllocation.remove();
         await session.commitTransaction();
     } catch (error) {
         console.log(error);
