@@ -3,7 +3,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 
-const packageSchema = new Schema({
+const nlPackageSchema = new Schema({
+    enId: { type: String, required: true },
     package_name: { type: String, required: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
@@ -15,4 +16,4 @@ const packageSchema = new Schema({
     repeat: { type: Number, required: true },
 });
 
-module.exports = mongoose.model('Package', packageSchema);
+module.exports = mongoose.model('Nl Package', nlPackageSchema);

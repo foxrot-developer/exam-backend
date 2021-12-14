@@ -12,6 +12,8 @@ const PaymentMethod = require('../../models/payment-method');
 const WebProfile = require('../../models/web-profile');
 const ArWebProfile = require('../../models/ar-web-profile');
 const NlWebProfile = require('../../models/nl-web-profile');
+const ArPackage = require('../../models/ar-package');
+const NlPackage = require('../../models/nl-package');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -171,7 +173,22 @@ const createPackage = async (req, res, next) => {
         throw new HttpError('Invalid data received from frontend!', 422);
     }
 
-    const { package_name, price, description, duration, no_exam } = req.body;
+    const {
+        package_name,
+        package_name_ar,
+        package_name_nl,
+        price,
+        price_ar,
+        price_nl,
+        description,
+        description_ar,
+        description_nl,
+        duration,
+        duration_ar,
+        duration_nl,
+        no_exam,
+        repeat
+    } = req.body;
 
     let existingPackage;
     try {
@@ -219,11 +236,43 @@ const createPackage = async (req, res, next) => {
         planid: plan.id,
         active: true,
         productid: product.id,
-        no_exam
+        no_exam,
+        repeat
+    });
+
+    const newArPackage = new ArPackage({
+        enId: newPackage.id,
+        package_name: package_name_ar,
+        price: price_ar,
+        description: description_ar,
+        duration: duration_ar,
+        planid: plan.id,
+        active: true,
+        productid: product.id,
+        no_exam,
+        repeat
+    });
+
+    const newNlPackage = new NlPackage({
+        enId: newPackage.id,
+        package_name: package_name_nl,
+        price: price_nl,
+        description: description_nl,
+        duration: duration_nl,
+        planid: plan.id,
+        active: true,
+        productid: product.id,
+        no_exam,
+        repeat
     });
 
     try {
-        await newPackage.save();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await newPackage.save({ session: session });
+        await newArPackage.save({ session: session });
+        await newNlPackage.save({ session: session });
+        await session.commitTransaction();
     } catch (error) {
         return next(new HttpError('Cannot create new package', 500));
     };

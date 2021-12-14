@@ -25,10 +25,19 @@ router.delete('/delete-package/:pkgId', adminController.deletePackage);
 
 router.post('/create-package', [
     check('package_name').not().isEmpty(),
+    check('package_name_ar').not().isEmpty(),
+    check('package_name_nl').not().isEmpty(),
     check('price').not().isEmpty(),
+    check('price_ar').not().isEmpty(),
+    check('price_nl').not().isEmpty(),
     check('description').not().isEmpty(),
+    check('description_ar').not().isEmpty(),
+    check('description_nl').not().isEmpty(),
     check('duration').not().isEmpty(),
+    check('duration_ar').not().isEmpty(),
+    check('duration_nl').not().isEmpty(),
     check('no_exam').not().isEmpty(),
+    check('repeat').not().isEmpty(),
 ], adminController.createPackage);
 
 router.post('/register-user', [
