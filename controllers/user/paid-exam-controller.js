@@ -556,7 +556,7 @@ const allPaidQuestions = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions) {
+    if (!existingPaidQuestions || existingPaidQuestions.length === 0) {
         return next(new HttpError('No paid questions found', 422));
     }
 
