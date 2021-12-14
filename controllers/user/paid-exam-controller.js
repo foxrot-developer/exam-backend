@@ -63,7 +63,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions || existingPaidQuestions.length < 0) {
+    if (!existingPaidQuestions || existingPaidQuestions.length < 5) {
         return next(new HttpError('Not enough part 1 questions in the bank', 422));
     }
 
@@ -77,7 +77,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 0) {
+    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 5) {
         return next(new HttpError('Not enough part 2 questions in the bank', 422));
     }
 
@@ -90,13 +90,13 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 0) {
+    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 5) {
         return next(new HttpError('Not enough part 3 questions in the bank', 422));
     }
 
-    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 1);
-    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 1);
-    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 1);
+    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 3);
+    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 3);
+    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 3);
 
     let randPart1Ids = [];
     randPart1.forEach(element => {
