@@ -38,6 +38,9 @@ router.post('/create-package', [
     check('duration_nl').not().isEmpty(),
     check('no_exam').not().isEmpty(),
     check('repeat').not().isEmpty(),
+    check('langs').not().isEmpty(),
+    check('langs_ar').not().isEmpty(),
+    check('langs_nl').not().isEmpty(),
 ], adminController.createPackage);
 
 router.post('/register-user', [

@@ -18,15 +18,27 @@ router.post('/exam-result/:userId', [
 
 router.post('/add-paid-exam', [
     check('name').not().isEmpty(),
-    check('description').not().isEmpty()
+    // check('name_ar').not().isEmpty(),
+    // check('name_nl').not().isEmpty(),
+    check('description').not().isEmpty(),
+    // check('description_ar').not().isEmpty(),
+    // check('description_nl').not().isEmpty()
 ], paidExamController.addPaidExam);
 
 router.post('/add-paid-exam-question', fileUpload.single('questionImage'),
     [
         check('question').not().isEmpty(),
+        check('question_ar').not().isEmpty(),
+        check('question_nl').not().isEmpty(),
         check('answer').not().isEmpty(),
+        check('answer_ar').not().isEmpty(),
+        check('answer_nl').not().isEmpty(),
         check('options').not().isEmpty(),
-        check('part').not().isEmpty()
+        check('options_ar').not().isEmpty(),
+        check('options_nl').not().isEmpty(),
+        check('part').not().isEmpty(),
+        check('part_ar').not().isEmpty(),
+        check('part_nl').not().isEmpty(),
     ], paidExamController.addPaidExamQuestion);
 
 router.patch('/edit-paid-exam/:examId', [
@@ -36,9 +48,17 @@ router.patch('/edit-paid-exam/:examId', [
 
 router.patch('/edit-paid-exam-question/:quesId', [
     check('question').not().isEmpty(),
+    check('question_ar').not().isEmpty(),
+    check('question_nl').not().isEmpty(),
     check('answer').not().isEmpty(),
+    check('answer_ar').not().isEmpty(),
+    check('answer_nl').not().isEmpty(),
     check('options').not().isEmpty(),
+    check('options_ar').not().isEmpty(),
+    check('options_nl').not().isEmpty(),
     check('part').not().isEmpty(),
+    check('part_ar').not().isEmpty(),
+    check('part_nl').not().isEmpty(),
 ], paidExamController.editPaidExamQuestion);
 
 router.delete('/delete-paid-exam/:examId', paidExamController.deletePaidExam);

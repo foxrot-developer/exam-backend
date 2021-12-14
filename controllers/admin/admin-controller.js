@@ -218,7 +218,10 @@ const createPackage = async (req, res, next) => {
         duration_ar,
         duration_nl,
         no_exam,
-        repeat
+        repeat,
+        langs,
+        langs_ar,
+        langs_nl
     } = req.body;
 
     let existingPackage;
@@ -268,7 +271,8 @@ const createPackage = async (req, res, next) => {
         active: true,
         productid: product.id,
         no_exam,
-        repeat
+        repeat,
+        langs
     });
 
     const newArPackage = new ArPackage({
@@ -281,7 +285,8 @@ const createPackage = async (req, res, next) => {
         active: true,
         productid: product.id,
         no_exam,
-        repeat
+        repeat,
+        langs: langs_ar
     });
 
     const newNlPackage = new NlPackage({
@@ -294,7 +299,8 @@ const createPackage = async (req, res, next) => {
         active: true,
         productid: product.id,
         no_exam,
-        repeat
+        repeat,
+        langs: langs_nl
     });
 
     try {

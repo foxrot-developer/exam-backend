@@ -14,6 +14,7 @@ const arPackageSchema = new Schema({
     productid: { type: String, required: true },
     no_exam: { type: Number, required: true },
     repeat: { type: Number, required: true },
+    langs: { type: String, required: true },
 });
 
 module.exports = mongoose.model('Ar Package', arPackageSchema);
