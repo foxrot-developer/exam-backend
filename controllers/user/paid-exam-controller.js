@@ -15,18 +15,53 @@ const ArQuestionAllocation = require('../../models/ar-question-allocation');
 const NlQuestionAllocation = require('../../models/nl-question-allocation');
 
 const getPaidExam = async (req, res, next) => {
-    let allPaidQuestion;
-    try {
-        allPaidQuestion = await PaidExam.find({});
-    } catch (error) {
-        return next(new HttpError('Error fetching questions', 500));
+
+    if (req.headers.lang === 'en') {
+        let allPaidQuestion;
+        try {
+            allPaidQuestion = await PaidExam.find({});
+        } catch (error) {
+            return next(new HttpError('Error fetching questions', 500));
+        }
+
+        if (!allPaidQuestion || allPaidQuestion.length === 0) {
+            return next(new HttpError('No paid exams found', 500));
+        }
+
+        res.json({ paid_exams: allPaidQuestion.map(question => question.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'ar') {
+        let allArPaidQuestion;
+        try {
+            allArPaidQuestion = await ArPaidExam.find({});
+        } catch (error) {
+            return next(new HttpError('Error fetching questions', 500));
+        }
+
+        if (!allArPaidQuestion || allArPaidQuestion.length === 0) {
+            return next(new HttpError('No paid exams found', 500));
+        }
+
+        res.json({ paid_exams: allArPaidQuestion.map(question => question.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'nl') {
+        let allNlPaidQuestion;
+        try {
+            allNlPaidQuestion = await NlPaidExam.find({});
+        } catch (error) {
+            return next(new HttpError('Error fetching questions', 500));
+        }
+
+        if (!allNlPaidQuestion || allNlPaidQuestion.length === 0) {
+            return next(new HttpError('No paid exams found', 500));
+        }
+
+        res.json({ paid_exams: allNlPaidQuestion.map(question => question.toObject({ getters: true })) });
+    }
+    else {
+        res.json({ message: 'Invalid or no lang header found' });
     }
 
-    if (!allPaidQuestion || allPaidQuestion.length === 0) {
-        return next(new HttpError('No paid exams found', 500));
-    }
-
-    res.json({ paid_exams: allPaidQuestion.map(question => question.toObject({ getters: true })) });
 };
 
 const addPaidExam = async (req, res, next) => {
@@ -113,8 +148,6 @@ const addPaidExam = async (req, res, next) => {
         randPart3Ids.push(element.id);
     });
 
-    console.log({ randPart1Ids, randPart2Ids, randPart3Ids });
-
     // Ar Random part 1
     let existingArQuestions;
     try {
@@ -128,13 +161,25 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('No ar paid questions found', 422));
     }
 
-    const arRandPart1 = existingArQuestions.filter(question => question.enId.includes(randPart1Ids));
+    const arRandPart1 = existingArQuestions.filter(question => {
+        return randPart1Ids.find(ide => {
+            return question.enId === ide;
+        })
+    });
 
     // Ar Random part 2
-    const arRandPart2 = existingArQuestions.filter(question => question.enId.includes(randPart2Ids));
+    const arRandPart2 = existingArQuestions.filter(question => {
+        return randPart2Ids.find(ide => {
+            return question.enId === ide;
+        })
+    });
 
     // Ar Random part 3
-    const arRandPart3 = existingArQuestions.filter(question => question.enId.includes(randPart3Ids));
+    const arRandPart3 = existingArQuestions.filter(question => {
+        return randPart3Ids.find(ide => {
+            return question.enId === ide;
+        })
+    });
 
 
     // Nl Random part 1
@@ -150,14 +195,25 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('No ar paid questions found', 422));
     }
 
-    const nlRandPart1 = existingNlQuestions.filter(question => question.enId.includes(randPart1Ids));
+    const nlRandPart1 = existingNlQuestions.filter(question => {
+        return randPart1Ids.find(ide => {
+            return question.enId === ide;
+        })
+    });
 
     // Nl Random part 2
-    const nlRandPart2 = existingNlQuestions.filter(question => question.enId.includes(randPart2Ids));
+    const nlRandPart2 = existingNlQuestions.filter(question => {
+        return randPart2Ids.find(ide => {
+            return question.enId === ide;
+        })
+    });
 
     // Nl Random part 3
-    const nlRandPart3 = existingNlQuestions.filter(question => question.enId.includes(randPart3Ids));
-
+    const nlRandPart3 = existingNlQuestions.filter(question => {
+        return randPart3Ids.find(ide => {
+            return question.enId === ide;
+        })
+    });
 
     const newPaidExam = new PaidExam({
         name,
@@ -548,19 +604,56 @@ const deletePaidExamQuestion = async (req, res, next) => {
 };
 
 const allPaidQuestions = async (req, res, next) => {
-    let existingPaidQuestions;
-    try {
-        existingPaidQuestions = await PaidExamQuestion.find({});
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting data from database', 500));
-    };
 
-    if (!existingPaidQuestions || existingPaidQuestions.length === 0) {
-        return next(new HttpError('No paid questions found', 422));
+    if (req.headers.lang === 'en') {
+        let existingPaidQuestions;
+        try {
+            existingPaidQuestions = await PaidExamQuestion.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting data from database', 500));
+        };
+
+        if (!existingPaidQuestions || existingPaidQuestions.length === 0) {
+            return next(new HttpError('No paid questions found', 422));
+        }
+
+        res.json({ paid_questions: existingPaidQuestions.map(ques => ques.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'ar') {
+        let existingArPaidQuestions;
+        try {
+            existingArPaidQuestions = await ArPaidExamQuestion.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting data from database', 500));
+        };
+
+        if (!existingArPaidQuestions || existingArPaidQuestions.length === 0) {
+            return next(new HttpError('No paid questions found', 422));
+        }
+
+        res.json({ paid_questions: existingArPaidQuestions.map(ques => ques.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'nl') {
+        let existingNlPaidQuestions;
+        try {
+            existingNlPaidQuestions = await NlPaidExamQuestion.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting data from database', 500));
+        };
+
+        if (!existingNlPaidQuestions || existingNlPaidQuestions.length === 0) {
+            return next(new HttpError('No paid questions found', 422));
+        }
+
+        res.json({ paid_questions: existingNlPaidQuestions.map(ques => ques.toObject({ getters: true })) });
+    }
+    else {
+        res.json({ message: 'Invalid or no lang header found' });
     }
 
-    res.json({ paid_questions: existingPaidQuestions.map(ques => ques.toObject({ getters: true })) });
 };
 
 const paidExamResult = async (req, res, next) => {
@@ -753,6 +846,60 @@ const allExamResults = async (req, res, next) => {
     res.json({ results: existingResults.map(result => result.toObject({ getters: true })) });
 };
 
+const paidExamDetails = async (req, res, next) => {
+    const examId = req.params.examId;
+
+    if (req.headers.lang === 'en') {
+        let existingQuestionsAllocation;
+        try {
+            existingQuestionsAllocation = await QuestionAllocation.findOne({ examId: examId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting en questions allocation from database', 500));
+        };
+
+        if (!existingQuestionsAllocation || existingQuestionsAllocation.length === 0) {
+            return next(new HttpError('No en questions found', 422));
+        }
+
+        res.json({ exam_details: existingQuestionsAllocation });
+
+    }
+    else if (req.headers.lang === 'ar') {
+        let existingArQuestionsAllocation;
+        try {
+            existingArQuestionsAllocation = await ArQuestionAllocation.findOne({ examId: examId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting en questions allocation from database', 500));
+        };
+
+        if (!existingArQuestionsAllocation || existingArQuestionsAllocation.length === 0) {
+            return next(new HttpError('No en questions found', 422));
+        }
+
+        res.json({ exam_details: existingArQuestionsAllocation });
+
+    }
+    else if (req.headers.lang === 'nl') {
+        let existingNlQuestionsAllocation;
+        try {
+            existingNlQuestionsAllocation = await NlQuestionAllocation.findOne({ examId: examId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting en questions allocation from database', 500));
+        };
+
+        if (!existingNlQuestionsAllocation || existingNlQuestionsAllocation.length === 0) {
+            return next(new HttpError('No en questions found', 422));
+        }
+        res.json({ exam_details: existingNlQuestionsAllocation });
+    }
+    else {
+        res.json({ message: 'No or invalid lang header' });
+    }
+};
+
 exports.getPaidExam = getPaidExam;
 exports.addPaidExam = addPaidExam;
 exports.editPaidExam = editPaidExam;
@@ -763,3 +910,4 @@ exports.deletePaidExamQuestion = deletePaidExamQuestion;
 exports.allPaidQuestions = allPaidQuestions;
 exports.paidExamResult = paidExamResult;
 exports.allExamResults = allExamResults;
+exports.paidExamDetails = paidExamDetails;
