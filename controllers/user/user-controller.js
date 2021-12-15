@@ -144,7 +144,14 @@ const signup = async (req, res, next) => {
     }
 
     try {
-        transporter.sendMail(mailDetails);
+        transporter.sendMail(mailDetails, function (err, data) {
+            if (err) {
+                console.log(error);
+            }
+            else {
+                console.log('Email sent to email');
+            }
+        });
     } catch (error) {
         console.log(error);
         return next(new HttpError('Mail sending error', 500));
