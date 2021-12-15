@@ -122,7 +122,7 @@ const signup = async (req, res, next) => {
             service: 'gmail',
             auth: {
                 user: 'usama.bashirb1@gmail.com',
-                pass: 'ubtutyte'
+                pass: 'ubTuTyTe'
             }
         })
     } catch (error) {
