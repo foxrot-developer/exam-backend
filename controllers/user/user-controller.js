@@ -146,7 +146,7 @@ const signup = async (req, res, next) => {
     try {
         transporter.sendMail(mailDetails, function (err, data) {
             if (err) {
-                console.log(error);
+                console.log(err);
             }
             else {
                 console.log('Email sent to email');
