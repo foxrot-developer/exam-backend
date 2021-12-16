@@ -224,7 +224,7 @@ const getPackages = async (req, res, next) => {
         };
 
         if (!allPackages || allPackages.length === 0) {
-            return next(new HttpError('No packages found', 500));
+            return next(new HttpError('No packages found', 200));
         }
 
         res.json({ packages: allPackages.map(package => package.toObject({ getters: true })) });
@@ -238,7 +238,7 @@ const getPackages = async (req, res, next) => {
         };
 
         if (!allArPackages || allArPackages.length === 0) {
-            return next(new HttpError('No packages found', 500));
+            return next(new HttpError('No packages found', 200));
         }
 
         res.json({ packages: allArPackages.map(package => package.toObject({ getters: true })) });
@@ -252,7 +252,7 @@ const getPackages = async (req, res, next) => {
         };
 
         if (!allNlPackages || allNlPackages.length === 0) {
-            return next(new HttpError('No packages found', 500));
+            return next(new HttpError('No packages found', 200));
         }
 
         res.json({ packages: allNlPackages.map(package => package.toObject({ getters: true })) });
