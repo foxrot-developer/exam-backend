@@ -116,10 +116,6 @@ const deletePackage = async (req, res, next) => {
         return next(new HttpError('Stripe deletion error', 500));
     };
 
-    if (!existingPlan) {
-        return next(new HttpError('Cannot delete plan', 500));
-    }
-
     let existingProduct;
     try {
         existingProduct = await stripe.products.del(
@@ -315,6 +311,144 @@ const createPackage = async (req, res, next) => {
     };
 
     res.status(201).json({ newPackage });
+};
+
+const editPackage = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        package_name,
+        package_name_ar,
+        package_name_nl,
+        price,
+        description,
+        description_ar,
+        description_nl,
+        duration,
+        duration_ar,
+        duration_nl,
+        no_exam,
+        repeat,
+        langs
+    } = req.body;
+
+    const pkgId = req.params.pkgId;
+
+    let existingPackage;
+    try {
+        existingPackage = await Package.findById(pkgId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting en packages from database', 500));
+    };
+
+    if (!existingPackage) {
+        return next(new HttpError('No package found against pkg id', 422));
+    }
+
+    // Ar
+    let existingArPackage;
+    try {
+        existingArPackage = await ArPackage.findOne({ enId: pkgId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting ar packages from database', 500));
+    };
+
+    if (!existingArPackage) {
+        return next(new HttpError('No package found against pkg id', 422));
+    }
+
+    // Nl
+    let existingNlPackage;
+    try {
+        existingNlPackage = await NlPackage.findOne({ enId: pkgId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting nl packages from database', 500));
+    };
+
+    if (!existingNlPackage) {
+        return next(new HttpError('No package found against pkg id', 422));
+    }
+
+    let existingPlan;
+    try {
+        existingPlan = await stripe.plans.del(
+            existingPackage.planid
+        );
+    } catch (error) {
+        return next(new HttpError('Stripe plan deletion error', 500));
+    };
+
+    let existingProduct;
+    try {
+        existingProduct = await stripe.products.update(
+            existingPackage.productid,
+            { name: package_name }
+        );
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Stripe error updating product', 500))
+    };
+
+    let newPlan;
+    try {
+        newPlan = await stripe.plans.create({
+            amount: price,
+            currency: 'eur',
+            interval: duration,
+            product: existingPackage.productid,
+        });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Stripe error crating plan', 500));
+    };
+
+    existingPackage.package_name = package_name;
+    existingPackage.description = description;
+    existingPackage.price = price;
+    existingPackage.duration = duration;
+    existingPackage.no_exam = no_exam;
+    existingPackage.repeat = repeat;
+    existingPackage.langs = langs;
+    existingPackage.planid = newPlan.id
+
+    existingArPackage.package_name = package_name_ar;
+    existingArPackage.description = description_ar;
+    existingArPackage.price = price;
+    existingArPackage.duration = duration_ar;
+    existingArPackage.no_exam = no_exam;
+    existingArPackage.repeat = repeat;
+    existingArPackage.langs = langs;
+    existingPackage.planid = newPlan.id
+
+    existingNlPackage.package_name = package_name_nl;
+    existingNlPackage.description = description_nl;
+    existingNlPackage.price = price;
+    existingNlPackage.duration = duration_nl;
+    existingNlPackage.no_exam = no_exam;
+    existingNlPackage.repeat = repeat;
+    existingNlPackage.langs = langs;
+    existingPackage.planid = newPlan.id
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingPackage.save({ session: session });
+        await existingArPackage.save({ session: session });
+        await existingNlPackage.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error updating data in database', 500));
+    };
+
+    res.json({ message: 'Package updated successfully' });
+
 };
 
 const createUser = async (req, res, next) => {
@@ -872,3 +1006,4 @@ exports.activePaymentMethod = activePaymentMethod;
 exports.allPayments = allPayments;
 exports.updateWebProfile = updateWebProfile;
 exports.webProfile = webProfile;
+exports.editPackage = editPackage;

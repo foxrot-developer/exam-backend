@@ -43,6 +43,22 @@ router.post('/create-package', [
     check('langs_nl').not().isEmpty(),
 ], adminController.createPackage);
 
+router.patch('/edit-package/:pkgId', [
+    check('package_name').not().isEmpty(),
+    check('package_name_ar').not().isEmpty(),
+    check('package_name_nl').not().isEmpty(),
+    check('price').not().isEmpty(),
+    check('description').not().isEmpty(),
+    check('description_ar').not().isEmpty(),
+    check('description_nl').not().isEmpty(),
+    check('duration').not().isEmpty(),
+    check('duration_ar').not().isEmpty(),
+    check('duration_nl').not().isEmpty(),
+    check('no_exam').not().isEmpty(),
+    check('repeat').not().isEmpty(),
+    check('langs').not().isEmpty(),
+], adminController.editPackage);
+
 router.post('/register-user', [
     check('username').not().isEmpty(),
     check('packageId').not().isEmpty(),
