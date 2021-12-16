@@ -279,7 +279,14 @@ const editPaidExam = async (req, res, next) => {
     }
 
     const examId = req.params.examId;
-    const { name, description } = req.body;
+    const {
+        name,
+        name_ar,
+        name_nl,
+        description,
+        description_ar,
+        description_nl } = req.body;
+
 
     let existingPaidExam;
     try {
@@ -293,11 +300,48 @@ const editPaidExam = async (req, res, next) => {
         return next(new HttpError('Exam not found', 422));
     }
 
+    // Ar
+    let existingArPaidExam;
+    try {
+        existingArPaidExam = await ArPaidExam.findOne({ enId: examId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    }
+
+    if (!existingArPaidExam) {
+        return next(new HttpError('Ar exam not found', 422));
+    }
+
+    // Nl
+    let existingNlPaidExam;
+    try {
+        existingNlPaidExam = await NlPaidExam.findOne({ enId: examId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    }
+
+    if (!existingNlPaidExam) {
+        return next(new HttpError('Nl exam not found', 422));
+    }
+
     existingPaidExam.name = name;
     existingPaidExam.description = description;
 
+    existingArPaidExam.name = name_ar;
+    existingArPaidExam.description = description_ar;
+
+    existingNlPaidExam.name = name_nl;
+    existingNlPaidExam.description = description_nl;
+
     try {
-        await existingPaidExam.save();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingPaidExam.save({ session: session });
+        await existingArPaidExam.save({ session: session });
+        await existingNlPaidExam.save({ session: session });
+        await session.commitTransaction();
     } catch (error) {
         return next(new HttpError('Error updating paid exam to database', 500));
     };

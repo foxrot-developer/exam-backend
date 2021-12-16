@@ -45,7 +45,11 @@ router.post('/add-paid-exam-question', fileUpload.single('questionImage'),
 
 router.patch('/edit-paid-exam/:examId', [
     check('name').not().isEmpty(),
-    check('description').not().isEmpty()
+    check('name_ar').not().isEmpty(),
+    check('name_nl').not().isEmpty(),
+    check('description').not().isEmpty(),
+    check('description_ar').not().isEmpty(),
+    check('description_nl').not().isEmpty()
 ], paidExamController.editPaidExam);
 
 router.patch('/edit-paid-exam-question/:quesId', [
