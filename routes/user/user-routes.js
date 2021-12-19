@@ -24,7 +24,8 @@ router.post('/login', [
 
 router.post('/exam-enrollment', [
     check('examId').not().isEmpty(),
-    check('userId').not().isEmpty()
+    check('userId').not().isEmpty(),
+    check('lang').not().isEmpty()
 ], userController.examEnrollment);
 
 router.patch('/change-password/:userId', [

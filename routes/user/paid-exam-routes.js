@@ -16,6 +16,7 @@ router.get('/exam-details/:examId', paidExamController.paidExamDetails);
 
 router.post('/exam-result/:userId', [
     check('examId').not().isEmpty(),
+    check('answers').not().isEmpty().isArray({ min: 1 })
 ], paidExamController.paidExamResult);
 
 router.post('/add-paid-exam', [

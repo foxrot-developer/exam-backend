@@ -357,7 +357,7 @@ const examEnrollment = async (req, res, next) => {
         return next(new HttpError('Invalid data received from frontend', 422));
     }
 
-    const { examId, userId } = req.body;
+    const { examId, userId, lang } = req.body;
 
     let existingPaidExam;
     try {
@@ -384,7 +384,7 @@ const examEnrollment = async (req, res, next) => {
     }
 
     try {
-        existingUser.enrolled.push(existingPaidExam);
+        existingUser.enrolled.push({ examId: existingPaidExam.id, lang: lang });
         await existingUser.save();
     } catch (error) {
         return next(new HttpError('Error saving data to database', 500));

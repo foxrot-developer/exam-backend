@@ -721,157 +721,460 @@ const paidExamResult = async (req, res, next) => {
         return next(new HttpError('No user found against id', 422));
     }
 
-    let existingPaidExam;
-    try {
-        existingPaidExam = await PaidExam.findById(examId);
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error fetching data from database', 500));
-    };
+    if (req.headers.lang === 'en') {
+        let existingPaidExam;
+        try {
+            existingPaidExam = await PaidExam.findById(examId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
 
-    if (!existingPaidExam) {
-        return next(new HttpError('No paid exam found against id', 422));
+        if (!existingPaidExam) {
+            return next(new HttpError('No paid exam found against id', 422));
+        }
+
+        let existingQuestionsAllocation;
+        try {
+            existingQuestionsAllocation = await QuestionAllocation.findOne({ examId: examId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching en questions allocation from database', 500));
+        };
+
+        if (!existingQuestionsAllocation) {
+            return next(new HttpError('No en question allocations found against examId', 422));
+        }
+
+        const partOneQuestions = JSON.parse(existingQuestionsAllocation.part1);
+        const partTwoQuestions = JSON.parse(existingQuestionsAllocation.part2);
+        const partThreeQuestions = JSON.parse(existingQuestionsAllocation.part3);
+
+        const partOneAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partTwoAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partThreeAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partOneResults = await Promise.all(partOneAnswers);
+        const partTwoResults = await Promise.all(partTwoAnswers);
+        const partThreeResults = await Promise.all(partThreeAnswers);
+
+        const finalPartOne = partOneResults.filter(result => result);
+        const finalPartTwo = partTwoResults.filter(result => result);
+        const finalPartThree = partThreeResults.filter(result => result);
+
+        const partOneCorrect = finalPartOne.filter(result => result.status).length;
+        const partTwoCorrect = finalPartTwo.filter(result => result.status).length;
+        const partThreeCorrect = finalPartThree.filter(result => result.status).length;
+
+
+        const partOnePass = partOneCorrect > 0 ? true : false;
+        const partTwoPass = partTwoCorrect > 0 ? true : false;
+        const partThreePass = partThreeCorrect > 0 ? true : false;
+
+
+        const result = {
+            examId,
+            result: {
+                part_one: {
+                    final_result: finalPartOne,
+                    correct: partOneCorrect,
+                    pass: partOnePass
+                },
+                part_two: {
+                    final_result: finalPartTwo,
+                    correct: partTwoCorrect,
+                    pass: partTwoPass
+                },
+                part_three: {
+                    final_result: finalPartThree,
+                    correct: partThreeCorrect,
+                    pass: partThreePass
+                }
+            }
+        }
+
+        const newResult = new Result({
+            userId,
+            results: result
+        });
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await newResult.save({ session });
+            existingUser.enrolled.pull({ examId: existingPaidExam.id, lang: 'en' });
+            existingUser.completed.push({ examId: existingPaidExam.id, lang: 'en' });
+            await existingUser.save({ session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving data to database', 500));
+        };
+
+        res.json({ exam_result: result });
+    }
+    else if (req.headers.lang === 'ar') {
+        let existingArPaidExam;
+        try {
+            existingArPaidExam = await ArPaidExam.findById(examId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!existingArPaidExam) {
+            return next(new HttpError('No paid exam found against id', 422));
+        }
+
+        let existingArQuestionsAllocation;
+        try {
+            existingArQuestionsAllocation = await ArQuestionAllocation.findOne({ examId: examId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching en questions allocation from database', 500));
+        };
+
+        if (!existingArQuestionsAllocation) {
+            return next(new HttpError('No en question allocations found against examId', 422));
+        }
+
+        const partOneQuestions = JSON.parse(existingArQuestionsAllocation.part1);
+        const partTwoQuestions = JSON.parse(existingArQuestionsAllocation.part2);
+        const partThreeQuestions = JSON.parse(existingArQuestionsAllocation.part3);
+
+        const partOneAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partTwoAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partThreeAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partOneResults = await Promise.all(partOneAnswers);
+        const partTwoResults = await Promise.all(partTwoAnswers);
+        const partThreeResults = await Promise.all(partThreeAnswers);
+
+        const finalPartOne = partOneResults.filter(result => result);
+        const finalPartTwo = partTwoResults.filter(result => result);
+        const finalPartThree = partThreeResults.filter(result => result);
+
+        const partOneCorrect = finalPartOne.filter(result => result.status).length;
+        const partTwoCorrect = finalPartTwo.filter(result => result.status).length;
+        const partThreeCorrect = finalPartThree.filter(result => result.status).length;
+
+
+        const partOnePass = partOneCorrect > 0 ? true : false;
+        const partTwoPass = partTwoCorrect > 0 ? true : false;
+        const partThreePass = partThreeCorrect > 0 ? true : false;
+
+
+        const result = {
+            examId,
+            result: {
+                part_one: {
+                    final_result: finalPartOne,
+                    correct: partOneCorrect,
+                    pass: partOnePass
+                },
+                part_two: {
+                    final_result: finalPartTwo,
+                    correct: partTwoCorrect,
+                    pass: partTwoPass
+                },
+                part_three: {
+                    final_result: finalPartThree,
+                    correct: partThreeCorrect,
+                    pass: partThreePass
+                }
+            }
+        }
+
+        const newResult = new Result({
+            userId,
+            results: result
+        });
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await newResult.save({ session });
+            existingUser.enrolled.pull({ examId: existingPaidExam.id, lang: 'ar' });
+            existingUser.completed.push({ examId: existingPaidExam.id, lang: 'ar' });
+            await existingUser.save({ session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving data to database', 500));
+        };
+
+        res.json({ exam_result: result });
+    }
+    else if (req.headers.lang === 'nl') {
+        let existingNlPaidExam;
+        try {
+            existingNlPaidExam = await NlPaidExam.findById(examId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!existingNlPaidExam) {
+            return next(new HttpError('No paid exam found against id', 422));
+        }
+
+        let existingNlQuestionsAllocation;
+        try {
+            existingNlQuestionsAllocation = await NlQuestionAllocation.findOne({ examId: examId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching en questions allocation from database', 500));
+        };
+
+        if (!existingNlQuestionsAllocation) {
+            return next(new HttpError('No en question allocations found against examId', 422));
+        }
+
+        const partOneQuestions = JSON.parse(existingNlQuestionsAllocation.part1);
+        const partTwoQuestions = JSON.parse(existingNlQuestionsAllocation.part2);
+        const partThreeQuestions = JSON.parse(existingNlQuestionsAllocation.part3);
+
+        const partOneAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partTwoAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partThreeAnswers = answers.map(async answer => {
+            if (!answer.id) {
+                return next(new HttpError('Question id is required', 422));
+            }
+            const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
+            if (finalAnswers !== undefined) {
+                if (answer.answer === finalAnswers.answer) {
+                    return {
+                        id: answer.id,
+                        status: true
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false
+                    };
+                }
+            }
+        });
+
+        const partOneResults = await Promise.all(partOneAnswers);
+        const partTwoResults = await Promise.all(partTwoAnswers);
+        const partThreeResults = await Promise.all(partThreeAnswers);
+
+        const finalPartOne = partOneResults.filter(result => result);
+        const finalPartTwo = partTwoResults.filter(result => result);
+        const finalPartThree = partThreeResults.filter(result => result);
+
+        const partOneCorrect = finalPartOne.filter(result => result.status).length;
+        const partTwoCorrect = finalPartTwo.filter(result => result.status).length;
+        const partThreeCorrect = finalPartThree.filter(result => result.status).length;
+
+
+        const partOnePass = partOneCorrect > 0 ? true : false;
+        const partTwoPass = partTwoCorrect > 0 ? true : false;
+        const partThreePass = partThreeCorrect > 0 ? true : false;
+
+
+        const result = {
+            examId,
+            result: {
+                part_one: {
+                    final_result: finalPartOne,
+                    correct: partOneCorrect,
+                    pass: partOnePass
+                },
+                part_two: {
+                    final_result: finalPartTwo,
+                    correct: partTwoCorrect,
+                    pass: partTwoPass
+                },
+                part_three: {
+                    final_result: finalPartThree,
+                    correct: partThreeCorrect,
+                    pass: partThreePass
+                }
+            }
+        }
+
+        const newResult = new Result({
+            userId,
+            results: result
+        });
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await newResult.save({ session });
+            existingUser.enrolled.pull({ examId: existingPaidExam.id, lang: 'nl' });
+            existingUser.completed.push({ examId: existingPaidExam.id, lang: 'nl' });
+            await existingUser.save({ session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving data to database', 500));
+        };
+
+        res.json({ exam_result: result });
     }
 
-    let existingPaidQuestions;
-    try {
-        existingPaidQuestions = await PaidExamQuestion.find({ examId: examId });
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting data from database', 500));
-    };
-
-    if (!existingPaidQuestions) {
-        return next(new HttpError('No paid questions found', 422));
-    }
-
-    const partOneQuestions = existingPaidQuestions.filter(question => question.part === 'part 1');
-    const partTwoQuestions = existingPaidQuestions.filter(question => question.part === 'part 2');
-    const partThreeQuestions = existingPaidQuestions.filter(question => question.part === 'part 3');
-
-    const partOneAnswers = answers.map(async answer => {
-        if (!answer.id) {
-            return next(new HttpError('Question id is required', 422));
-        }
-        const finalAnswers = partOneQuestions.find(question => question.id === answer.id);
-        if (finalAnswers !== undefined) {
-            if (answer.answer === finalAnswers.answer) {
-                return {
-                    id: answer.id,
-                    status: true
-                };
-            }
-            else {
-                return {
-                    id: answer.id,
-                    status: false
-                };
-            }
-        }
-    });
-
-    const partTwoAnswers = answers.map(async answer => {
-        if (!answer.id) {
-            return next(new HttpError('Question id is required', 422));
-        }
-        const finalAnswers = partTwoQuestions.find(question => question.id === answer.id);
-        if (finalAnswers !== undefined) {
-            if (answer.answer === finalAnswers.answer) {
-                return {
-                    id: answer.id,
-                    status: true
-                };
-            }
-            else {
-                return {
-                    id: answer.id,
-                    status: false
-                };
-            }
-        }
-    });
-
-    const partThreeAnswers = answers.map(async answer => {
-        if (!answer.id) {
-            return next(new HttpError('Question id is required', 422));
-        }
-        const finalAnswers = partThreeQuestions.find(question => question.id === answer.id);
-        if (finalAnswers !== undefined) {
-            if (answer.answer === finalAnswers.answer) {
-                return {
-                    id: answer.id,
-                    status: true
-                };
-            }
-            else {
-                return {
-                    id: answer.id,
-                    status: false
-                };
-            }
-        }
-    });
-
-    const partOneResults = await Promise.all(partOneAnswers);
-    const partTwoResults = await Promise.all(partTwoAnswers);
-    const partThreeResults = await Promise.all(partThreeAnswers);
-
-
-
-    const finalPartOne = partOneResults.filter(result => result);
-    const finalPartTwo = partTwoResults.filter(result => result);
-    const finalPartThree = partThreeResults.filter(result => result);
-
-    const partOneCorrect = finalPartOne.filter(result => result.status).length;
-    const partTwoCorrect = finalPartTwo.filter(result => result.status).length;
-    const partThreeCorrect = finalPartThree.filter(result => result.status).length;
-
-
-    const partOnePass = partOneCorrect > 0 ? true : false;
-    const partTwoPass = partTwoCorrect > 0 ? true : false;
-    const partThreePass = partThreeCorrect > 0 ? true : false;
-
-
-    const result = {
-        examId,
-        result: {
-            part_one: {
-                final_result: finalPartOne,
-                correct: partOneCorrect,
-                pass: partOnePass
-            },
-            part_two: {
-                final_result: finalPartTwo,
-                correct: partTwoCorrect,
-                pass: partTwoPass
-            },
-            part_three: {
-                final_result: finalPartThree,
-                correct: partThreeCorrect,
-                pass: partThreePass
-            }
-        }
-    }
-
-    const newResult = new Result({
-        userId,
-        results: result
-    });
-
-    try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await newResult.save({ session });
-        existingUser.enrolled.pull(existingPaidExam);
-        existingUser.completed.push(existingPaidExam);
-        await existingUser.save({ session });
-        await session.commitTransaction();
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error saving data to database', 500));
-    };
-
-    res.json({ exam_result: result });
 };
 
 const allExamResults = async (req, res, next) => {

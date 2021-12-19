@@ -12,8 +12,8 @@ const userSchema = new Schema({
     block: { type: Boolean, required: true },
     customerId: { type: String },
     specialCode: { type: String },
-    enrolled: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Paid Exam' }],
-    completed: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Paid Exam' }]
+    enrolled: [{ type: Object, required: true }],
+    completed: [{ type: Object, required: true }]
 });
 
 // userSchema.plugin(uniqueValidator);
