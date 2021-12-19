@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
+const nodemailer = require('nodemailer');
 
 const HttpError = require('../../helpers/http-error');
 const User = require('../../models/user');
@@ -477,6 +478,17 @@ const createUser = async (req, res, next) => {
         return next(new HttpError('Password hashing failed. Try again', 500));
     }
 
+    let existingPackage;
+    try {
+        existingPackage = await Package.findById(packageId);
+    } catch (error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if (!existingPackage) {
+        return next(new HttpError('Cannot find package against provided package id', 422));
+    }
+
     const newUser = new User({
         username,
         email,
@@ -509,6 +521,47 @@ const createUser = async (req, res, next) => {
         console.log(error);
         return next(new HttpError('Error saving data in database', 500));
     }
+
+    let transporter;
+    try {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'usama.bashirb1@gmail.com',
+                pass: 'ubTuTyTe'
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Transporter error', 500));
+    };
+
+    let mailDetails
+    try {
+        mailDetails = {
+            from: 'usama.bashirb1@gmail.com',
+            to: email,
+            subject: 'Package subscription confirmation',
+            text: `Your free subscription of ${existingPackage.package_name} is confirmed`
+        }
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Mail details error', 500));
+    }
+
+    try {
+        transporter.sendMail(mailDetails, function (err, data) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log('Email sent to email');
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Mail sending error', 500));
+    };
 
     res.status(201).json({ message: 'User created successfully' });
 };
