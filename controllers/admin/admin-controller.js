@@ -244,7 +244,7 @@ const createPackage = async (req, res, next) => {
     let plan;
     try {
         plan = await stripe.plans.create({
-            amount: price,
+            amount: price * 100,
             currency: 'eur',
             interval: duration,
             product: product.id
@@ -399,7 +399,7 @@ const editPackage = async (req, res, next) => {
     let newPlan;
     try {
         newPlan = await stripe.plans.create({
-            amount: price,
+            amount: price * 100,
             currency: 'eur',
             interval: duration,
             product: existingPackage.productid,
