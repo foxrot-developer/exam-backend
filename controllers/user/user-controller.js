@@ -208,7 +208,7 @@ const login = async (req, res, next) => {
         if (!validPassword) {
             return next(new HttpError('Password incorrect', 422));
         }
-        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled.map(enroll => enroll.toObject({ getters: true })), completed: existingUser.completed.map(enroll => enroll.toObject({ getters: true })) });
+        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled, completed: existingUser.completed });
     }
 
 };
