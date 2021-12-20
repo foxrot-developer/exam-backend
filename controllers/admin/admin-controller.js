@@ -1064,7 +1064,7 @@ const webProfile = async (req, res, next) => {
             return next(new HttpError('No data found in database', 422));
         }
 
-        res.json({ profileId: existingWebProfile.id, address: existingWebProfile.address, location: existingWebProfile.location, contact: existingWebProfile.contact });
+        res.json({ profileId: existingWebProfile.id, address: existingWebProfile.address, location: existingWebProfile.location, contact: existingWebProfile.contact, email: existingWebProfile.email, hours: existingWebProfile.hours });
 
     }
 
@@ -1082,7 +1082,7 @@ const webProfile = async (req, res, next) => {
             return next(new HttpError('No ar result found against id', 422));
         }
 
-        res.json({ enId: existingArWebProfile.enId, profileId: existingArWebProfile.id, address: existingArWebProfile.address, location: existingArWebProfile.location, contact: existingArWebProfile.contact });
+        res.json({ enId: existingArWebProfile.enId, profileId: existingArWebProfile.id, address: existingArWebProfile.address, location: existingArWebProfile.location, contact: existingArWebProfile.contact, email: existingArWebProfile.email, hours: existingArWebProfile.hours });
 
     }
 
@@ -1100,7 +1100,7 @@ const webProfile = async (req, res, next) => {
             return next(new HttpError('No nl result found against id', 422));
         }
 
-        res.json({ enId: existingNlWebProfile.enId, profileId: existingNlWebProfile.id, address: existingNlWebProfile.address, location: existingNlWebProfile.location, contact: existingNlWebProfile.contact });
+        res.json({ enId: existingNlWebProfile.enId, profileId: existingNlWebProfile.id, address: existingNlWebProfile.address, location: existingNlWebProfile.location, contact: existingNlWebProfile.contact, email: existingNlWebProfile.email, hours: existingNlWebProfile.hours });
 
     }
     else {
