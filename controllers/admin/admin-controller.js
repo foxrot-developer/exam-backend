@@ -800,33 +800,99 @@ const userSubscriptionDetails = async (req, res, next) => {
         return next(new HttpError('No subscription found', 422));
     }
 
-    let existingPackage;
-    try {
-        existingPackage = await Package.findById(existingSubs.package);
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting package from database', 500));
-    };
-
-    if (!existingPackage) {
-        return next(new HttpError('No package found against package id', 500));
-    }
-
-    if (!existingUser.freeAccess && existingSubs.subscriptionid !== '') {
-        let getSubs;
+    if (req.headers.lang === 'en') {
+        let existingPackage;
         try {
-            getSubs = await stripe.subscriptions.retrieve(
-                existingSubs.subscriptionid
-            );
+            existingPackage = await Package.findById(existingSubs.package);
         } catch (error) {
             console.log(error);
-            return next(new HttpError('Stripe error getting subscription details', 500));
+            return next(new HttpError('Error getting package from database', 500));
         };
 
-        res.json({ subscription_details: getSubs, package_details: existingPackage });
-    } else {
-        res.json({ package_details: existingPackage, subscription_details: 'free' });
+        if (!existingPackage) {
+            return next(new HttpError('No package found against package id', 500));
+        }
+
+        if (!existingUser.freeAccess && existingSubs.subscriptionid !== '') {
+            let getSubs;
+            try {
+                getSubs = await stripe.subscriptions.retrieve(
+                    existingSubs.subscriptionid
+                );
+            } catch (error) {
+                console.log(error);
+                return next(new HttpError('Stripe error getting subscription details', 500));
+            };
+
+            res.json({ subscription_details: getSubs, package_details: existingPackage });
+        } else {
+            res.json({ package_details: existingPackage, subscription_details: 'free' });
+        }
     }
+
+    else if (req.headers.lang === 'ar') {
+        let existingArPackage;
+        try {
+            existingArPackage = await ArPackage.findOne({ enId: existingSubs.package });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting package from database', 500));
+        };
+
+        if (!existingArPackage) {
+            return next(new HttpError('No package found against package id', 500));
+        }
+
+        if (!existingUser.freeAccess && existingSubs.subscriptionid !== '') {
+            let getSubs;
+            try {
+                getSubs = await stripe.subscriptions.retrieve(
+                    existingSubs.subscriptionid
+                );
+            } catch (error) {
+                console.log(error);
+                return next(new HttpError('Stripe error getting subscription details', 500));
+            };
+
+            res.json({ subscription_details: getSubs, package_details: existingArPackage });
+        } else {
+            res.json({ package_details: existingArPackage, subscription_details: 'free' });
+        }
+    }
+
+    else if (req.headers.lang === 'nl') {
+        let existingNlPackage;
+        try {
+            existingNlPackage = await NlPackage.findOne({ enId: existingSubs.package });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting package from database', 500));
+        };
+
+        if (!existingNlPackage) {
+            return next(new HttpError('No package found against package id', 500));
+        }
+
+        if (!existingUser.freeAccess && existingSubs.subscriptionid !== '') {
+            let getSubs;
+            try {
+                getSubs = await stripe.subscriptions.retrieve(
+                    existingSubs.subscriptionid
+                );
+            } catch (error) {
+                console.log(error);
+                return next(new HttpError('Stripe error getting subscription details', 500));
+            };
+
+            res.json({ subscription_details: getSubs, package_details: existingNlPackage });
+        } else {
+            res.json({ package_details: existingNlPackage, subscription_details: 'free' });
+        }
+    }
+    else {
+        return next(new HttpError('Invaid or no lang header found', 422));
+    }
+
 };
 
 const activePaymentMethod = async (req, res, next) => {
