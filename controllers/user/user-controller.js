@@ -210,8 +210,8 @@ const idealSignup = async (req, res, next) => {
         return next(new HttpError('Stripe error creating payment intent', 500));
     };
 
-    const status = paymentIntent['latest_invoice']['payment_intent']['status'];
-    const client_secret = paymentIntent['latest_invoice']['payment_intent']['client_secret'];
+    // const status = paymentIntent['latest_invoice']['payment_intent']['status'];
+    // const client_secret = paymentIntent['latest_invoice']['payment_intent']['client_secret'];
 
 
 
