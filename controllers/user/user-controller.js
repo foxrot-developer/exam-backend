@@ -521,7 +521,7 @@ const examEnrollment = async (req, res, next) => {
         return next(new HttpError('Error saving data to database', 500));
     };
 
-    res.json({ message: 'User enrolled successfully' });
+    res.json({ user: existingUser });
 };
 
 const getUserDetails = async (req, res, next) => {
