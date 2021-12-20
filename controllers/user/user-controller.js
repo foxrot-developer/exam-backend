@@ -161,6 +161,137 @@ const signup = async (req, res, next) => {
 
 };
 
+const idealSignup = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const { username, email, password, packageId, paymentMethod } = req.body;
+
+    let existingUser;
+    try {
+        existingUser = await User.findOne({ email: email });
+    } catch (error) {
+        return next(new HttpError('Signup failed. Try again', 500));
+    }
+
+    if (existingUser) {
+        return next(new HttpError('Email already registered', 422));
+    }
+
+    let existingPackage;
+    try {
+        existingPackage = await Package.findById(packageId);
+    } catch (error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if (!existingPackage) {
+        return next(new HttpError('Cannot find package against provided package id', 422));
+    }
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (error) {
+        return next(new HttpError('Password hashing failed. Try again', 500));
+    }
+
+    let paymentIntent;
+    try {
+        paymentIntent = await stripe.paymentIntents.create({
+            amount: existingPackage.price,
+            currency: 'eur',
+            payment_method_types: ['ideal'],
+        });
+    } catch(error) {
+        console.log(error);
+        return next(new HttpError('Stripe error creating payment intent', 500));
+    };
+
+    const status = paymentIntent['latest_invoice']['payment_intent']['status'];
+    const client_secret = paymentIntent['latest_invoice']['payment_intent']['client_secret'];
+
+
+
+    const newUser = new User({
+        username,
+        email,
+        password: hashedPassword,
+        packageId,
+        freeAccess: false,
+        block: false,
+        customerId: '',
+        specialCode: '',
+        enrolled: [],
+        completed: []
+    });
+
+    const newSubscription = new UserSubscription({
+        subscription: {
+            free: false
+        },
+        user: newUser.id,
+        package: packageId,
+        subscriptionid: ''
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await newUser.save({ session: session });
+        await newSubscription.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error saving data in database', 500));
+    }
+
+    let transporter;
+    try {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'usama.bashirb1@gmail.com',
+                pass: 'ubTuTyTe'
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Transporter error', 500));
+    };
+
+    let mailDetails
+    try {
+        mailDetails = {
+            from: 'usama.bashirb1@gmail.com',
+            to: email,
+            subject: 'Package subscription confirmation',
+            text: `Your subscription of ${existingPackage.package_name} is confirmed`
+        }
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Mail details error', 500));
+    }
+
+    try {
+        transporter.sendMail(mailDetails, function (err, data) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log('Email sent to email');
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Mail sending error', 500));
+    };
+
+    res.json({ userId: newUser.id, username: newUser.username, email: newUser.email, freeAccess: newUser.freeAccess, subscriptionid: newUser.subscriptionid, client_secret: paymentIntent.client_secret });
+};
+
 const login = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -418,3 +549,4 @@ exports.changePassword = changePassword;
 exports.userForgetPassword = userForgetPassword;
 exports.examEnrollment = examEnrollment;
 exports.getUserDetails = getUserDetails;
+exports.idealSignup = idealSignup;

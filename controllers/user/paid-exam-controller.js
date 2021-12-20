@@ -854,7 +854,8 @@ const paidExamResult = async (req, res, next) => {
 
         const newResult = new Result({
             userId,
-            results: result
+            results: result,
+            lang: 'en'
         });
 
         try {
@@ -1005,7 +1006,8 @@ const paidExamResult = async (req, res, next) => {
 
         const newResult = new Result({
             userId,
-            results: result
+            results: result,
+            lang: 'ar'
         });
 
         try {
@@ -1156,7 +1158,8 @@ const paidExamResult = async (req, res, next) => {
 
         const newResult = new Result({
             userId,
-            results: result
+            results: result,
+            lang: 'nl'
         });
 
         try {
@@ -1178,19 +1181,53 @@ const paidExamResult = async (req, res, next) => {
 };
 
 const allExamResults = async (req, res, next) => {
-    let existingResults;
-    try {
-        existingResults = await Result.find({});
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting results from the database', 500));
-    };
 
-    if (!existingResults) {
-        return next(new HttpError('No results found', 422));
+    if (req.headers.lang === 'en') {
+        let existingResults;
+        try {
+            existingResults = await Result.find({ lang: 'en' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting results from the database', 500));
+        };
+
+        if (!existingResults) {
+            return next(new HttpError('No results found', 422));
+        }
+
+        res.json({ results: existingResults.map(result => result.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'ar') {
+        let existingArResults;
+        try {
+            existingArResults = await Result.find({ lang: 'ar' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting results from the database', 500));
+        };
+
+        if (!existingArResults) {
+            return next(new HttpError('No results found', 422));
+        }
+
+        res.json({ results: existingArResults.map(result => result.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'nl') {
+        let existingNlResults;
+        try {
+            existingNlResults = await Result.find({ lang: 'nl' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting results from the database', 500));
+        };
+
+        if (!existingNlResults) {
+            return next(new HttpError('No results found', 422));
+        }
+
+        res.json({ results: existingNlResults.map(result => result.toObject({ getters: true })) });
     }
 
-    res.json({ results: existingResults.map(result => result.toObject({ getters: true })) });
 };
 
 const paidExamDetails = async (req, res, next) => {
@@ -1247,6 +1284,59 @@ const paidExamDetails = async (req, res, next) => {
     }
 };
 
+const userResults = async (req, res, next) => {
+    const userId = req.params.userId;
+
+    if (req.headers.lang === 'en') {
+        let userExistingResults;
+        try {
+            userExistingResults = await Result.find({ userId: userId, lang: 'en' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!userExistingResults || userExistingResults.length === 0) {
+            return next(new HttpError('No results found against user id', 422));
+        }
+
+        res.json({ user_results: userExistingResults.map(result => result.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'ar') {
+        let userArExistingResults;
+        try {
+            userArExistingResults = await Result.find({ userId: userId, lang: 'ar' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!userArExistingResults || userArExistingResults.length === 0) {
+            return next(new HttpError('No results found against user id', 422));
+        }
+
+        res.json({ user_results: userArExistingResults.map(result => result.toObject({ getters: true })) });
+    }
+    else if (req.headers.lang === 'nl') {
+        let userNlExistingResults;
+        try {
+            userNlExistingResults = await Result.find({ userId: userId, lang: 'nl' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!userNlExistingResults || userNlExistingResults.length === 0) {
+            return next(new HttpError('No results found against user id', 422));
+        }
+
+        res.json({ user_results: userNlExistingResults.map(result => result.toObject({ getters: true })) });
+    }
+    else {
+        return next(new HttpError('Invalid or no lang header found', 422));
+    }
+};
+
 exports.getPaidExam = getPaidExam;
 exports.addPaidExam = addPaidExam;
 exports.editPaidExam = editPaidExam;
@@ -1258,3 +1348,4 @@ exports.allPaidQuestions = allPaidQuestions;
 exports.paidExamResult = paidExamResult;
 exports.allExamResults = allExamResults;
 exports.paidExamDetails = paidExamDetails;
+exports.userResults = userResults;
