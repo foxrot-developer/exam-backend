@@ -360,6 +360,7 @@ const addPaidExamQuestion = async (req, res, next) => {
         question_ar,
         question_nl,
         answer,
+        draggable,
         answer_ar,
         answer_nl,
         options,
@@ -373,6 +374,7 @@ const addPaidExamQuestion = async (req, res, next) => {
     const paidQuestion = new PaidExamQuestion({
         question,
         questionImage: req.file.path,
+        draggable,
         answer,
         options,
         part
@@ -381,6 +383,7 @@ const addPaidExamQuestion = async (req, res, next) => {
     const arPaidQuestion = new ArPaidExamQuestion({
         enId: paidQuestion.id,
         question: question_ar,
+        draggable,
         questionImage: req.file.path,
         answer: answer_ar,
         options: options_ar,
@@ -391,6 +394,7 @@ const addPaidExamQuestion = async (req, res, next) => {
         enId: paidQuestion.id,
         question: question_nl,
         questionImage: req.file.path,
+        draggable,
         answer: answer_nl,
         options: options_nl,
         part: part_nl
@@ -756,17 +760,41 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (answer.answer === finalAnswers.answer) {
-                    return {
-                        id: answer.id,
-                        status: true
-                    };
+                if (!finalAnswers.draggable) {
+                    if (answer.answer === finalAnswers.answer) {
+                        return {
+                            id: answer.id,
+                            status: true
+                        };
+                    }
+                    else {
+                        return {
+                            id: answer.id,
+                            status: false
+                        };
+                    }
                 }
                 else {
-                    return {
-                        id: answer.id,
-                        status: false
-                    };
+                    const originalId1 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 1);
+                    const originalId2 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 2);
+                    const originalId3 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 3);
+
+                    const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                    const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                    const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                        return {
+                            id: answer.id,
+                            status: true
+                        };
+                    }
+                    else {
+                        return {
+                            id: answer.id,
+                            status: false
+                        };
+                    }
                 }
             }
         });
@@ -777,17 +805,41 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (answer.answer === finalAnswers.answer) {
-                    return {
-                        id: answer.id,
-                        status: true
-                    };
+                if (!finalAnswers.draggable) {
+                    if (answer.answer === finalAnswers.answer) {
+                        return {
+                            id: answer.id,
+                            status: true
+                        };
+                    }
+                    else {
+                        return {
+                            id: answer.id,
+                            status: false
+                        };
+                    }
                 }
                 else {
-                    return {
-                        id: answer.id,
-                        status: false
-                    };
+                    const originalId1 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 1);
+                    const originalId2 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 2);
+                    const originalId3 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 3);
+
+                    const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                    const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                    const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                        return {
+                            id: answer.id,
+                            status: true
+                        };
+                    }
+                    else {
+                        return {
+                            id: answer.id,
+                            status: false
+                        };
+                    }
                 }
             }
         });
@@ -798,17 +850,41 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (answer.answer === finalAnswers.answer) {
-                    return {
-                        id: answer.id,
-                        status: true
-                    };
+                if (!finalAnswers.draggable) {
+                    if (answer.answer === finalAnswers.answer) {
+                        return {
+                            id: answer.id,
+                            status: true
+                        };
+                    }
+                    else {
+                        return {
+                            id: answer.id,
+                            status: false
+                        };
+                    }
                 }
                 else {
-                    return {
-                        id: answer.id,
-                        status: false
-                    };
+                    const originalId1 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 1);
+                    const originalId2 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 2);
+                    const originalId3 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 3);
+
+                    const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                    const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                    const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                        return {
+                            id: answer.id,
+                            status: true
+                        };
+                    }
+                    else {
+                        return {
+                            id: answer.id,
+                            status: false
+                        };
+                    }
                 }
             }
         });

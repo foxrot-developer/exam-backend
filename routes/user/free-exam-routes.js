@@ -34,6 +34,7 @@ router.patch('/edit-question/:quesId', [
     check('question_ar').not().isEmpty(),
     check('question_nl').not().isEmpty(),
     check('answer').not().isEmpty(),
+    check('draggable').not().isEmpty().isBoolean(),
     check('answer_ar').not().isEmpty(),
     check('answer_nl').not().isEmpty(),
     check('options').not().isEmpty(),

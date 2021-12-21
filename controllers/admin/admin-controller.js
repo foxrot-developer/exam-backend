@@ -525,10 +525,12 @@ const createUser = async (req, res, next) => {
     let transporter;
     try {
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.transip.email',
+            port: 465,
+            secure: true, // true for 465, false for other ports
             auth: {
-                user: 'usama.bashirb1@gmail.com',
-                pass: 'ubTuTyTe'
+                user: 'info@alshahbarijschool.nl', // your domain email address
+                pass: 'password' // your password
             }
         })
     } catch (error) {
