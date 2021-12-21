@@ -143,6 +143,7 @@ const createFreeExam = async (req, res, next) => {
 
     const {
         question,
+        draggable,
         question_ar,
         question_nl,
         answer,
@@ -161,6 +162,7 @@ const createFreeExam = async (req, res, next) => {
         question,
         questionImage: req.file.path,
         answer,
+        draggable,
         options,
         part
     });
@@ -168,6 +170,7 @@ const createFreeExam = async (req, res, next) => {
     const arQuestions = new ArFreeExam({
         enId: questions.id,
         question: question_ar,
+        draggable,
         questionImage: req.file.path,
         answer: answer_ar,
         options: options_ar,
@@ -177,6 +180,7 @@ const createFreeExam = async (req, res, next) => {
     const nlQuestions = new NlFreeExam({
         enId: questions.id,
         question: question_nl,
+        draggable,
         questionImage: req.file.path,
         answer: answer_nl,
         options: options_nl,

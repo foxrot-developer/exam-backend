@@ -8,7 +8,8 @@ const freeExamSchema = new Schema({
     questionImage: { type: String, required: true },
     answer: { type: String, required: true },
     options: { type: String, required: true },
-    part: { type: String, required: true }
+    part: { type: String, required: true },
+    draggable: { type: Boolean, required: true },
 });
 
 // freeExamSchema.plugin(uniqueValidator);
