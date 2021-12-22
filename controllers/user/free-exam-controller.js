@@ -72,13 +72,15 @@ const freeExamScore = async (req, res, next) => {
                 if (answer.answer === finalAnswers.answer) {
                     return {
                         id: answer.id,
-                        status: true
+                        status: true,
+                        correct_answer: finalAnswers.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
-                        status: false
+                        status: false,
+                        correct_answer: finalAnswers.answer
                     };
                 }
             }
@@ -94,13 +96,15 @@ const freeExamScore = async (req, res, next) => {
                 if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                     return {
                         id: answer.id,
-                        status: true
+                        status: true,
+                        correct_answer: finalAnswers.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
-                        status: false
+                        status: false,
+                        correct_answer: finalAnswers.answer
                     };
                 }
             }
@@ -119,13 +123,15 @@ const freeExamScore = async (req, res, next) => {
                 if (answer.answer === finalAnswers.answer) {
                     return {
                         id: answer.id,
-                        status: true
+                        status: true,
+                        correct_answer: finalAnswers.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
-                        status: false
+                        status: false,
+                        correct_answer: finalAnswers.answer
                     };
                 }
             }
@@ -141,13 +147,15 @@ const freeExamScore = async (req, res, next) => {
                 if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                     return {
                         id: answer.id,
-                        status: true
+                        status: true,
+                        correct_answer: finalAnswers.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
-                        status: false
+                        status: false,
+                        correct_answer: finalAnswers.answer
                     };
                 }
             }
@@ -166,13 +174,15 @@ const freeExamScore = async (req, res, next) => {
                 if (answer.answer === finalAnswers.answer) {
                     return {
                         id: answer.id,
-                        status: true
+                        status: true,
+                        correct_answer: finalAnswers.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
-                        status: false
+                        status: false,
+                        correct_answer: finalAnswers.answer
                     };
                 }
             }
@@ -188,13 +198,15 @@ const freeExamScore = async (req, res, next) => {
                 if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                     return {
                         id: answer.id,
-                        status: true
+                        status: true,
+                        correct_answer: finalAnswers.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
-                        status: false
+                        status: false,
+                        correct_answer: finalAnswers.answer
                     };
                 }
             }
