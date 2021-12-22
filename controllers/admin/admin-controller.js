@@ -530,7 +530,7 @@ const createUser = async (req, res, next) => {
             secure: true, // true for 465, false for other ports
             auth: {
                 user: 'info@alshahbarijschool.nl', // your domain email address
-                pass: 'password' // your password
+                pass: 'D3velop1nJDE' // your password
             }
         })
     } catch (error) {
