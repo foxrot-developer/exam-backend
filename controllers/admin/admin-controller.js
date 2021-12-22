@@ -541,7 +541,7 @@ const createUser = async (req, res, next) => {
     let mailDetails
     try {
         mailDetails = {
-            from: 'usama.bashirb1@gmail.com',
+            from: 'info@alshahbarijschool.nl',
             to: email,
             subject: 'Package subscription confirmation',
             text: `Your free subscription of ${existingPackage.package_name} is confirmed`

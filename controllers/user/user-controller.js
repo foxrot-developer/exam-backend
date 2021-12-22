@@ -119,10 +119,12 @@ const signup = async (req, res, next) => {
     let transporter;
     try {
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.transip.email',
+            port: 465,
+            secure: true, // true for 465, false for other ports
             auth: {
-                user: 'usama.bashirb1@gmail.com',
-                pass: 'ubTuTyTe'
+                user: 'info@alshahbarijschool.nl', // your domain email address
+                pass: 'D3velop1nJDE' // your password
             }
         })
     } catch (error) {
@@ -133,10 +135,10 @@ const signup = async (req, res, next) => {
     let mailDetails
     try {
         mailDetails = {
-            from: 'usama.bashirb1@gmail.com',
+            from: 'info@alshahbarijschool.nl',
             to: email,
             subject: 'Package subscription confirmation',
-            text: `Your subscription of ${existingPackage.package_name} is confirmed`
+            text: `Your free subscription of ${existingPackage.package_name} is confirmed`
         }
     } catch (error) {
         console.log(error);
@@ -205,7 +207,7 @@ const idealSignup = async (req, res, next) => {
             currency: 'eur',
             payment_method_types: ['ideal'],
         });
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         return next(new HttpError('Stripe error creating payment intent', 500));
     };
@@ -251,10 +253,12 @@ const idealSignup = async (req, res, next) => {
     let transporter;
     try {
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.transip.email',
+            port: 465,
+            secure: true, // true for 465, false for other ports
             auth: {
-                user: 'usama.bashirb1@gmail.com',
-                pass: 'ubTuTyTe'
+                user: 'info@alshahbarijschool.nl', // your domain email address
+                pass: 'D3velop1nJDE' // your password
             }
         })
     } catch (error) {
@@ -265,10 +269,10 @@ const idealSignup = async (req, res, next) => {
     let mailDetails
     try {
         mailDetails = {
-            from: 'usama.bashirb1@gmail.com',
+            from: 'info@alshahbarijschool.nl',
             to: email,
             subject: 'Package subscription confirmation',
-            text: `Your subscription of ${existingPackage.package_name} is confirmed`
+            text: `Your free subscription of ${existingPackage.package_name} is confirmed`
         }
     } catch (error) {
         console.log(error);
