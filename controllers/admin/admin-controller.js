@@ -1594,7 +1594,19 @@ const allSections = async (req, res, next) => {
             return next(new HttpError('No data found', 422));
         }
 
-        res.json({ sections: existingSections });
+        let existingWebProfile;
+        try {
+            existingWebProfile = await WebProfile.findById(profileId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error getting data from database', 500));
+        }
+
+        if (!existingWebProfile) {
+            return next(new HttpError('No data found in database', 422));
+        }
+
+        res.json({ sections: existingSections, profileId: existingWebProfile.id, address: existingWebProfile.address, location: existingWebProfile.location, contact: existingWebProfile.contact, email: existingWebProfile.email, hours: existingWebProfile.hours });
     }
     else if (req.headers.lang === 'ar') {
         let existingArSections;
@@ -1609,7 +1621,19 @@ const allSections = async (req, res, next) => {
             return next(new HttpError('No data found', 422));
         }
 
-        res.json({ sections: existingArSections });
+        let existingArWebProfile;
+        try {
+            existingArWebProfile = await ArWebProfile.findOne({ enId: profileId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!existingArWebProfile) {
+            return next(new HttpError('No ar result found against id', 422));
+        }
+
+        res.json({ sections: existingArSections, enId: existingArWebProfile.enId, profileId: existingArWebProfile.id, address: existingArWebProfile.address, location: existingArWebProfile.location, contact: existingArWebProfile.contact, email: existingArWebProfile.email, hours: existingArWebProfile.hours });
     }
     else if (req.headers.lang === 'nl') {
         let existingNlSections;
@@ -1624,7 +1648,19 @@ const allSections = async (req, res, next) => {
             return next(new HttpError('No data found', 422));
         }
 
-        res.json({ sections: existingNlSections });
+        let existingNlWebProfile;
+        try {
+            existingNlWebProfile = await NlWebProfile.findOne({ enId: profileId });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        };
+
+        if (!existingNlWebProfile) {
+            return next(new HttpError('No nl result found against id', 422));
+        }
+
+        res.json({ sections: existingNlSections, enId: existingNlWebProfile.enId, profileId: existingNlWebProfile.id, address: existingNlWebProfile.address, location: existingNlWebProfile.location, contact: existingNlWebProfile.contact, email: existingNlWebProfile.email, hours: existingNlWebProfile.hours });
     }
     else {
         return next(new HttpError('Invalid or no header found in request', 422));
