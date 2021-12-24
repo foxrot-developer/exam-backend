@@ -1509,6 +1509,77 @@ const packageUpdate = async (req, res, next) => {
     res.json({ message: "Package section language successfully" });
 };
 
+const footerUpdate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        footer,
+        footer_ar,
+        footer_nl
+    } = req.body;
+
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await PageSection.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    existingWebProfile.footer = footer;
+    existingArWebProfile.footer = footer_ar;
+    existingNlWebProfile.footer = footer_nl;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingWebProfile.save({ session: session });
+        await existingArWebProfile.save({ session: session });
+        await existingNlWebProfile.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Cannot updating footer text section', 500));
+    };
+
+    res.json({ message: "Footer text section language successfully" });
+};
+
 const allSections = async (req, res, next) => {
     if (req.headers.lang === 'en') {
         let existingSections;
@@ -1583,4 +1654,5 @@ exports.aboutUpdate = aboutUpdate;
 exports.contactUpdate = contactUpdate;
 exports.languageUpdate = languageUpdate;
 exports.packageUpdate = packageUpdate;
+exports.footerUpdate = footerUpdate;
 exports.allSections = allSections;

@@ -2,7 +2,6 @@ const express = require('express');
 const { check } = require('express-validator');
 
 const adminController = require('../../controllers/admin/admin-controller');
-const admin = require('../../models/admin');
 
 const router = express.Router();
 
@@ -70,6 +69,12 @@ router.patch('/hero-update/:profileId', [
     check('hero_ar').not().isEmpty(),
     check('hero_nl').not().isEmpty()
 ], adminController.heroUpdate);
+
+router.patch('/footer-update/:profileId', [
+    check('footer').not().isEmpty(),
+    check('footer_ar').not().isEmpty(),
+    check('footer_nl').not().isEmpty()
+], adminController.footerUpdate);
 
 router.patch('/about-update/:profileId', [
     check('about').not().isEmpty(),

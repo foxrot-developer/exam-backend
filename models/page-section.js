@@ -9,6 +9,7 @@ const pageSectionSchema = new Schema({
     hero: { type: String, required: true },
     language: { type: String, required: true },
     package: { type: String, required: true },
+    footer: { type: String, required: true },
 });
 
 // userSchema.plugin(uniqueValidator);
