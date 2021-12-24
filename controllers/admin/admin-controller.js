@@ -1596,7 +1596,7 @@ const allSections = async (req, res, next) => {
 
         let existingWebProfile;
         try {
-            existingWebProfile = await WebProfile.findById(profileId);
+            existingWebProfile = await WebProfile.findById('61b6f6e84cb6e87df531d81c');
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error getting data from database', 500));
@@ -1623,7 +1623,7 @@ const allSections = async (req, res, next) => {
 
         let existingArWebProfile;
         try {
-            existingArWebProfile = await ArWebProfile.findOne({ enId: profileId });
+            existingArWebProfile = await ArWebProfile.findOne({ enId: '61b6f6e84cb6e87df531d81c' });
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error fetching data from database', 500));
@@ -1650,7 +1650,7 @@ const allSections = async (req, res, next) => {
 
         let existingNlWebProfile;
         try {
-            existingNlWebProfile = await NlWebProfile.findOne({ enId: profileId });
+            existingNlWebProfile = await NlWebProfile.findOne({ enId: '61b6f6e84cb6e87df531d81c' });
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error fetching data from database', 500));
