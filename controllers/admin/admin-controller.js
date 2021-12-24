@@ -15,6 +15,9 @@ const ArWebProfile = require('../../models/ar-web-profile');
 const NlWebProfile = require('../../models/nl-web-profile');
 const ArPackage = require('../../models/ar-package');
 const NlPackage = require('../../models/nl-package');
+const PageSection = require('../../models/page-section');
+const ArPageSection = require('../../models/ar-page-section');
+const NlPageSection = require('../../models/nl-page-section');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -1111,6 +1114,452 @@ const webProfile = async (req, res, next) => {
 
 };
 
+const resetUserPassword = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const { password } = req.body;
+    const userId = req.params.userId;
+
+    let existingUser;
+    try {
+        existingUser = await User.findById(userId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting user data from database', 500));
+    }
+
+    if (!existingUser) {
+        return next(new HttpError('No user found against the user id', 422));
+    }
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (error) {
+        return next(new HttpError('Password hashing failed. Try again', 500));
+    }
+
+    existingUser.password = password;
+
+    try {
+        await existingUser.save();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error updating user password in database', 500));
+    }
+
+    res.json({ message: 'User password reset successful' });
+};
+
+const heroUpdate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        hero,
+        hero_ar,
+        hero_nl
+    } = req.body;
+
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await PageSection.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    existingWebProfile.hero = hero;
+    existingArWebProfile.hero = hero_ar;
+    existingNlWebProfile.hero = hero_nl;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingWebProfile.save({ session: session });
+        await existingArWebProfile.save({ session: session });
+        await existingNlWebProfile.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Cannot updating hero section', 500));
+    };
+
+    res.json({ message: "Hero section updated successfully" });
+};
+
+const aboutUpdate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        about,
+        about_ar,
+        about_nl
+    } = req.body;
+
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await PageSection.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    existingWebProfile.about = about;
+    existingArWebProfile.about = about_ar;
+    existingNlWebProfile.about = about_nl;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingWebProfile.save({ session: session });
+        await existingArWebProfile.save({ session: session });
+        await existingNlWebProfile.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Cannot updating about section', 500));
+    };
+
+    res.json({ message: "About section updated successfully" });
+};
+
+const contactUpdate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        contact,
+        contact_ar,
+        contact_nl
+    } = req.body;
+
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await PageSection.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    existingWebProfile.contact = contact;
+    existingArWebProfile.contact = contact_ar;
+    existingNlWebProfile.contact = contact_nl;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingWebProfile.save({ session: session });
+        await existingArWebProfile.save({ session: session });
+        await existingNlWebProfile.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Cannot updating contact section', 500));
+    };
+
+    res.json({ message: "Contact section updated successfully" });
+};
+
+const languageUpdate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        language,
+        language_ar,
+        language_nl
+    } = req.body;
+
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await PageSection.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    existingWebProfile.language = language;
+    existingArWebProfile.language = language_ar;
+    existingNlWebProfile.language = language_nl;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingWebProfile.save({ session: session });
+        await existingArWebProfile.save({ session: session });
+        await existingNlWebProfile.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Cannot updating language section', 500));
+    };
+
+    res.json({ message: "Language section language successfully" });
+};
+
+const packageUpdate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        package,
+        package_ar,
+        package_nl
+    } = req.body;
+
+    const profileId = req.params.profileId;
+
+    let existingWebProfile;
+    try {
+        existingWebProfile = await PageSection.findById(profileId);
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Ar
+    let existingArWebProfile;
+    try {
+        existingArWebProfile = await ArPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    // Nl
+    let existingNlWebProfile;
+    try {
+        existingNlWebProfile = await NlPageSection.findOne({ enId: profileId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlWebProfile) {
+        return next(new HttpError('No profile found against id', 422));
+    }
+
+    existingWebProfile.package = package;
+    existingArWebProfile.package = package_ar;
+    existingNlWebProfile.package = package_nl;
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingWebProfile.save({ session: session });
+        await existingArWebProfile.save({ session: session });
+        await existingNlWebProfile.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Cannot updating package section', 500));
+    };
+
+    res.json({ message: "Package section language successfully" });
+};
+
+const allSections = async (req, res, next) => {
+    if (req.headers.lang === 'en') {
+        let existingSections;
+        try {
+            existingSections = await PageSection.findById('61c5d4f9dbe9259cdf13b541');
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching sections from database', 500));
+        }
+
+        if (!existingSections) {
+            return next(new HttpError('No data found', 422));
+        }
+
+        res.json({ sections: existingSections });
+    }
+    else if (req.headers.lang === 'ar') {
+        let existingArSections;
+        try {
+            existingArSections = await ArPageSection.findOne({ enId: '61c5d4f9dbe9259cdf13b541' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching sections from database', 500));
+        }
+
+        if (!existingArSections) {
+            return next(new HttpError('No data found', 422));
+        }
+
+        res.json({ sections: existingArSections });
+    }
+    else if (req.headers.lang === 'nl') {
+        let existingNlSections;
+        try {
+            existingNlSections = await NlPageSection.findOne({ enId: '61c5d4f9dbe9259cdf13b541' });
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching sections from database', 500));
+        }
+
+        if (!existingNlSections) {
+            return next(new HttpError('No data found', 422));
+        }
+
+        res.json({ sections: existingNlSections });
+    }
+    else {
+        return next(new HttpError('Invalid or no header found in request', 422));
+    }
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
@@ -1128,3 +1577,10 @@ exports.allPayments = allPayments;
 exports.updateWebProfile = updateWebProfile;
 exports.webProfile = webProfile;
 exports.editPackage = editPackage;
+exports.resetUserPassword = resetUserPassword
+exports.heroUpdate = heroUpdate;
+exports.aboutUpdate = aboutUpdate;
+exports.contactUpdate = contactUpdate;
+exports.languageUpdate = languageUpdate;
+exports.packageUpdate = packageUpdate;
+exports.allSections = allSections;
