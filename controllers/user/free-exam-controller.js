@@ -170,7 +170,7 @@ const freeExamScore = async (req, res, next) => {
                 return next(new HttpError('Question id is required', 422));
             }
             const finalAnswers = await NlFreeExam.findOne({ enId: answer.id });
-            console.log({ answer });
+            console.log(answer.answer);
             if (!answer.draggable) {
                 if (answer.answer === finalAnswers.answer) {
                     return {
