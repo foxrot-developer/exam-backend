@@ -951,7 +951,7 @@ const allPayments = async (req, res, next) => {
 };
 
 const updateWebProfile = async (req, res, next) => {
-    const { location, location_ar, location_nl, address, address_ar, address_nl, contact, contact_ar, contact_nl } = req.body;
+    const { location, location_ar, location_nl, address, address_ar, address_nl, contact, contact_ar, contact_nl, email, email_ar, email_nl, hours, hours_ar, hours_nl } = req.body;
     const profileId = req.params.profileId;
 
     let existingWebProfile;
@@ -1035,6 +1035,42 @@ const updateWebProfile = async (req, res, next) => {
         existingWebProfile.address = address;
         existingArWebProfile.address = address_ar;
         existingNlWebProfile.address = address_nl;
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await existingWebProfile.save({ session: session });
+            await existingArWebProfile.save({ session: session });
+            await existingNlWebProfile.save({ session: session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving address to database', 500));
+        };
+    }
+
+    if (email) {
+        existingWebProfile.email = email;
+        existingArWebProfile.email = email_ar;
+        existingNlWebProfile.email = email_nl;
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await existingWebProfile.save({ session: session });
+            await existingArWebProfile.save({ session: session });
+            await existingNlWebProfile.save({ session: session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving address to database', 500));
+        };
+    }
+
+    if (hours) {
+        existingWebProfile.hours = hours;
+        existingArWebProfile.hours = hours_ar;
+        existingNlWebProfile.hours = hours_nl;
 
         try {
             const session = await mongoose.startSession();
