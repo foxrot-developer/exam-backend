@@ -959,7 +959,7 @@ const paidExamResult = async (req, res, next) => {
             return next(new HttpError('Error saving data to database', 500));
         };
 
-        res.json({ exam_result: result });
+        res.json({ exam_result: result, userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled, completed: existingUser.completed });
     }
     else if (req.headers.lang === 'ar') {
         let existingArPaidExam;
@@ -1195,7 +1195,7 @@ const paidExamResult = async (req, res, next) => {
             return next(new HttpError('Error saving data to database', 500));
         };
 
-        res.json({ exam_result: result });
+        res.json({ exam_result: result, userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled, completed: existingUser.completed });
     }
     else if (req.headers.lang === 'nl') {
         let existingNlPaidExam;
@@ -1431,7 +1431,7 @@ const paidExamResult = async (req, res, next) => {
             return next(new HttpError('Error saving data to database', 500));
         };
 
-        res.json({ exam_result: result });
+        res.json({ exam_result: result, userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled, completed: existingUser.completed });
     }
 
 };
