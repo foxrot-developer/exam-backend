@@ -118,7 +118,7 @@ const freeExamScore = async (req, res, next) => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
             }
-            const finalAnswers = await ArFreeExam.findOne({ enId: answer.id });
+            const finalAnswers = await ArFreeExam.findById(answer.id);
             if (!finalAnswers.draggable) {
                 if (answer.answer === finalAnswers.answer) {
                     return {
@@ -169,7 +169,7 @@ const freeExamScore = async (req, res, next) => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
             }
-            const finalAnswers = await NlFreeExam.findOne({ enId: answer.id });
+            const finalAnswers = await NlFreeExam.findById(answer.id);
             if (!finalAnswers.draggable) {
                 if (answer.answer === finalAnswers.answer) {
                     return {
