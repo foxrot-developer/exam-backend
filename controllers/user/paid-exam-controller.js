@@ -1186,8 +1186,8 @@ const paidExamResult = async (req, res, next) => {
             const session = await mongoose.startSession();
             session.startTransaction();
             await newResult.save({ session });
-            existingUser.enrolled.pull({ examId: existingPaidExam.id, lang: 'ar' });
-            existingUser.completed.push({ examId: existingPaidExam.id, lang: 'ar' });
+            existingUser.enrolled.pull({ examId: existingArPaidExam.id, lang: 'ar' });
+            existingUser.completed.push({ examId: existingArPaidExam.id, lang: 'ar' });
             await existingUser.save({ session });
             await session.commitTransaction();
         } catch (error) {
@@ -1422,8 +1422,8 @@ const paidExamResult = async (req, res, next) => {
             const session = await mongoose.startSession();
             session.startTransaction();
             await newResult.save({ session });
-            existingUser.enrolled.pull({ examId: existingPaidExam.id, lang: 'nl' });
-            existingUser.completed.push({ examId: existingPaidExam.id, lang: 'nl' });
+            existingUser.enrolled.pull({ examId: existingNlPaidExam.id, lang: 'nl' });
+            existingUser.completed.push({ examId: existingNlPaidExam.id, lang: 'nl' });
             await existingUser.save({ session });
             await session.commitTransaction();
         } catch (error) {
