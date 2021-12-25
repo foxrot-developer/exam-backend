@@ -765,14 +765,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -789,14 +789,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -814,14 +814,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -838,14 +838,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -863,14 +863,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -887,14 +887,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1001,14 +1001,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1025,14 +1025,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1050,14 +1050,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1074,14 +1074,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1099,14 +1099,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1123,14 +1123,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1237,14 +1237,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1261,14 +1261,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1286,14 +1286,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1310,14 +1310,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1335,14 +1335,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
@@ -1359,14 +1359,14 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: finalAnswers.answer
+                            correct_answer: answer.answer
                         };
                     }
                 }
