@@ -12,6 +12,7 @@ const ArPackage = require('../../models/ar-package');
 const NlPackage = require('../../models/nl-package');
 const UserSubscription = require('../../models/user-subscription');
 const PaidExam = require('../../models/paid-exam');
+const EmailTemplate = require('../../models/email-template');
 
 const signup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -132,13 +133,25 @@ const signup = async (req, res, next) => {
         return next(new HttpError('Transporter error', 500));
     };
 
+    let existingEmailTemplate;
+    try {
+        existingEmailTemplate = await EmailTemplate.findById('61c86f420eb00d6b409944b4');
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingEmailTemplate) {
+        return next(new HttpError('No email template found against id', 500));
+    }
+
     let mailDetails
     try {
         mailDetails = {
             from: 'info@alshahbarijschool.nl',
             to: email,
             subject: 'Package subscription confirmation',
-            text: `Your free subscription of ${existingPackage.package_name} is confirmed`
+            text: existingEmailTemplate.templateText
         }
     } catch (error) {
         console.log(error);
