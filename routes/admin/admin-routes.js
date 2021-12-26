@@ -44,6 +44,7 @@ router.post('/create-package', [
     check('langs').not().isEmpty(),
     check('langs_ar').not().isEmpty(),
     check('langs_nl').not().isEmpty(),
+    check('interval').not().isEmpty(),
 ], adminController.createPackage);
 
 router.patch('/edit-package/:pkgId', [
@@ -60,6 +61,7 @@ router.patch('/edit-package/:pkgId', [
     check('no_exam').not().isEmpty(),
     check('repeat').not().isEmpty(),
     check('langs').not().isEmpty(),
+    check('interval').not().isEmpty(),
 ], adminController.editPackage);
 
 router.patch('/reset-user-password/:userId', [

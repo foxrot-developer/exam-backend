@@ -222,7 +222,8 @@ const createPackage = async (req, res, next) => {
         repeat,
         langs,
         langs_ar,
-        langs_nl
+        langs_nl,
+        interval
     } = req.body;
 
     let existingPackage;
@@ -251,6 +252,7 @@ const createPackage = async (req, res, next) => {
             amount: price * 100,
             currency: 'eur',
             interval: duration,
+            interval_count: interval,
             product: product.id
         });
     } catch (error) {
@@ -273,7 +275,8 @@ const createPackage = async (req, res, next) => {
         productid: product.id,
         no_exam,
         repeat,
-        langs
+        langs,
+        interval
     });
 
     const newArPackage = new ArPackage({
@@ -287,7 +290,8 @@ const createPackage = async (req, res, next) => {
         productid: product.id,
         no_exam,
         repeat,
-        langs: langs_ar
+        langs: langs_ar,
+        interval
     });
 
     const newNlPackage = new NlPackage({
@@ -301,7 +305,8 @@ const createPackage = async (req, res, next) => {
         productid: product.id,
         no_exam,
         repeat,
-        langs: langs_nl
+        langs: langs_nl,
+        interval
     });
 
     try {
@@ -337,7 +342,8 @@ const editPackage = async (req, res, next) => {
         duration_nl,
         no_exam,
         repeat,
-        langs
+        langs,
+        interval
     } = req.body;
 
     const pkgId = req.params.pkgId;
@@ -406,6 +412,7 @@ const editPackage = async (req, res, next) => {
             amount: price * 100,
             currency: 'eur',
             interval: duration,
+            interval_count: interval,
             product: existingPackage.productid,
         });
     } catch (error) {

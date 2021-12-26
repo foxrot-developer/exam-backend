@@ -15,6 +15,7 @@ const arPackageSchema = new Schema({
     no_exam: { type: Number, required: true },
     repeat: { type: Number, required: true },
     langs: { type: String, required: true },
+    interval: { type: Number, required: true },
 });
 
 module.exports = mongoose.model('Ar Package', arPackageSchema);
