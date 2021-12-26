@@ -15,6 +15,8 @@ router.get('/web-profile/:profileId', adminController.webProfile);
 
 router.get('/all-sections', adminController.allSections);
 
+router.get('/get-email-template', adminController.getEmailTemplate);
+
 router.patch('/update-user/:userId', [
     check('username').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
@@ -114,6 +116,10 @@ router.post('/login', [
 ], adminController.adminLogin);
 
 router.patch('/update-web-profile/:profileId', adminController.updateWebProfile);
+
+router.patch('/email-template', [
+    check('templateText').not().isEmpty(),
+], adminController.updateEmailTemplate);
 
 router.patch('/update-password/:adminId', [
     check('oldPassword').not().isEmpty(),

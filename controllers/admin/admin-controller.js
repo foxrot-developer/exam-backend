@@ -18,6 +18,7 @@ const NlPackage = require('../../models/nl-package');
 const PageSection = require('../../models/page-section');
 const ArPageSection = require('../../models/ar-page-section');
 const NlPageSection = require('../../models/nl-page-section');
+const EmailTemplate = require('../../models/email-template');
 
 const getUsers = async (req, res, next) => {
     let allUsers;
@@ -1734,6 +1735,55 @@ const allSections = async (req, res, next) => {
     }
 };
 
+const updateEmailTemplate = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const templateText = req.body;
+
+    let existingEmailTemplate;
+    try {
+        existingEmailTemplate = await EmailTemplate.findById('61c86f420eb00d6b409944b4');
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingEmailTemplate) {
+        return next(new HttpError('No email template found against id', 500));
+    }
+
+    existingEmailTemplate.templateText = templateText.templateText;
+
+    try {
+        await existingEmailTemplate.save();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error saving data to database', 500));
+    }
+
+    res.json({ message: "Email template updated successfully" });
+
+};
+
+const getEmailTemplate = async (req, res, next) => {
+    let existingEmailTemplate;
+    try {
+        existingEmailTemplate = await EmailTemplate.findById('61c86f420eb00d6b409944b4');
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingEmailTemplate) {
+        return next(new HttpError('No email template found against id', 500));
+    }
+
+    res.json({ email_template: existingEmailTemplate.toObject({ getters: true }) });
+};
+
 exports.getUsers = getUsers;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
@@ -1759,3 +1809,5 @@ exports.languageUpdate = languageUpdate;
 exports.packageUpdate = packageUpdate;
 exports.footerUpdate = footerUpdate;
 exports.allSections = allSections;
+exports.updateEmailTemplate = updateEmailTemplate;
+exports.getEmailTemplate = getEmailTemplate;
