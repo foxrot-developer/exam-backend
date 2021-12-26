@@ -98,7 +98,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions || existingPaidQuestions.length < 5) {
+    if (!existingPaidQuestions || existingPaidQuestions.length < 26) {
         return next(new HttpError('Not enough part 1 questions in the bank', 422));
     }
 
@@ -112,7 +112,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 5) {
+    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 13) {
         return next(new HttpError('Not enough part 2 questions in the bank', 422));
     }
 
@@ -125,13 +125,13 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 5) {
+    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 29) {
         return next(new HttpError('Not enough part 3 questions in the bank', 422));
     }
 
-    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 3);
-    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 3);
-    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 3);
+    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 24);
+    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 11);
+    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 27);
 
     let randPart1Ids = [];
     randPart1.forEach(element => {
@@ -1150,9 +1150,9 @@ const paidExamResult = async (req, res, next) => {
         const partThreeCorrect = finalPartThree.filter(result => result.status).length;
 
 
-        const partOnePass = partOneCorrect > 0 ? true : false;
-        const partTwoPass = partTwoCorrect > 0 ? true : false;
-        const partThreePass = partThreeCorrect > 0 ? true : false;
+        const partOnePass = partOneCorrect >= 13 ? true : false;
+        const partTwoPass = partTwoCorrect >= 10 ? true : false;
+        const partThreePass = partThreeCorrect >= 25 ? true : false;
 
 
         const result = {
