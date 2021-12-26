@@ -427,6 +427,7 @@ const editPackage = async (req, res, next) => {
     existingPackage.no_exam = no_exam;
     existingPackage.repeat = repeat;
     existingPackage.langs = langs;
+    existingPackage.interval = interval;
     existingPackage.planid = newPlan.id
 
     existingArPackage.package_name = package_name_ar;
@@ -436,6 +437,7 @@ const editPackage = async (req, res, next) => {
     existingArPackage.no_exam = no_exam;
     existingArPackage.repeat = repeat;
     existingArPackage.langs = langs;
+    existingArPackage.interval = interval;
     existingPackage.planid = newPlan.id
 
     existingNlPackage.package_name = package_name_nl;
@@ -445,6 +447,7 @@ const editPackage = async (req, res, next) => {
     existingNlPackage.no_exam = no_exam;
     existingNlPackage.repeat = repeat;
     existingNlPackage.langs = langs;
+    existingNlPackage.interval = interval;
     existingPackage.planid = newPlan.id
 
     try {
