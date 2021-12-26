@@ -1006,6 +1006,8 @@ const allPayments = async (req, res, next) => {
 
 const updateWebProfile = async (req, res, next) => {
     const { location, location_ar, location_nl, address, address_ar, address_nl, contact, contact_ar, contact_nl, email, email_ar, email_nl, hours, hours_ar, hours_nl } = req.body;
+
+    console.log({ email, email_ar, email_nl });
     const profileId = req.params.profileId;
 
     let existingWebProfile;
