@@ -746,6 +746,30 @@ const activePackage = async (req, res, next) => {
         return next(new HttpError('No package found against provided package id', 422));
     }
 
+    // Ar
+    let existingArPackage;
+    try {
+        existingArPackage = await ArPackage.findOne({ enId: pkgId });
+    } catch (error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if (!existingArPackage) {
+        return next(new HttpError('No ar package found against provided package id', 422));
+    }
+
+    // Nl
+    let existingNlPackage;
+    try {
+        existingNlPackage = await NlPackage.findOne({ enId: pkgId });
+    } catch (error) {
+        return next(new HttpError('Error accessing database', 500));
+    };
+
+    if (!existingNlPackage) {
+        return next(new HttpError('No nl package found against provided package id', 422));
+    }
+
     let existingPlan;
     try {
         existingPlan = await stripe.plans.update(
@@ -769,9 +793,16 @@ const activePackage = async (req, res, next) => {
     };
 
     existingPackage.active = active;
+    existingArPackage.active = active;
+    existingNlPackage.active = active;
 
     try {
-        await existingPackage.save();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await existingPackage.save({ session: session });
+        await existingArPackage.save({ session: session });
+        await existingNlPackage.save({ session: session });
+        await session.commitTransaction();
     } catch (error) {
         return next(new HttpError('Error updating package', 500));
     };
