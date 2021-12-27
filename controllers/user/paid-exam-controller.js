@@ -354,7 +354,7 @@ const addPaidExamQuestion = async (req, res, next) => {
     if (!errors.isEmpty()) {
         return next(new HttpError('Invalid data received from frontend', 422));
     }
-
+    console.log('Entered controller');
     const {
         question,
         question_ar,
