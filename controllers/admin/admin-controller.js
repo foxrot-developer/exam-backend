@@ -1233,7 +1233,7 @@ const resetUserPassword = async (req, res, next) => {
         return next(new HttpError('Password hashing failed. Try again', 500));
     }
 
-    existingUser.password = password;
+    existingUser.password = hashedPassword;
 
     try {
         await existingUser.save();
