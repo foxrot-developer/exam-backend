@@ -411,7 +411,7 @@ const addPaidExamQuestion = async (req, res, next) => {
         return next(new HttpError('Error saving paid question', 422));
     }
 
-    res.status(201).json({ message: 'Question added successfully' });
+    res.json({ message: 'Question added successfully' });
 };
 
 const deletePaidExam = async (req, res, next) => {
