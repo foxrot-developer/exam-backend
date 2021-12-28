@@ -1593,6 +1593,85 @@ const userResults = async (req, res, next) => {
     }
 };
 
+const approveQuestions = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const { questions } = req.body;
+
+    const parsedQuestions = JSON.parse(questions);
+
+    parsedQuestions.map(ques => {
+
+        const {
+            question,
+            draggable,
+            question_ar,
+            question_nl,
+            answer,
+            answer_ar,
+            answer_nl,
+            options,
+            options_ar,
+            options_nl,
+            part,
+            part_ar,
+            part_nl,
+            reason,
+            reason_ar,
+            reason_nl } = ques;
+
+        const questions = new FreeExam({
+            question,
+            questionImage: req.file.path,
+            answer,
+            draggable,
+            options,
+            reason,
+            part
+        });
+
+        const arQuestions = new ArFreeExam({
+            enId: questions.id,
+            question: question_ar,
+            draggable,
+            questionImage: req.file.path,
+            answer: answer_ar,
+            options: options_ar,
+            reason: reason_ar,
+            part: part_ar
+        });
+
+        const nlQuestions = new NlFreeExam({
+            enId: questions.id,
+            question: question_nl,
+            draggable,
+            questionImage: req.file.path,
+            answer: answer_nl,
+            options: options_nl,
+            reason: reason_nl,
+            part: part_nl
+        });
+
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await questions.save({ session: session });
+            await arQuestions.save({ session: session });
+            await nlQuestions.save({ session: session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error saving question', 422));
+        }
+    });
+
+    res.json({ message: "Questions uploaded successfully" });
+
+};
+
 exports.getPaidExam = getPaidExam;
 exports.addPaidExam = addPaidExam;
 exports.editPaidExam = editPaidExam;
@@ -1605,3 +1684,4 @@ exports.paidExamResult = paidExamResult;
 exports.allExamResults = allExamResults;
 exports.paidExamDetails = paidExamDetails;
 exports.userResults = userResults;
+exports.approveQuestions = approveQuestions;

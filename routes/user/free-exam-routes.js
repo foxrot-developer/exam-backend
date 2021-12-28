@@ -29,6 +29,11 @@ router.post('/create-free-exam', fileUpload.single('questionImage'),
         check('part_nl').not().isEmpty(),
     ], freeExamController.createFreeExam);
 
+router.post('./approve-questions', fileUpload.single('questionImage'),
+    [
+        check('questions').not().isEmpty(),
+    ], freeExamController.approveQuestions);
+
 router.patch('/edit-question/:quesId', [
     check('question').not().isEmpty(),
     check('question_ar').not().isEmpty(),

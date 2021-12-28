@@ -9,6 +9,7 @@ const freeExamSchema = new Schema({
     answer: { type: String, required: true },
     options: { type: String, required: true },
     part: { type: String, required: true },
+    reason: { type: String, required: true },
     draggable: { type: Boolean, required: true },
 });
 
