@@ -1623,7 +1623,7 @@ const approveQuestions = async (req, res, next) => {
             reason_ar,
             reason_nl } = ques;
 
-        const questions = new FreeExam({
+        const questions = new PaidExamQuestion({
             question,
             questionImage: req.file.path,
             answer,
@@ -1633,7 +1633,7 @@ const approveQuestions = async (req, res, next) => {
             part
         });
 
-        const arQuestions = new ArFreeExam({
+        const arQuestions = new ArPaidExamQuestion({
             enId: questions.id,
             question: question_ar,
             draggable,
@@ -1644,7 +1644,7 @@ const approveQuestions = async (req, res, next) => {
             part: part_ar
         });
 
-        const nlQuestions = new NlFreeExam({
+        const nlQuestions = new NlPaidExamQuestion({
             enId: questions.id,
             question: question_nl,
             draggable,
