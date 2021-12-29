@@ -433,9 +433,11 @@ const approveQuestions = async (req, res, next) => {
 
     const { questions } = req.body;
 
+    console.log(req.files.questionImages);
+
     const parsedQuestions = JSON.parse(questions);
 
-    parsedQuestions.map(ques => {
+    parsedQuestions.map((ques, index) => {
 
         const {
             question,
@@ -457,7 +459,7 @@ const approveQuestions = async (req, res, next) => {
 
         const questions = new FreeExam({
             question,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer,
             draggable,
             options,
@@ -469,7 +471,7 @@ const approveQuestions = async (req, res, next) => {
             enId: questions.id,
             question: question_ar,
             draggable,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer: answer_ar,
             options: options_ar,
             reason: reason_ar,
@@ -480,7 +482,7 @@ const approveQuestions = async (req, res, next) => {
             enId: questions.id,
             question: question_nl,
             draggable,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer: answer_nl,
             options: options_nl,
             reason: reason_nl,
