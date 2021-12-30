@@ -29,7 +29,7 @@ router.post('/create-free-exam', fileUpload.single('questionImage'),
         check('part_nl').not().isEmpty(),
     ], freeExamController.createFreeExam);
 
-router.post('./free-approve-questions', fileUpload.fields([{ name: 'questionImages', maxCount: 100 }]),
+router.post('/free-approve-questions', fileUpload.fields([{ name: 'questionImages', maxCount: 100 }]),
     [
         check('questions').not().isEmpty(),
     ], freeExamController.approveQuestions);
