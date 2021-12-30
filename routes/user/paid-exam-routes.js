@@ -47,7 +47,7 @@ router.post('/add-paid-exam-question', fileUpload.single('questionImage'),
         check('part_nl').not().isEmpty(),
     ], paidExamController.addPaidExamQuestion);
 
-router.post('./approve-questions', fileUpload.single('questionImages'),
+router.post('/approve-questions', fileUpload.single('questionImages'),
     [
         check('questions').not().isEmpty(),
     ], paidExamController.approveQuestions);
