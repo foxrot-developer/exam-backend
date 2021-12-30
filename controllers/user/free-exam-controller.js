@@ -437,7 +437,7 @@ const approveQuestions = async (req, res, next) => {
 
     const parsedQuestions = JSON.parse(questions);
 
-    parsedQuestions.map((ques, index) => {
+    parsedQuestions.map(async (ques, index) => {
 
         const {
             question,
