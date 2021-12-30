@@ -433,7 +433,7 @@ const approveQuestions = async (req, res, next) => {
 
     const { questions } = req.body;
 
-    console.log(req.files.questionImages);
+    console.log("Question Images", req.files.questionImages);
 
     const parsedQuestions = JSON.parse(questions);
 
