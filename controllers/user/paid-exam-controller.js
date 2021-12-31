@@ -1601,9 +1601,11 @@ const approveQuestions = async (req, res, next) => {
 
     const { questions } = req.body;
 
+    console.log("Question Images", req.files.questionImages);
+
     const parsedQuestions = JSON.parse(questions);
 
-    parsedQuestions.map(async ques => {
+    parsedQuestions.map(async (ques, index) => {
 
         const {
             question,
@@ -1623,9 +1625,9 @@ const approveQuestions = async (req, res, next) => {
             reason_ar,
             reason_nl } = ques;
 
-        const questions = new PaidExamQuestion({
+        const questions = new FreeExam({
             question,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer,
             draggable,
             options,
@@ -1633,22 +1635,22 @@ const approveQuestions = async (req, res, next) => {
             part
         });
 
-        const arQuestions = new ArPaidExamQuestion({
+        const arQuestions = new ArFreeExam({
             enId: questions.id,
             question: question_ar,
             draggable,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer: answer_ar,
             options: options_ar,
             reason: reason_ar,
             part: part_ar
         });
 
-        const nlQuestions = new NlPaidExamQuestion({
+        const nlQuestions = new NlFreeExam({
             enId: questions.id,
             question: question_nl,
             draggable,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer: answer_nl,
             options: options_nl,
             reason: reason_nl,
@@ -1668,7 +1670,7 @@ const approveQuestions = async (req, res, next) => {
         }
     });
 
-    res.json({ message: "Questions uploaded successfully" });
+    res.json({ message: "Questions uploaded successfully" });s
 
 };
 
