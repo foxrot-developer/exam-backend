@@ -797,18 +797,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -846,18 +860,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -895,18 +923,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1033,18 +1075,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1082,18 +1138,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1131,18 +1201,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1269,18 +1353,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1318,18 +1416,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1367,18 +1479,32 @@ const paidExamResult = async (req, res, next) => {
                     const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                     const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                    if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
+                        };
+                    }
+                    else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                        return {
+                            id: answer.id,
+                            status: true,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
