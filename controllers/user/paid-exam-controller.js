@@ -1601,11 +1601,9 @@ const approveQuestions = async (req, res, next) => {
 
     const { questions } = req.body;
 
-    console.log("Question Images", req.files.questionImages);
-
     const parsedQuestions = JSON.parse(questions);
 
-    parsedQuestions.map(async (ques, index) => {
+    parsedQuestions.map(async ques => {
 
         const {
             question,
@@ -1625,9 +1623,9 @@ const approveQuestions = async (req, res, next) => {
             reason_ar,
             reason_nl } = ques;
 
-        const questions = new FreeExam({
+        const questions = new PaidExamQuestion({
             question,
-            questionImage: req.files.questionImages[index].path,
+            questionImage: req.file.path,
             answer,
             draggable,
             options,
@@ -1635,22 +1633,22 @@ const approveQuestions = async (req, res, next) => {
             part
         });
 
-        const arQuestions = new ArFreeExam({
+        const arQuestions = new ArPaidExamQuestion({
             enId: questions.id,
             question: question_ar,
             draggable,
-            questionImage: req.files.questionImages[index].path,
+            questionImage: req.file.path,
             answer: answer_ar,
             options: options_ar,
             reason: reason_ar,
             part: part_ar
         });
 
-        const nlQuestions = new NlFreeExam({
+        const nlQuestions = new NlPaidExamQuestion({
             enId: questions.id,
             question: question_nl,
             draggable,
-            questionImage: req.files.questionImages[index].path,
+            questionImage: req.file.path,
             answer: answer_nl,
             options: options_nl,
             reason: reason_nl,
