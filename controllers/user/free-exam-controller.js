@@ -95,7 +95,21 @@ const freeExamScore = async (req, res, next) => {
 
                 console.log({ answerId1, answerId2, answerId3 });
 
-                if (originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
                     return {
                         id: answer.id,
                         status: true,
