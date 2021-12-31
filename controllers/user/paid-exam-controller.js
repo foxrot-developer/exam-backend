@@ -354,7 +354,7 @@ const addPaidExamQuestion = async (req, res, next) => {
     if (!errors.isEmpty()) {
         return next(new HttpError('Invalid data received from frontend', 422));
     }
-    console.log('Entered controller');
+
     const {
         question,
         question_ar,
@@ -368,7 +368,10 @@ const addPaidExamQuestion = async (req, res, next) => {
         options_nl,
         part,
         part_ar,
-        part_nl, } = req.body;
+        part_nl,
+        reason,
+        reason_ar,
+        reason_nl } = req.body;
 
 
     const paidQuestion = new PaidExamQuestion({
@@ -377,6 +380,7 @@ const addPaidExamQuestion = async (req, res, next) => {
         draggable,
         answer,
         options,
+        reason,
         part
     });
 
@@ -387,6 +391,7 @@ const addPaidExamQuestion = async (req, res, next) => {
         questionImage: req.file.path,
         answer: answer_ar,
         options: options_ar,
+        reason: reason_ar,
         part: part_ar
     });
 
@@ -397,6 +402,7 @@ const addPaidExamQuestion = async (req, res, next) => {
         draggable,
         answer: answer_nl,
         options: options_nl,
+        reason: reason_nl,
         part: part_nl
     });
 
@@ -530,7 +536,10 @@ const editPaidExamQuestion = async (req, res, next) => {
         options_nl,
         part,
         part_ar,
-        part_nl, } = req.body;
+        part_nl,
+        reason,
+        reason_ar,
+        reason_nl } = req.body;
 
     const quesId = req.params.quesId;
 
@@ -572,16 +581,19 @@ const editPaidExamQuestion = async (req, res, next) => {
     existingQuestion.question = question;
     existingQuestion.answer = answer;
     existingQuestion.options = options;
+    existingQuestion.reason = reason;
     existingQuestion.part = part;
 
     existingArQuestion.question = question_ar;
     existingArQuestion.answer = answer_ar;
     existingArQuestion.options = options_ar;
+    existingArQuestion.reason = reason_ar;
     existingArQuestion.part = part_ar;
 
     existingNlQuestion.question = question_nl;
     existingNlQuestion.answer = answer_nl;
     existingNlQuestion.options = options_nl;
+    existingNlQuestion.reason = reason_nl;
     existingNlQuestion.part = part_nl;
 
     try {

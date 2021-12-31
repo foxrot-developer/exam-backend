@@ -45,6 +45,9 @@ router.post('/add-paid-exam-question', fileUpload.single('questionImage'),
         check('part').not().isEmpty(),
         check('part_ar').not().isEmpty(),
         check('part_nl').not().isEmpty(),
+        check('reason').not().isEmpty(),
+        check('reason_ar').not().isEmpty(),
+        check('reason_nl').not().isEmpty(),
     ], paidExamController.addPaidExamQuestion);
 
 router.post('/approve-questions', fileUpload.fields([{ name: 'questionImages', maxCount: 100 }]),
@@ -75,6 +78,9 @@ router.patch('/edit-paid-exam-question/:quesId', [
     check('part').not().isEmpty(),
     check('part_ar').not().isEmpty(),
     check('part_nl').not().isEmpty(),
+    check('reason').not().isEmpty(),
+    check('reason_ar').not().isEmpty(),
+    check('reason_nl').not().isEmpty(),
 ], paidExamController.editPaidExamQuestion);
 
 router.delete('/delete-paid-exam/:examId', paidExamController.deletePaidExam);

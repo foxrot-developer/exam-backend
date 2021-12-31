@@ -27,6 +27,9 @@ router.post('/create-free-exam', fileUpload.single('questionImage'),
         check('part').not().isEmpty(),
         check('part_ar').not().isEmpty(),
         check('part_nl').not().isEmpty(),
+        check('reason').not().isEmpty(),
+        check('reason_ar').not().isEmpty(),
+        check('reason_nl').not().isEmpty(),
     ], freeExamController.createFreeExam);
 
 router.post('/free-approve-questions', fileUpload.fields([{ name: 'questionImages', maxCount: 100 }]),
@@ -48,6 +51,9 @@ router.patch('/edit-question/:quesId', [
     check('part').not().isEmpty(),
     check('part_ar').not().isEmpty(),
     check('part_nl').not().isEmpty(),
+    check('reason').not().isEmpty(),
+    check('reason_ar').not().isEmpty(),
+    check('reason_nl').not().isEmpty(),
 ], freeExamController.editQuestion);
 
 router.delete('/delete-question/:quesId', freeExamController.deleteQuestion);

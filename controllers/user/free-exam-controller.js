@@ -238,7 +238,10 @@ const createFreeExam = async (req, res, next) => {
         options_nl,
         part,
         part_ar,
-        part_nl, } = req.body;
+        part_nl,
+        reason,
+        reason_ar,
+        reason_nl } = req.body;
 
     console.log(req.file);
 
@@ -248,6 +251,7 @@ const createFreeExam = async (req, res, next) => {
         answer,
         draggable,
         options,
+        reason,
         part
     });
 
@@ -258,6 +262,7 @@ const createFreeExam = async (req, res, next) => {
         questionImage: req.file.path,
         answer: answer_ar,
         options: options_ar,
+        reason: reason_ar,
         part: part_ar
     });
 
@@ -268,6 +273,7 @@ const createFreeExam = async (req, res, next) => {
         questionImage: req.file.path,
         answer: answer_nl,
         options: options_nl,
+        reason: reason_nl,
         part: part_nl
     });
 
@@ -304,7 +310,10 @@ const editQuestion = async (req, res, next) => {
         options_nl,
         part,
         part_ar,
-        part_nl, } = req.body;
+        part_nl,
+        reason,
+        reason_ar,
+        reason_nl } = req.body;
 
     const quesId = req.params.quesId;
 
@@ -346,16 +355,19 @@ const editQuestion = async (req, res, next) => {
     existingQuestion.question = question;
     existingQuestion.answer = answer;
     existingQuestion.options = options;
+    existingQuestion.reason = reason;
     existingQuestion.part = part;
 
     existingArQuestion.question = question_ar;
     existingArQuestion.answer = answer_ar;
     existingArQuestion.options = options_ar;
+    existingArQuestion.reason = reason_ar;
     existingArQuestion.part = part_ar;
 
     existingNlQuestion.question = question_nl;
     existingNlQuestion.answer = answer_nl;
     existingNlQuestion.options = options_nl;
+    existingNlQuestion.reason = reason_nl;
     existingNlQuestion.part = part_nl;
 
     try {
