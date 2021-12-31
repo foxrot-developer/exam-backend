@@ -1601,9 +1601,11 @@ const approveQuestions = async (req, res, next) => {
 
     const { questions } = req.body;
 
+    console.log("Question Images", req.files.questionImages);
+
     const parsedQuestions = JSON.parse(questions);
 
-    parsedQuestions.map(async ques => {
+    parsedQuestions.map(async (ques, index) => {
 
         const {
             question,
@@ -1625,7 +1627,7 @@ const approveQuestions = async (req, res, next) => {
 
         const questions = new PaidExamQuestion({
             question,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer,
             draggable,
             options,
@@ -1637,7 +1639,7 @@ const approveQuestions = async (req, res, next) => {
             enId: questions.id,
             question: question_ar,
             draggable,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer: answer_ar,
             options: options_ar,
             reason: reason_ar,
@@ -1648,7 +1650,7 @@ const approveQuestions = async (req, res, next) => {
             enId: questions.id,
             question: question_nl,
             draggable,
-            questionImage: req.file.path,
+            questionImage: req.files.questionImages[index].path,
             answer: answer_nl,
             options: options_nl,
             reason: reason_nl,
