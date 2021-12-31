@@ -1670,7 +1670,7 @@ const approveQuestions = async (req, res, next) => {
         }
     });
 
-    res.json({ message: "Questions uploaded successfully" });s
+    res.json({ message: "Questions uploaded successfully" });
 
 };
 
