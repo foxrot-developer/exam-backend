@@ -626,7 +626,7 @@ const selectFreeExam = async (req, res, next) => {
     // Ar allocations
     let existingArQuestionsAllocation
     try {
-        existingArQuestionsAllocation = await ArQuestionAllocation.findOne({ enId: examId });
+        existingArQuestionsAllocation = await ArQuestionAllocation.findOne({ enId: existingQuestionsAllocation.id });
     } catch (error) {
         console.log(error);
         return next(new HttpError('Error fetching data from database', 500));
@@ -639,7 +639,7 @@ const selectFreeExam = async (req, res, next) => {
     // Nl allocations
     let existingNlQuestionsAllocation
     try {
-        existingNlQuestionsAllocation = await NlQuestionAllocation.findOne({ enId: examId });
+        existingNlQuestionsAllocation = await NlQuestionAllocation.findOne({ enId: existingQuestionsAllocation.id });
     } catch (error) {
         console.log(error);
         return next(new HttpError('Error fetching data from database', 500));
@@ -698,7 +698,7 @@ const selectFreeExam = async (req, res, next) => {
     });
 
     const newArFreeExam = new ArFreeExam({
-        enId: newFreeExam.id,
+        enId: existingArQuestionsAllocation.enId,
         examId: existingArQuestionsAllocation.examId,
         part1: existingArQuestionsAllocation.part1,
         part2: existingArQuestionsAllocation.part2,
@@ -706,7 +706,7 @@ const selectFreeExam = async (req, res, next) => {
     });
 
     const newNlFreeExam = new ArFreeExam({
-        enId: newFreeExam.id,
+        enId: existingNlQuestionsAllocation.enId,
         examId: existingNlQuestionsAllocation.examId,
         part1: existingNlQuestionsAllocation.part1,
         part2: existingNlQuestionsAllocation.part2,
