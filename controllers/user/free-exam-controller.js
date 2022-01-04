@@ -119,7 +119,7 @@ const freeExamScore = async (req, res, next) => {
             return next(new HttpError('No free exam found', 422));
         }
 
-        let allQuestions;
+        let allQuestions = [];
         ques_part1 = JSON.parse(existingFreeExam[0].part1);
         allQuestions.push(ques_part1);
         ques_part2 = JSON.parse(existingFreeExam[0].part2);
@@ -202,7 +202,7 @@ const freeExamScore = async (req, res, next) => {
             return next(new HttpError('Error fetching data from database', 500));
         }
 
-        let allQuestions;
+        let allQuestions = [];
         ques_part1 = JSON.parse(existingArFreeExam[0].part1);
         allQuestions.push(ques_part1);
         ques_part2 = JSON.parse(existingArFreeExam[0].part2);
@@ -285,7 +285,7 @@ const freeExamScore = async (req, res, next) => {
             return next(new HttpError('Error fetching data from database', 500));
         }
 
-        let allQuestions;
+        let allQuestions = [];
         ques_part1 = JSON.parse(existingNlFreeExam[0].part1);
         allQuestions.push(ques_part1);
         ques_part2 = JSON.parse(existingNlFreeExam[0].part2);
