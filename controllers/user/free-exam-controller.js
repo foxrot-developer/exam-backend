@@ -133,8 +133,6 @@ const freeExamScore = async (req, res, next) => {
             allQuestions.push(element);
         });
 
-        console.log({ allQuestions });
-
         const questionAnswers = answers.map(async answer => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
