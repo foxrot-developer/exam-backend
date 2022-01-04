@@ -211,15 +211,15 @@ const freeExamScore = async (req, res, next) => {
         }
 
         let allQuestions = [];
-        ques_part1 = JSON.parse(existingFreeExam[0].part1);
+        ques_part1 = JSON.parse(existingArFreeExam[0].part1);
         ques_part1.forEach(element => {
             allQuestions.push(element);
         });
-        ques_part2 = JSON.parse(existingFreeExam[0].part2);
+        ques_part2 = JSON.parse(existingArFreeExam[0].part2);
         ques_part2.forEach(element => {
             allQuestions.push(element);
         });
-        ques_part3 = JSON.parse(existingFreeExam[0].part3);
+        ques_part3 = JSON.parse(existingArFreeExam[0].part3);
         ques_part3.forEach(element => {
             allQuestions.push(element);
         });
@@ -300,15 +300,15 @@ const freeExamScore = async (req, res, next) => {
         }
 
         let allQuestions = [];
-        ques_part1 = JSON.parse(existingFreeExam[0].part1);
+        ques_part1 = JSON.parse(existingNlFreeExam[0].part1);
         ques_part1.forEach(element => {
             allQuestions.push(element);
         });
-        ques_part2 = JSON.parse(existingFreeExam[0].part2);
+        ques_part2 = JSON.parse(existingNlFreeExam[0].part2);
         ques_part2.forEach(element => {
             allQuestions.push(element);
         });
-        ques_part3 = JSON.parse(existingFreeExam[0].part3);
+        ques_part3 = JSON.parse(existingNlFreeExam[0].part3);
         ques_part3.forEach(element => {
             allQuestions.push(element);
         });
