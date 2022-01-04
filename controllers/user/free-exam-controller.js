@@ -108,31 +108,46 @@ const freeExamScore = async (req, res, next) => {
     const { answers } = req.body;
 
     if (req.headers.lang === 'en') {
+        let existingFreeExam;
+        try {
+            existingFreeExam = await FreeExam.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        }
+        if (!existingFreeExam || existingFreeExam.length === 0) {
+            return next(new HttpError('No free exam found', 422));
+        }
+
+        ques_part1 = JSON.parse(existingFreeExam[0].part1);
+        ques_part2 = JSON.parse(existingFreeExam[0].part2);
+        ques_part3 = JSON.parse(existingFreeExam[0].part3);
+
         const questionAnswers = answers.map(async answer => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
             }
-            const finalAnswers = await FreeExam.findById(answer.id);
-            if (!finalAnswers.draggable) {
-                if (answer.answer === finalAnswers.answer) {
+            const finalAnswers1 = ques_part1.find(ques => ques._id === answer.id);
+            if (!finalAnswers1.draggable) {
+                if (answer.answer === finalAnswers1.answer) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
                         status: false,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
             }
             else {
-                const originalId1 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 1);
-                const originalId2 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 2);
-                const originalId3 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 3);
+                const originalId1 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 3);
 
                 const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
                 const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
@@ -144,28 +159,144 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
                         status: false,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
+                    };
+                }
+            }
+
+            const finalAnswers2 = ques_part2.find(ques => ques._id === answer.id);
+            if (!finalAnswers2.draggable) {
+                if (answer.answer === finalAnswers2.answer) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+            }
+            else {
+                const originalId1 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 3);
+
+                const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                console.log({ answerId1, answerId2, answerId3 });
+
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+            }
+
+            const finalAnswers3 = ques_part3.find(ques => ques._id === answer.id);
+            if (!finalAnswers3.draggable) {
+                if (answer.answer === finalAnswers3.answer) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+            }
+            else {
+                const originalId1 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 3);
+
+                const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                console.log({ answerId1, answerId2, answerId3 });
+
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers3.answer
                     };
                 }
             }
@@ -175,62 +306,192 @@ const freeExamScore = async (req, res, next) => {
     }
 
     else if (req.headers.lang === 'ar') {
+        let existingArFreeExam;
+        try {
+            existingArFreeExam = await ArFreeExam.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        }
+
+        ques_part1 = JSON.parse(existingArFreeExam[0].part1);
+        ques_part2 = JSON.parse(existingArFreeExam[0].part2);
+        ques_part3 = JSON.parse(existingArFreeExam[0].part3);
+
         const questionAnswers = answers.map(async answer => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
             }
-            const finalAnswers = await ArFreeExam.findById(answer.id);
-            if (!finalAnswers.draggable) {
-                if (answer.answer === finalAnswers.answer) {
+            const finalAnswers1 = ques_part1.find(ques => ques.enId === answer.id);
+            if (!finalAnswers1.draggable) {
+                if (answer.answer === finalAnswers1.answer) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
                         status: false,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
             }
             else {
-                const originalId1 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 1);
-                const originalId2 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 2);
-                const originalId3 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 3);
+                const originalId1 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 3);
 
                 const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
                 const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                 const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
+                console.log({ answerId1, answerId2, answerId3 });
+
                 if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
                         status: false,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
+                    };
+                }
+            }
+
+            const finalAnswers2 = ques_part2.find(ques => ques.enId === answer.id);
+            if (!finalAnswers2.draggable) {
+                if (answer.answer === finalAnswers2.answer) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+            }
+            else {
+                const originalId1 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 3);
+
+                const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                console.log({ answerId1, answerId2, answerId3 });
+
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+            }
+
+            const finalAnswers3 = ques_part3.find(ques => ques.enId === answer.id);
+            if (!finalAnswers3.draggable) {
+                if (answer.answer === finalAnswers3.answer) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+            }
+            else {
+                const originalId1 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 3);
+
+                const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                console.log({ answerId1, answerId2, answerId3 });
+
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers3.answer
                     };
                 }
             }
@@ -240,62 +501,192 @@ const freeExamScore = async (req, res, next) => {
     }
 
     else if (req.headers.lang === 'nl') {
+        let existingNlFreeExam;
+        try {
+            existingNlFreeExam = await NlFreeExam.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
+        }
+
+        ques_part1 = JSON.parse(existingNlFreeExam[0].part1);
+        ques_part2 = JSON.parse(existingNlFreeExam[0].part2);
+        ques_part3 = JSON.parse(existingNlFreeExam[0].part3);
+
         const questionAnswers = answers.map(async answer => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
             }
-            const finalAnswers = await NlFreeExam.findById(answer.id);
-            if (!finalAnswers.draggable) {
-                if (answer.answer === finalAnswers.answer) {
+            const finalAnswers1 = ques_part1.find(ques => ques.enId === answer.id);
+            if (!finalAnswers1.draggable) {
+                if (answer.answer === finalAnswers1.answer) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
                         status: false,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
             }
             else {
-                const originalId1 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 1);
-                const originalId2 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 2);
-                const originalId3 = JSON.parse(finalAnswers.answer).find(ans => ans.id === 3);
+                const originalId1 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers1.answer).find(ans => ans.id === 3);
 
                 const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
                 const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                 const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
+                console.log({ answerId1, answerId2, answerId3 });
+
                 if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
                     return {
                         id: answer.id,
                         status: true,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
                     };
                 }
                 else {
                     return {
                         id: answer.id,
                         status: false,
-                        correct_answer: finalAnswers.answer
+                        correct_answer: finalAnswers1.answer
+                    };
+                }
+            }
+
+            const finalAnswers2 = ques_part2.find(ques => ques.enId === answer.id);
+            if (!finalAnswers2.draggable) {
+                if (answer.answer === finalAnswers2.answer) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+            }
+            else {
+                const originalId1 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers2.answer).find(ans => ans.id === 3);
+
+                const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                console.log({ answerId1, answerId2, answerId3 });
+
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers2.answer
+                    };
+                }
+            }
+
+            const finalAnswers3 = ques_part3.find(ques => ques.enId === answer.id);
+            if (!finalAnswers3.draggable) {
+                if (answer.answer === finalAnswers3.answer) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+            }
+            else {
+                const originalId1 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 1);
+                const originalId2 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 2);
+                const originalId3 = JSON.parse(finalAnswers3.answer).find(ans => ans.id === 3);
+
+                const answerId1 = JSON.parse(answer.answer).find(ans => ans.id === 1);
+                const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
+                const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
+
+                console.log({ answerId1, answerId2, answerId3 });
+
+                if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else if (originalId2 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else if (originalId1.x === answerId1.x && originalId1.y === answerId1.y) {
+                    return {
+                        id: answer.id,
+                        status: true,
+                        correct_answer: finalAnswers3.answer
+                    };
+                }
+                else {
+                    return {
+                        id: answer.id,
+                        status: false,
+                        correct_answer: finalAnswers3.answer
                     };
                 }
             }
