@@ -38,12 +38,12 @@ const getFreeExam = async (req, res, next) => {
             return next(new HttpError('no paid exam found', 422));
         }
 
-        res.json({ free_exam: existingPaidExam.toObject({ getters: true }), free_questions: existingFreeExam.toObject({ getters: true }) });
+        res.json({ free_exam: existingPaidExam.toObject({ getters: true }), free_questions: existingFreeExam });
     }
     else if (req.headers.lang === 'ar') {
         let existingArFreeExam;
         try {
-            existingArFreeExam = await FreeExam.find({});
+            existingArFreeExam = await ArFreeExam.find({});
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error fetching data from database', 500));
@@ -62,15 +62,15 @@ const getFreeExam = async (req, res, next) => {
         }
 
         if (!existingArPaidExam) {
-            return next(new HttpError('no paid exam found', 422));
+            return next(new HttpError('no ar paid exam found', 422));
         }
 
-        res.json({ free_exam: existingArPaidExam.toObject({ getters: true }), free_questions: existingArFreeExam.toObject({ getters: true }) });
+        res.json({ free_exam: existingArPaidExam.toObject({ getters: true }), free_questions: existingArFreeExam });
     }
     else if (req.headers.lang === 'nl') {
         let existingNlFreeExam;
         try {
-            existingNlFreeExam = await FreeExam.find({});
+            existingNlFreeExam = await NlFreeExam.find({});
         } catch (error) {
             console.log(error);
             return next(new HttpError('Error fetching data from database', 500));
@@ -92,7 +92,7 @@ const getFreeExam = async (req, res, next) => {
             return next(new HttpError('no paid exam found', 422));
         }
 
-        res.json({ free_exam: existingNlPaidExam.toObject({ getters: true }), free_questions: existingNlFreeExam.toObject({ getters: true }) });
+        res.json({ free_exam: existingNlPaidExam.toObject({ getters: true }), free_questions: existingNlFreeExam });
     }
     else {
         res.json({ message: 'Invalid language header or no header found' });
