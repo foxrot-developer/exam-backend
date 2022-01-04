@@ -98,7 +98,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions || existingPaidQuestions.length < 26) {
+    if (!existingPaidQuestions || existingPaidQuestions.length < 25) {
         return next(new HttpError('Not enough part 1 questions in the bank', 422));
     }
 
@@ -112,7 +112,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 13) {
+    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 12) {
         return next(new HttpError('Not enough part 2 questions in the bank', 422));
     }
 
@@ -125,7 +125,7 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Error getting data from database', 500));
     };
 
-    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 29) {
+    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 28) {
         return next(new HttpError('Not enough part 3 questions in the bank', 422));
     }
 
