@@ -129,9 +129,9 @@ const addPaidExam = async (req, res, next) => {
         return next(new HttpError('Not enough part 3 questions in the bank', 422));
     }
 
-    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 24);
-    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 11);
-    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 27);
+    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 12);
+    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 25);
+    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 28);
 
     let randPart1Ids = [];
     randPart1.forEach(element => {
