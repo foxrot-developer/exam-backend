@@ -121,11 +121,17 @@ const freeExamScore = async (req, res, next) => {
 
         let allQuestions = [];
         ques_part1 = JSON.parse(existingFreeExam[0].part1);
-        allQuestions.push(ques_part1);
+        ques_part1.forEach(element => {
+            allQuestions.push(element);
+        });
         ques_part2 = JSON.parse(existingFreeExam[0].part2);
-        allQuestions.push(ques_part2);
+        ques_part2.forEach(element => {
+            allQuestions.push(element);
+        });
         ques_part3 = JSON.parse(existingFreeExam[0].part3);
-        allQuestions.push(ques_part3);
+        ques_part3.forEach(element => {
+            allQuestions.push(element);
+        });
 
         console.log({ allQuestions });
 
