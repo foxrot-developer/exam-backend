@@ -127,6 +127,8 @@ const freeExamScore = async (req, res, next) => {
         ques_part3 = JSON.parse(existingFreeExam[0].part3);
         allQuestions.push(ques_part3);
 
+        console.log({ allQuestions });
+
         const questionAnswers = answers.map(async answer => {
             if (!answer.id) {
                 return next(new HttpError('Question id is required', 422));
