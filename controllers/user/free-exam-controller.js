@@ -705,7 +705,7 @@ const selectFreeExam = async (req, res, next) => {
         part3: existingArQuestionsAllocation.part3
     });
 
-    const newNlFreeExam = new ArFreeExam({
+    const newNlFreeExam = new NlFreeExam({
         enId: existingNlQuestionsAllocation.enId,
         examId: existingNlQuestionsAllocation.examId,
         part1: existingNlQuestionsAllocation.part1,
