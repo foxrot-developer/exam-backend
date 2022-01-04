@@ -698,7 +698,7 @@ const selectFreeExam = async (req, res, next) => {
     });
 
     const newArFreeExam = new ArFreeExam({
-        enId: existingArQuestionsAllocation.enId,
+        enId: newFreeExam.id,
         examId: existingArQuestionsAllocation.examId,
         part1: existingArQuestionsAllocation.part1,
         part2: existingArQuestionsAllocation.part2,
@@ -706,7 +706,7 @@ const selectFreeExam = async (req, res, next) => {
     });
 
     const newNlFreeExam = new ArFreeExam({
-        enId: existingNlQuestionsAllocation.enId,
+        enId: newFreeExam.id,
         examId: existingNlQuestionsAllocation.examId,
         part1: existingNlQuestionsAllocation.part1,
         part2: existingNlQuestionsAllocation.part2,
