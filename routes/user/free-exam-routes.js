@@ -37,6 +37,8 @@ router.post('/free-approve-questions', fileUpload.fields([{ name: 'questionImage
         check('questions').not().isEmpty(),
     ], freeExamController.approveQuestions);
 
+router.post('/select-free-exam/:examId', freeExamController.selectFreeExam);
+
 router.patch('/edit-question/:quesId', [
     check('question').not().isEmpty(),
     check('question_ar').not().isEmpty(),

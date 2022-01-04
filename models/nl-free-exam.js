@@ -5,13 +5,10 @@ const Schema = mongoose.Schema;
 
 const nlFreeExamSchema = new Schema({
     enId: { type: String, required: true },
-    question: { type: String, required: true },
-    questionImage: { type: String, required: true },
-    answer: { type: String, required: true },
-    options: { type: String, required: true },
-    part: { type: String, required: true },
-    reason: { type: String, required: true },
-    draggable: { type: Boolean, required: true },
+    examId: { type: String, required: true },
+    part1: { type: String, required: true },
+    part2: { type: String, required: true },
+    part3: { type: String, required: true },
 });
 
 // freeExamSchema.plugin(uniqueValidator);

@@ -582,18 +582,21 @@ const editPaidExamQuestion = async (req, res, next) => {
     existingQuestion.answer = answer;
     existingQuestion.options = options;
     existingQuestion.reason = reason;
+    existingQuestion.questionImage = req.file.path;
     existingQuestion.part = part;
 
     existingArQuestion.question = question_ar;
     existingArQuestion.answer = answer_ar;
     existingArQuestion.options = options_ar;
     existingArQuestion.reason = reason_ar;
+    existingArQuestion.questionImage = req.file.path;
     existingArQuestion.part = part_ar;
 
     existingNlQuestion.question = question_nl;
     existingNlQuestion.answer = answer_nl;
     existingNlQuestion.options = options_nl;
     existingNlQuestion.reason = reason_nl;
+    existingNlQuestion.questionImage = req.file.path;
     existingNlQuestion.part = part_nl;
 
     try {

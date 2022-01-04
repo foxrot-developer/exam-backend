@@ -5,49 +5,94 @@ const HttpError = require('../../helpers/http-error');
 const FreeExam = require('../../models/free-exam');
 const NlFreeExam = require('../../models/nl-free-exam');
 const ArFreeExam = require('../../models/ar-free-exam');
+const PaidExam = require('../../models/paid-exam');
+const ArPaidExam = require('../../models/ar-paid-exam');
+const NlPaidExam = require('../../models/nl-paid-exam');
+const QuestionAllocation = require('../../models/question-allocation');
+const ArQuestionAllocation = require('../../models/ar-question-allocation');
+const NlQuestionAllocation = require('../../models/nl-question-allocation');
 
 const getFreeExam = async (req, res, next) => {
     if (req.headers.lang === 'en') {
-        let allFreeQuestion;
+        let existingFreeExam;
         try {
-            allFreeQuestion = await FreeExam.find({});
+            existingFreeExam = await FreeExam.find({});
         } catch (error) {
-            return next(new HttpError('Error fetching questions', 500));
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
         }
 
-        if (!allFreeQuestion || allFreeQuestion.length === 0) {
-            return next(new HttpError('No questions found', 500));
+        if (!existingFreeExam || existingFreeExam.length === 0) {
+            return next(new HttpError('No free exams found', 422));
         }
 
-        res.json({ questions: allFreeQuestion.map(question => question.toObject({ getters: true })) });
+        let existingPaidExam;
+        try {
+            existingPaidExam = await PaidExam.findById(existingFreeExam[0].examId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching paid exam from database', 500));
+        }
+
+        if (!existingPaidExam) {
+            return next(new HttpError('no paid exam found', 422));
+        }
+
+        res.json({ free_exam: existingPaidExam.toObject({ getters: true }), free_questions: existingFreeExam.toObject({ getters: true }) });
     }
     else if (req.headers.lang === 'ar') {
-        let allArFreeQuestion;
+        let existingArFreeExam;
         try {
-            allArFreeQuestion = await ArFreeExam.find({});
+            existingArFreeExam = await FreeExam.find({});
         } catch (error) {
-            return next(new HttpError('Error fetching questions', 500));
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
         }
 
-        if (!allArFreeQuestion || allArFreeQuestion.length === 0) {
-            return next(new HttpError('No questions found', 500));
+        if (!existingArFreeExam || existingArFreeExam.length === 0) {
+            return next(new HttpError('No free exams found', 422));
         }
 
-        res.json({ questions: allArFreeQuestion.map(question => question.toObject({ getters: true })) });
+        let existingArPaidExam;
+        try {
+            existingArPaidExam = await ArPaidExam.findById(existingArFreeExam[0].examId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching paid exam from database', 500));
+        }
+
+        if (!existingArPaidExam) {
+            return next(new HttpError('no paid exam found', 422));
+        }
+
+        res.json({ free_exam: existingArPaidExam.toObject({ getters: true }), free_questions: existingArFreeExam.toObject({ getters: true }) });
     }
     else if (req.headers.lang === 'nl') {
-        let allNlFreeQuestion;
+        let existingNlFreeExam;
         try {
-            allNlFreeQuestion = await NlFreeExam.find({});
+            existingNlFreeExam = await FreeExam.find({});
         } catch (error) {
-            return next(new HttpError('Error fetching questions', 500));
+            console.log(error);
+            return next(new HttpError('Error fetching data from database', 500));
         }
 
-        if (!allNlFreeQuestion || allNlFreeQuestion.length === 0) {
-            return next(new HttpError('No questions found', 500));
+        if (!existingNlFreeExam || existingNlFreeExam.length === 0) {
+            return next(new HttpError('No free exams found', 422));
         }
 
-        res.json({ questions: allNlFreeQuestion.map(question => question.toObject({ getters: true })) });
+        let existingNlPaidExam;
+        try {
+            existingNlPaidExam = await NlPaidExam.findById(existingNlFreeExam[0].examId);
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error fetching paid exam from database', 500));
+        }
+
+        if (!existingNlPaidExam) {
+            return next(new HttpError('no paid exam found', 422));
+        }
+
+        res.json({ free_exam: existingNlPaidExam.toObject({ getters: true }), free_questions: existingNlFreeExam.toObject({ getters: true }) });
     }
     else {
         res.json({ message: 'Invalid language header or no header found' });
@@ -562,9 +607,131 @@ const approveQuestions = async (req, res, next) => {
 
 };
 
+const selectFreeExam = async (req, res, next) => {
+    const examId = req.params.examId;
+
+    // English allocations
+    let existingQuestionsAllocation
+    try {
+        existingQuestionsAllocation = await QuestionAllocation.findOne({ examId: examId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    }
+
+    if (!existingQuestionsAllocation) {
+        return next(new HttpError('No question allocations found against exam id', 422));
+    }
+
+    // Ar allocations
+    let existingArQuestionsAllocation
+    try {
+        existingArQuestionsAllocation = await ArQuestionAllocation.findOne({ enId: examId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    }
+
+    if (!existingArQuestionsAllocation) {
+        return next(new HttpError('No ar question allocations found against exam id', 422));
+    }
+
+    // Nl allocations
+    let existingNlQuestionsAllocation
+    try {
+        existingNlQuestionsAllocation = await NlQuestionAllocation.findOne({ enId: examId });
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    }
+
+    if (!existingNlQuestionsAllocation) {
+        return next(new HttpError('No ar question allocations found against exam id', 422));
+    }
+
+    // Free Exam
+    let existingFreeExam;
+    try {
+        existingFreeExam = await FreeExam.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching free exam from database', 500));
+    }
+
+    // Ar Free Exam
+    let existingArFreeExam;
+    try {
+        existingArFreeExam = await ArFreeExam.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching free exam from database', 500));
+    }
+
+    // Nl Free Exam
+    let existingNlFreeExam;
+    try {
+        existingNlFreeExam = await ArFreeExam.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching free exam from database', 500));
+    }
+
+    if (existingFreeExam.length && existingArFreeExam.length && existingNlFreeExam.length) {
+        try {
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            await existingFreeExam[0].remove({ session: session });
+            await existingArFreeExam[0].remove({ session: session });
+            await existingNlFreeExam[0].remove({ session: session });
+            await session.commitTransaction();
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('Error deleting existing free exams', 422));
+        }
+    }
+
+    const newFreeExam = new FreeExam({
+        examId: existingQuestionsAllocation.examId,
+        part1: existingQuestionsAllocation.part1,
+        part2: existingQuestionsAllocation.part2,
+        part3: existingQuestionsAllocation.part3
+    });
+
+    const newArFreeExam = new ArFreeExam({
+        enId: existingArQuestionsAllocation.enId,
+        examId: existingArQuestionsAllocation.examId,
+        part1: existingArQuestionsAllocation.part1,
+        part2: existingArQuestionsAllocation.part2,
+        part3: existingArQuestionsAllocation.part3
+    });
+
+    const newNlFreeExam = new ArFreeExam({
+        enId: existingNlQuestionsAllocation.enId,
+        examId: existingNlQuestionsAllocation.examId,
+        part1: existingNlQuestionsAllocation.part1,
+        part2: existingNlQuestionsAllocation.part2,
+        part3: existingNlQuestionsAllocation.part3
+    });
+
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await newFreeExam.save({ session: session });
+        await newArFreeExam.save({ session: session });
+        await newNlFreeExam.save({ session: session });
+        await session.commitTransaction();
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error allocating exam', 422));
+    }
+
+    res.json({ message: 'Free exam allocation successful' });
+};
+
 exports.getFreeExam = getFreeExam;
 exports.freeExamScore = freeExamScore;
 exports.createFreeExam = createFreeExam;
 exports.editQuestion = editQuestion;
 exports.deleteQuestion = deleteQuestion;
 exports.approveQuestions = approveQuestions;
+exports.selectFreeExam = selectFreeExam;
