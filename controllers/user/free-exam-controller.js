@@ -319,6 +319,7 @@ const freeExamScore = async (req, res, next) => {
                 return next(new HttpError('Question id is required', 422));
             }
             const finalAnswers1 = allQuestions.find(ques => ques.enId === answer.id);
+            console.log({ finalAnswers1 });
             if (!finalAnswers1.draggable) {
                 if (answer.answer === finalAnswers1.answer) {
                     return {
