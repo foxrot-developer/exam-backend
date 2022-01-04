@@ -311,6 +311,8 @@ const freeExamScore = async (req, res, next) => {
             allQuestions.push(element);
         });
 
+        console.log({ allQuestions });
+
 
         const questionAnswers = answers.map(async answer => {
             if (!answer.id) {
