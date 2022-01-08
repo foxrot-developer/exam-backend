@@ -971,9 +971,9 @@ const paidExamResult = async (req, res, next) => {
         const partThreeCorrect = finalPartThree.filter(result => result.status).length;
 
 
-        const partOnePass = partOneCorrect > 13 ? true : false;
-        const partTwoPass = partTwoCorrect > 10 ? true : false;
-        const partThreePass = partThreeCorrect > 25 ? true : false;
+        const partOnePass = partOneCorrect > 0 ? true : false;
+        const partTwoPass = partTwoCorrect > 0 ? true : false;
+        const partThreePass = partThreeCorrect > 0 ? true : false;
 
 
         const result = {
@@ -1527,9 +1527,9 @@ const paidExamResult = async (req, res, next) => {
         const partThreeCorrect = finalPartThree.filter(result => result.status).length;
 
 
-        const partOnePass = partOneCorrect > 13 ? true : false;
-        const partTwoPass = partTwoCorrect > 10 ? true : false;
-        const partThreePass = partThreeCorrect > 25 ? true : false;
+        const partOnePass = partOneCorrect > 0 ? true : false;
+        const partTwoPass = partTwoCorrect > 0 ? true : false;
+        const partThreePass = partThreeCorrect > 0 ? true : false;
 
 
         const result = {
