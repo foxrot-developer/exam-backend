@@ -780,14 +780,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -804,6 +806,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -811,6 +814,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -818,6 +822,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -825,6 +830,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -843,14 +849,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -867,6 +875,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -874,6 +883,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -881,6 +891,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -888,6 +899,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -906,14 +918,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -930,6 +944,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -937,6 +952,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -944,6 +960,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -951,6 +968,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1058,14 +1076,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1082,6 +1102,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1089,6 +1110,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1096,6 +1118,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1103,6 +1126,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1121,14 +1145,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1145,6 +1171,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1152,6 +1179,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1159,6 +1187,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1166,6 +1195,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1184,14 +1214,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1208,6 +1240,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1215,6 +1248,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1222,6 +1256,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1229,6 +1264,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1336,14 +1372,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1360,6 +1398,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1367,6 +1406,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1374,6 +1414,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1381,6 +1422,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1399,14 +1441,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1423,6 +1467,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1430,6 +1475,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1437,6 +1483,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1444,6 +1491,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1462,14 +1510,16 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                     else {
                         return {
                             id: answer.id,
                             status: false,
-                            correct_answer: answer.answer
+                            user_selected: answer.answer,
+                            correct_answer: finalAnswers.answer
                         };
                     }
                 }
@@ -1486,6 +1536,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1493,6 +1544,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1500,6 +1552,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: true,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }
@@ -1507,6 +1560,7 @@ const paidExamResult = async (req, res, next) => {
                         return {
                             id: answer.id,
                             status: false,
+                            user_selected: answer.answer,
                             correct_answer: finalAnswers.answer
                         };
                     }

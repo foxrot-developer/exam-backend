@@ -143,6 +143,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -150,6 +151,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: false,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -163,12 +165,11 @@ const freeExamScore = async (req, res, next) => {
                 const answerId2 = JSON.parse(answer.answer).find(ans => ans.id === 2);
                 const answerId3 = JSON.parse(answer.answer).find(ans => ans.id === 3);
 
-                console.log({ answerId1, answerId2, answerId3 });
-
                 if (originalId2 && originalId3 && originalId1.x === answerId1.x && originalId1.y === answerId1.y && originalId2.x === answerId2.x && originalId3.x === answerId3.x && originalId3.y === answerId3.y) {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -176,6 +177,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -183,6 +185,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -190,6 +193,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: false,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -232,6 +236,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -239,6 +244,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: false,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -258,6 +264,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -265,6 +272,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -272,6 +280,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -279,6 +288,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: false,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -322,6 +332,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -329,6 +340,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: false,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -348,6 +360,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -355,6 +368,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -362,6 +376,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: true,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
@@ -369,6 +384,7 @@ const freeExamScore = async (req, res, next) => {
                     return {
                         id: answer.id,
                         status: false,
+                        user_selected: answer.answer,
                         correct_answer: finalAnswers1.answer
                     };
                 }
