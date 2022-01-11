@@ -16,51 +16,40 @@ const NlQuestionAllocation = require('../../models/nl-question-allocation');
 
 const getPaidExam = async (req, res, next) => {
 
-    if (req.headers.lang === 'en') {
-        let allPaidQuestion;
-        try {
-            allPaidQuestion = await PaidExam.find({});
-        } catch (error) {
-            return next(new HttpError('Error fetching questions', 500));
-        }
-
-        if (!allPaidQuestion || allPaidQuestion.length === 0) {
-            return next(new HttpError('No paid exams found', 500));
-        }
-
-        res.json({ paid_exams: allPaidQuestion.map(question => question.toObject({ getters: true })) });
+    let allPaidQuestion;
+    try {
+        allPaidQuestion = await PaidExam.find({});
+    } catch (error) {
+        return next(new HttpError('Error fetching questions', 500));
     }
-    else if (req.headers.lang === 'ar') {
-        let allArPaidQuestion;
-        try {
-            allArPaidQuestion = await ArPaidExam.find({});
-        } catch (error) {
-            return next(new HttpError('Error fetching questions', 500));
-        }
 
-        if (!allArPaidQuestion || allArPaidQuestion.length === 0) {
-            return next(new HttpError('No paid exams found', 500));
-        }
-
-        res.json({ paid_exams: allArPaidQuestion.map(question => question.toObject({ getters: true })) });
+    if (!allPaidQuestion || allPaidQuestion.length === 0) {
+        return next(new HttpError('No paid exams found', 500));
     }
-    else if (req.headers.lang === 'nl') {
-        let allNlPaidQuestion;
-        try {
-            allNlPaidQuestion = await NlPaidExam.find({});
-        } catch (error) {
-            return next(new HttpError('Error fetching questions', 500));
-        }
 
-        if (!allNlPaidQuestion || allNlPaidQuestion.length === 0) {
-            return next(new HttpError('No paid exams found', 500));
-        }
+    let allArPaidQuestion;
+    try {
+        allArPaidQuestion = await ArPaidExam.find({});
+    } catch (error) {
+        return next(new HttpError('Error fetching questions', 500));
+    }
 
-        res.json({ paid_exams: allNlPaidQuestion.map(question => question.toObject({ getters: true })) });
+    if (!allArPaidQuestion || allArPaidQuestion.length === 0) {
+        return next(new HttpError('No paid exams found', 500));
     }
-    else {
-        res.json({ message: 'Invalid or no lang header found' });
+
+    let allNlPaidQuestion;
+    try {
+        allNlPaidQuestion = await NlPaidExam.find({});
+    } catch (error) {
+        return next(new HttpError('Error fetching questions', 500));
     }
+
+    if (!allNlPaidQuestion || allNlPaidQuestion.length === 0) {
+        return next(new HttpError('No paid exams found', 500));
+    }
+
+    res.json({ en_paid_exams: allPaidQuestion.map(question => question.toObject({ getters: true })), ar_paid_exams: allArPaidQuestion.map(question => question.toObject({ getters: true })), nl_paid_exams: allNlPaidQuestion.map(question => question.toObject({ getters: true })) });
 
 };
 
