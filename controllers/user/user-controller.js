@@ -216,7 +216,7 @@ const idealSignup = async (req, res, next) => {
     let paymentIntent;
     try {
         paymentIntent = await stripe.paymentIntents.create({
-            amount: existingPackage.price.toFixed(2),
+            amount: existingPackage.price,
             currency: 'eur',
             payment_method_types: ['ideal'],
         });
