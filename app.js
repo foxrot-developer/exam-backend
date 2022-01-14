@@ -45,7 +45,7 @@ app.use((error, req, res, next) => {
     res.json({ message: error.message || 'An unknown error occured' });
 });
 
-mongoose.connect(`mongodb+srv://oday:D3velop1nJDE@exam.zj7fc.mongodb.net/exam?authSource=admin&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+mongoose.connect(`mongodb+srv://oday:D3velop1nJDE@exam.zj7fc.mongodb.net/alshahba?authSource=admin&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     console.log('Connected');
     app.listen(process.env.PORT || 5000);
 }).catch(err => {
