@@ -736,7 +736,7 @@ const editPaidExamQuestion = async (req, res, next) => {
             console.log(error);
             return next(new HttpError('No free exams question found', 500));
         }
-
+        // Allocations
         existingFreeExamAllocation.map(exam => {
             JSON.parse(exam.part1).map(question => {
                 if (question.enId === quesId) {
