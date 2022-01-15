@@ -183,18 +183,18 @@ const idealSignup = async (req, res, next) => {
         return next(new HttpError('Invalid data received', 422));
     }
 
-    const { username, email, password, packageId, paymentMethod } = req.body;
+    const { email, packageId } = req.body;
 
-    // let existingUser;
-    // try {
-    //     existingUser = await User.findOne({ email: email });
-    // } catch (error) {
-    //     return next(new HttpError('Signup failed. Try again', 500));
-    // }
+    let existingUser;
+    try {
+        existingUser = await User.findOne({ email: email });
+    } catch (error) {
+        return next(new HttpError('Signup failed. Try again', 500));
+    }
 
-    // if (existingUser) {
-    //     return next(new HttpError('Email already registered', 422));
-    // }
+    if (existingUser) {
+        return next(new HttpError('Email already registered', 422));
+    }
 
     let existingPackage;
     try {
@@ -205,13 +205,6 @@ const idealSignup = async (req, res, next) => {
 
     if (!existingPackage) {
         return next(new HttpError('Cannot find package against provided package id', 422));
-    }
-
-    let hashedPassword;
-    try {
-        hashedPassword = await bcrypt.hash(password, 12);
-    } catch (error) {
-        return next(new HttpError('Password hashing failed. Try again', 500));
     }
 
     let paymentIntent;
@@ -226,10 +219,24 @@ const idealSignup = async (req, res, next) => {
         return next(new HttpError('Stripe error creating payment intent', 500));
     };
 
-    // const status = paymentIntent['latest_invoice']['payment_intent']['status'];
-    // const client_secret = paymentIntent['latest_invoice']['payment_intent']['client_secret'];
+    res.json({ client_secret: paymentIntent.client_secret });
+};
 
+const createIdealUser = async (req, res, next) => {
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const { username, email, password, packageId } = req.body;
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12);
+    } catch (error) {
+        return next(new HttpError('Password hashing failed. Try again', 500));
+    }
 
     const newUser = new User({
         username,
@@ -319,7 +326,8 @@ const idealSignup = async (req, res, next) => {
         return next(new HttpError('Mail sending error', 500));
     };
 
-    res.json({ userId: newUser.id, username: newUser.username, email: newUser.email, freeAccess: newUser.freeAccess, subscriptionid: newUser.subscriptionid, client_secret: paymentIntent.client_secret });
+    res.json({ userId: newUser.id, username: newUser.username, email: newUser.email, freeAccess: newUser.freeAccess, subscriptionid: newUser.subscriptionid });
+
 };
 
 const login = async (req, res, next) => {
@@ -580,3 +588,4 @@ exports.userForgetPassword = userForgetPassword;
 exports.examEnrollment = examEnrollment;
 exports.getUserDetails = getUserDetails;
 exports.idealSignup = idealSignup;
+exports.createIdealUser = createIdealUser;

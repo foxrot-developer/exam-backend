@@ -18,11 +18,16 @@ router.post('/signup', [
 ], userController.signup);
 
 router.post('/ideal-signup', [
+    check('packageId').not().isEmpty(),
+    check('email').normalizeEmail().isEmail()
+], userController.idealSignup);
+
+router.post('/ideal-user', [
     check('username').not().isEmpty(),
     check('packageId').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
     check('password').isLength({ min: 8 })
-], userController.idealSignup);
+], userController.createIdealUser);
 
 router.post('/login', [
     check('email').normalizeEmail().isEmail(),
