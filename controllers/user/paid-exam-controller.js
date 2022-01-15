@@ -13,6 +13,9 @@ const User = require('../../models/user');
 const QuestionAllocation = require('../../models/question-allocation');
 const ArQuestionAllocation = require('../../models/ar-question-allocation');
 const NlQuestionAllocation = require('../../models/nl-question-allocation');
+const FreeExam = require('../../models/free-exam');
+const ArFreeExam = require('../../models/ar-free-exam');
+const NlFreeExam = require('../../models/nl-free-exam');
 
 const getPaidExam = async (req, res, next) => {
 
@@ -531,6 +534,157 @@ const editPaidExamQuestion = async (req, res, next) => {
             return next(new HttpError('No paid question found against id', 422));
         }
 
+        // Free exam
+        let existingFreeExamAllocation;
+        try {
+            existingFreeExamAllocation = await FreeExam.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('No free exams question found', 500));
+        }
+
+        existingFreeExamAllocation.map(exam => {
+            JSON.parse(exam.part1).map(question => {
+                if (question._id === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part2).map(question => {
+                if (question._id === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part3).map(question => {
+                if (question._id === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+        })
+
+        // Paid exam allocation
+        let existingQuestionAllocation;
+        try {
+            existingQuestionAllocation = await QuestionAllocation.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('No free exams question found', 500));
+        }
+
+        existingQuestionAllocation.map(exam => {
+            JSON.parse(exam.part1).map(question => {
+                if (question._id === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part2).map(question => {
+                if (question._id === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part3).map(question => {
+                if (question._id === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+        })
+
+
         existingQuestion.question = question;
         existingQuestion.answer = answer;
         existingQuestion.options = options;
@@ -574,6 +728,156 @@ const editPaidExamQuestion = async (req, res, next) => {
             return next(new HttpError('No paid question found against id', 422));
         }
 
+        // Free exam
+        let existingFreeExamAllocation;
+        try {
+            existingFreeExamAllocation = await ArFreeExam.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('No free exams question found', 500));
+        }
+
+        existingFreeExamAllocation.map(exam => {
+            JSON.parse(exam.part1).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part2).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part3).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+        })
+
+        // Paid exam allocation
+        let existingQuestionAllocation;
+        try {
+            existingQuestionAllocation = await ArQuestionAllocation.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('No free exams question found', 500));
+        }
+
+        existingQuestionAllocation.map(exam => {
+            JSON.parse(exam.part1).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part2).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part3).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+        })
+
         existingArQuestion.question = question_ar;
         existingArQuestion.answer = answer_ar;
         existingArQuestion.options = options_ar;
@@ -616,6 +920,156 @@ const editPaidExamQuestion = async (req, res, next) => {
         if (!existingNlQuestion) {
             return next(new HttpError('No paid question found against id', 422));
         }
+
+        // Free exam
+        let existingFreeExamAllocation;
+        try {
+            existingFreeExamAllocation = await NlFreeExam.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('No free exams question found', 500));
+        }
+
+        existingFreeExamAllocation.map(exam => {
+            JSON.parse(exam.part1).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part2).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part3).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+        })
+
+        // Paid exam allocation
+        let existingQuestionAllocation;
+        try {
+            existingQuestionAllocation = await NlQuestionAllocation.find({});
+        } catch (error) {
+            console.log(error);
+            return next(new HttpError('No free exams question found', 500));
+        }
+
+        existingQuestionAllocation.map(exam => {
+            JSON.parse(exam.part1).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part2).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+            JSON.parse(exam.part3).map(question => {
+                if (question.enId === quesId) {
+                    question.question = question;
+                    question.answer = answer;
+                    question.options = options;
+                    question.reason = reason;
+                    question.questionImage = req.file.path;
+                    question.draggable = draggable;
+                    question.part = part;
+
+                    try {
+                        const session = await mongoose.startSession();
+                        session.startTransaction();
+                        await exam.save({ session: session });
+                        await session.commitTransaction();
+                    } catch (error) {
+                        console.log(error);
+                        return next(new HttpError('Error updating question', 500));
+                    };
+                }
+            })
+        })
 
         existingNlQuestion.question = question_nl;
         existingNlQuestion.answer = answer_nl;
