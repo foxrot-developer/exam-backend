@@ -185,16 +185,16 @@ const idealSignup = async (req, res, next) => {
 
     const { email, packageId } = req.body;
 
-    let existingUser;
-    try {
-        existingUser = await User.findOne({ email: email });
-    } catch (error) {
-        return next(new HttpError('Signup failed. Try again', 500));
-    }
+    // let existingUser;
+    // try {
+    //     existingUser = await User.findOne({ email: email });
+    // } catch (error) {
+    //     return next(new HttpError('Signup failed. Try again', 500));
+    // }
 
-    if (existingUser) {
-        return next(new HttpError('Email already registered', 422));
-    }
+    // if (existingUser) {
+    //     return next(new HttpError('Email already registered', 422));
+    // }
 
     let existingPackage;
     try {
