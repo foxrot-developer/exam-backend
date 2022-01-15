@@ -523,6 +523,8 @@ const editPaidExamQuestion = async (req, res, next) => {
 
         const quesId = req.params.quesId;
 
+        console.log(req.file);
+
         let existingQuestion;
         try {
             existingQuestion = await PaidExamQuestion.findById(quesId);
