@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
+const stripe = require('stripe')('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');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 
@@ -216,7 +216,7 @@ const idealSignup = async (req, res, next) => {
     let paymentIntent;
     try {
         paymentIntent = await stripe.paymentIntents.create({
-            amount: parseInt(existingPackage.price),
+            amount: parseInt(existingPackage.price * 100),
             currency: 'eur',
             payment_method_types: ['ideal'],
         });
@@ -279,13 +279,25 @@ const idealSignup = async (req, res, next) => {
         return next(new HttpError('Transporter error', 500));
     };
 
+    let existingEmailTemplate;
+    try {
+        existingEmailTemplate = await EmailTemplate.findById('61c86f420eb00d6b409944b4');
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error fetching data from database', 500));
+    };
+
+    if (!existingEmailTemplate) {
+        return next(new HttpError('No email template found against id', 500));
+    }
+
     let mailDetails
     try {
         mailDetails = {
             from: 'info@alshahbarijschool.nl',
             to: email,
             subject: 'Package subscription confirmation',
-            text: `Your free subscription of ${existingPackage.package_name} is confirmed`
+            text: existingEmailTemplate.templateText
         }
     } catch (error) {
         console.log(error);
