@@ -544,7 +544,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         }
 
         existingFreeExamAllocation.map(exam => {
-            JSON.parse(exam.part1).map(question => {
+            JSON.parse(exam.part1).map(async question => {
                 if (question._id === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -565,7 +565,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part2).map(question => {
+            JSON.parse(exam.part2).map(async question => {
                 if (question._id === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -586,7 +586,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part3).map(question => {
+            JSON.parse(exam.part3).map(async question => {
                 if (question._id === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -619,7 +619,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         }
 
         existingQuestionAllocation.map(exam => {
-            JSON.parse(exam.part1).map(question => {
+            JSON.parse(exam.part1).map(async question => {
                 if (question._id === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -640,7 +640,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part2).map(question => {
+            JSON.parse(exam.part2).map(async question => {
                 if (question._id === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -661,7 +661,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part3).map(question => {
+            JSON.parse(exam.part3).map(async question => {
                 if (question._id === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -738,7 +738,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         }
         // Allocations
         existingFreeExamAllocation.map(exam => {
-            JSON.parse(exam.part1).map(question => {
+            JSON.parse(exam.part1).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -759,7 +759,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part2).map(question => {
+            JSON.parse(exam.part2).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -780,7 +780,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part3).map(question => {
+            JSON.parse(exam.part3).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -813,7 +813,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         }
 
         existingQuestionAllocation.map(exam => {
-            JSON.parse(exam.part1).map(question => {
+            JSON.parse(exam.part1).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -834,7 +834,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part2).map(question => {
+            JSON.parse(exam.part2).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -855,7 +855,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part3).map(question => {
+            JSON.parse(exam.part3).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -931,7 +931,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         }
 
         existingFreeExamAllocation.map(exam => {
-            JSON.parse(exam.part1).map(question => {
+            JSON.parse(exam.part1).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -952,7 +952,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part2).map(question => {
+            JSON.parse(exam.part2).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -973,7 +973,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part3).map(question => {
+            JSON.parse(exam.part3).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -1006,7 +1006,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         }
 
         existingQuestionAllocation.map(exam => {
-            JSON.parse(exam.part1).map(question => {
+            JSON.parse(exam.part1).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -1027,7 +1027,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part2).map(question => {
+            JSON.parse(exam.part2).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
@@ -1048,7 +1048,7 @@ const editPaidExamQuestion = async (req, res, next) => {
                     };
                 }
             })
-            JSON.parse(exam.part3).map(question => {
+            JSON.parse(exam.part3).map(async question => {
                 if (question.enId === quesId) {
                     question.question = question;
                     question.answer = answer;
