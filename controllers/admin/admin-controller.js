@@ -1,8 +1,8 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
-// const stripe = require('stripe')('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');
-const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
+const stripe = require('stripe')('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');
+// const stripe = require('stripe')('sk_test_51K3gR8GptmPxUZeMVyiVoakC2tYzXDict6ZdlvauzE4cDDK57MuBGQ9IHoZNDIlMJCOSpZUwEd7x8VXGzIKPjOKb00hz7QBzvB');
 const nodemailer = require('nodemailer');
 
 const HttpError = require('../../helpers/http-error');

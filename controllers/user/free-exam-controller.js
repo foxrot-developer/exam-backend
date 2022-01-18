@@ -80,6 +80,8 @@ const getFreeExam = async (req, res, next) => {
             return next(new HttpError('No free exams found', 422));
         }
 
+        console.log({ existingNlFreeExam });
+
         let existingNlPaidExam;
         try {
             existingNlPaidExam = await NlPaidExam.findById(existingNlFreeExam[0].examId);
