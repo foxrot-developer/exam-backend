@@ -70,6 +70,7 @@ const signup = async (req, res, next) => {
     try {
         subscription = await stripe.subscriptions.create({
             customer: customer.id,
+            cancel_at_period_end: true,
             items: [
                 { plan: existingPackage.planid }
             ],
@@ -338,8 +339,6 @@ const login = async (req, res, next) => {
 
     const { email, password, specialCode } = req.body;
 
-    console.log({ specialCode });
-
     let existingUser;
     try {
         existingUser = await User.findOne({ email: email });
@@ -351,33 +350,38 @@ const login = async (req, res, next) => {
         return next(new HttpError('Invalid email', 422));
     }
 
-    if (specialCode !== '' && specialCode !== undefined) {
-        if (specialCode !== existingUser.specialCode) {
-            return next(new HttpError('Code does not match against the user', 422));
-        }
-        let validPassword;
-        try {
-            validPassword = await bcrypt.compare(password, existingUser.password);
-        } catch (error) {
-            return next(new HttpError('Error validating password', 500));
-        }
+    if (!existingUser.block) {
+        if (specialCode !== '' && specialCode !== undefined) {
+            if (specialCode !== existingUser.specialCode) {
+                return next(new HttpError('Code does not match against the user', 422));
+            }
+            let validPassword;
+            try {
+                validPassword = await bcrypt.compare(password, existingUser.password);
+            } catch (error) {
+                return next(new HttpError('Error validating password', 500));
+            }
 
-        if (!validPassword) {
-            return next(new HttpError('Password incorrect', 422));
-        }
-        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled.map(enroll => enroll.toObject({ getters: true })), completed: existingUser.completed.map(enroll => enroll.toObject({ getters: true })) });
-    } else {
-        let validPassword;
-        try {
-            validPassword = await bcrypt.compare(password, existingUser.password);
-        } catch (error) {
-            return next(new HttpError('Error validating password', 500));
-        }
+            if (!validPassword) {
+                return next(new HttpError('Password incorrect', 422));
+            }
+            res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled.map(enroll => enroll.toObject({ getters: true })), completed: existingUser.completed.map(enroll => enroll.toObject({ getters: true })) });
+        } else {
+            let validPassword;
+            try {
+                validPassword = await bcrypt.compare(password, existingUser.password);
+            } catch (error) {
+                return next(new HttpError('Error validating password', 500));
+            }
 
-        if (!validPassword) {
-            return next(new HttpError('Password incorrect', 422));
+            if (!validPassword) {
+                return next(new HttpError('Password incorrect', 422));
+            }
+            res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled, completed: existingUser.completed });
         }
-        res.json({ userId: existingUser.id, email: existingUser.email, username: existingUser.username, freeAccess: existingUser.freeAccess, subscriptionid: existingUser.subscriptionid, enrolled: existingUser.enrolled, completed: existingUser.completed });
+    }
+    else {
+        return next(new HttpError('User is blocked', 500));
     }
 
 };

@@ -1203,6 +1203,48 @@ const allPaidQuestions = async (req, res, next) => {
 
 };
 
+const allLanguageQuestions = async (req, res, next) => {
+
+    let existingPaidQuestions;
+    try {
+        existingPaidQuestions = await PaidExamQuestion.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingPaidQuestions || existingPaidQuestions.length === 0) {
+        return next(new HttpError('No paid questions found', 422));
+    }
+
+    let existingArPaidQuestions;
+    try {
+        existingArPaidQuestions = await ArPaidExamQuestion.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingArPaidQuestions || existingArPaidQuestions.length === 0) {
+        return next(new HttpError('No paid questions found', 422));
+    }
+
+    let existingNlPaidQuestions;
+    try {
+        existingNlPaidQuestions = await NlPaidExamQuestion.find({});
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Error getting data from database', 500));
+    };
+
+    if (!existingNlPaidQuestions || existingNlPaidQuestions.length === 0) {
+        return next(new HttpError('No paid questions found', 422));
+    }
+
+    res.json({ paid_questions_en: existingPaidQuestions.map(ques => ques.toObject({ getters: true })), paid_questions_ar: existingArPaidQuestions.map(ques => ques.toObject({ getters: true })), paid_questions_nl: existingNlPaidQuestions.map(ques => ques.toObject({ getters: true })) });
+
+};
+
 const paidExamResult = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -2366,3 +2408,4 @@ exports.allExamResults = allExamResults;
 exports.paidExamDetails = paidExamDetails;
 exports.userResults = userResults;
 exports.approveQuestions = approveQuestions;
+exports.allLanguageQuestions = allLanguageQuestions;
