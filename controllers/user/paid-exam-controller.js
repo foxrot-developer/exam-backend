@@ -2322,8 +2322,6 @@ const approveQuestions = async (req, res, next) => {
 
     const { questions } = req.body;
 
-    console.log("Question Images", req.files.questionImages);
-
     const parsedQuestions = JSON.parse(questions);
 
     parsedQuestions.map(async (ques, index) => {
@@ -2395,6 +2393,232 @@ const approveQuestions = async (req, res, next) => {
 
 };
 
+const replaceQuestion = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid data received', 422));
+    }
+
+    const {
+        question_id,
+        new_question_id,
+        question_img,
+        question,
+        draggable,
+        question_ar,
+        question_nl,
+        answer,
+        answer_ar,
+        answer_nl,
+        options,
+        options_ar,
+        options_nl,
+        part,
+        reason,
+        reason_ar,
+        reason_nl } = req.body;
+
+    const examId = req.params.examId;
+
+    let existingExamAllocation;
+    try {
+        existingExamAllocation = QuestionAllocation.find({ examId: examId });
+    }
+    catch (error) {
+        console.log(error);
+        return next(new HttpError('Errir fetching exam allocations from database', 500));
+    }
+
+    if (!existingExamAllocation || !existingExamAllocation.length) {
+        return next(new HttpError('No exam allocations found', 404));
+    }
+
+    // Ar
+    let existingArExamAllocation;
+    try {
+        existingArExamAllocation = ArQuestionAllocation.find({ enId: examId });
+    }
+    catch (error) {
+        console.log(error);
+        return next(new HttpError('Errir fetching Ar exam allocations from database', 500));
+    }
+
+    if (!existingArExamAllocation || !existingArExamAllocation.length) {
+        return next(new HttpError('No Ar exam allocations found', 404));
+    }
+
+    // Nl
+    let existingNlExamAllocation;
+    try {
+        existingNlExamAllocation = NlQuestionAllocation.find({ enId: examId });
+    }
+    catch (error) {
+        console.log(error);
+        return next(new HttpError('Errir fetching Nl exam allocations from database', 500));
+    }
+
+    if (!existingNlExamAllocation || !existingNlExamAllocation.length) {
+        return next(new HttpError('No Nl exam allocations found', 404));
+    }
+
+    if (part === 'part 1') {
+        const part1Questions = JSON.parse(existingExamAllocation.part1);
+        const part1ArQuestions = JSON.parse(existingArExamAllocation.part1);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation.part1);
+
+        const replaceQuestion = part1Questions.find(question => question._id === question_id);
+        const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
+        const replaceNlQuestion = part1NlQuestions.find(question => question.enId === question_id);
+
+        if (replaceQuestion || replaceArQuestion || replaceNlQuestion) {
+            replaceQuestion._id = new_question_id;
+            replaceQuestion.question = question;
+            replaceQuestion.questionImage = question_img;
+            replaceQuestion.answer = answer;
+            replaceQuestion.options = options;
+            replaceQuestion.reason = reason;
+            replaceQuestion.draggable = draggable;
+
+            replaceArQuestion.enId = new_question_id;
+            replaceArQuestion.question = question_ar;
+            replaceArQuestion.questionImage = question_img;
+            replaceArQuestion.answer = answer_ar;
+            replaceArQuestion.options = options_ar;
+            replaceArQuestion.reason = reason_ar;
+            replaceArQuestion.draggable = draggable;
+
+            replaceNlQuestion.enId = new_question_id;
+            replaceNlQuestion.question = question_nl;
+            replaceNlQuestion.questionImage = question_img;
+            replaceNlQuestion.answer = answer_nl;
+            replaceNlQuestion.options = options_nl;
+            replaceNlQuestion.reason = reason_nl;
+            replaceNlQuestion.draggable = draggable;
+
+            try {
+                const session = await mongoose.startSession();
+                session.startTransaction();
+                await existingExamAllocation.save({ session: session });
+                await existingArExamAllocation.save({ session: session });
+                await existingNlExamAllocation.save({ session: session });
+                await session.commitTransaction();
+            } catch (error) {
+                return next(new HttpError('Error replacing question', 500));
+            };
+
+            res.json({ message: 'Question replaced successfully' });
+        }
+        else {
+            return next(new HttpError('No replacable question found', 404));
+        }
+    }
+    else if (part === 'part 2') {
+        const part1Questions = JSON.parse(existingExamAllocation.part2);
+        const part1ArQuestions = JSON.parse(existingArExamAllocation.part2);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation.part2);
+
+        const replaceQuestion = part1Questions.find(question => question._id === question_id);
+        const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
+        const replaceNlQuestion = part1NlQuestions.find(question => question.enId === question_id);
+
+        if (replaceQuestion || replaceArQuestion || replaceNlQuestion) {
+            replaceQuestion._id = new_question_id;
+            replaceQuestion.question = question;
+            replaceQuestion.questionImage = question_img;
+            replaceQuestion.answer = answer;
+            replaceQuestion.options = options;
+            replaceQuestion.reason = reason;
+            replaceQuestion.draggable = draggable;
+
+            replaceArQuestion.enId = new_question_id;
+            replaceArQuestion.question = question_ar;
+            replaceArQuestion.questionImage = question_img;
+            replaceArQuestion.answer = answer_ar;
+            replaceArQuestion.options = options_ar;
+            replaceArQuestion.reason = reason_ar;
+            replaceArQuestion.draggable = draggable;
+
+            replaceNlQuestion.enId = new_question_id;
+            replaceNlQuestion.question = question_nl;
+            replaceNlQuestion.questionImage = question_img;
+            replaceNlQuestion.answer = answer_nl;
+            replaceNlQuestion.options = options_nl;
+            replaceNlQuestion.reason = reason_nl;
+            replaceNlQuestion.draggable = draggable;
+
+            try {
+                const session = await mongoose.startSession();
+                session.startTransaction();
+                await existingExamAllocation.save({ session: session });
+                await existingArExamAllocation.save({ session: session });
+                await existingNlExamAllocation.save({ session: session });
+                await session.commitTransaction();
+            } catch (error) {
+                return next(new HttpError('Error replacing question', 500));
+            };
+
+            res.json({ message: 'Question replaced successfully' });
+        }
+        else {
+            return next(new HttpError('No replacable question found', 404));
+        }
+    }
+    else if (part === 'part 3') {
+        const part1Questions = JSON.parse(existingExamAllocation.part3);
+        const part1ArQuestions = JSON.parse(existingArExamAllocation.part3);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation.part3);
+
+        const replaceQuestion = part1Questions.find(question => question._id === question_id);
+        const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
+        const replaceNlQuestion = part1NlQuestions.find(question => question.enId === question_id);
+
+        if (replaceQuestion || replaceArQuestion || replaceNlQuestion) {
+            replaceQuestion._id = new_question_id;
+            replaceQuestion.question = question;
+            replaceQuestion.questionImage = question_img;
+            replaceQuestion.answer = answer;
+            replaceQuestion.options = options;
+            replaceQuestion.reason = reason;
+            replaceQuestion.draggable = draggable;
+
+            replaceArQuestion.enId = new_question_id;
+            replaceArQuestion.question = question_ar;
+            replaceArQuestion.questionImage = question_img;
+            replaceArQuestion.answer = answer_ar;
+            replaceArQuestion.options = options_ar;
+            replaceArQuestion.reason = reason_ar;
+            replaceArQuestion.draggable = draggable;
+
+            replaceNlQuestion.enId = new_question_id;
+            replaceNlQuestion.question = question_nl;
+            replaceNlQuestion.questionImage = question_img;
+            replaceNlQuestion.answer = answer_nl;
+            replaceNlQuestion.options = options_nl;
+            replaceNlQuestion.reason = reason_nl;
+            replaceNlQuestion.draggable = draggable;
+
+            try {
+                const session = await mongoose.startSession();
+                session.startTransaction();
+                await existingExamAllocation.save({ session: session });
+                await existingArExamAllocation.save({ session: session });
+                await existingNlExamAllocation.save({ session: session });
+                await session.commitTransaction();
+            } catch (error) {
+                return next(new HttpError('Error replacing question', 500));
+            };
+
+            res.json({ message: 'Question replaced successfully' });
+        }
+        else {
+            return next(new HttpError('No replacable question found', 404));
+        }
+    }
+    else {
+        return next(new HttpError('Invalid part', 422));
+    }
+};
+
 exports.getPaidExam = getPaidExam;
 exports.addPaidExam = addPaidExam;
 exports.editPaidExam = editPaidExam;
@@ -2409,3 +2633,4 @@ exports.paidExamDetails = paidExamDetails;
 exports.userResults = userResults;
 exports.approveQuestions = approveQuestions;
 exports.allLanguageQuestions = allLanguageQuestions;
+exports.replaceQuestion = replaceQuestion;

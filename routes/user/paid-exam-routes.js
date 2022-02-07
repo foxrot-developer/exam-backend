@@ -69,6 +69,9 @@ router.patch('/edit-paid-exam/:examId', [
 router.patch('/edit-paid-exam-question/:quesId', fileUpload.single('questionImage'), paidExamController.editPaidExamQuestion);
 
 router.patch('/replace-question/:examId', [
+    check('question_id').not().isEmpty(),
+    check('new_question_id').not().isEmpty(),
+    check('question_img').not().isEmpty(),
     check('question').not().isEmpty(),
     check('question_ar').not().isEmpty(),
     check('question_nl').not().isEmpty(),
@@ -80,12 +83,10 @@ router.patch('/replace-question/:examId', [
     check('options_ar').not().isEmpty(),
     check('options_nl').not().isEmpty(),
     check('part').not().isEmpty(),
-    check('part_ar').not().isEmpty(),
-    check('part_nl').not().isEmpty(),
     check('reason').not().isEmpty(),
     check('reason_ar').not().isEmpty(),
     check('reason_nl').not().isEmpty(),
-])
+], paidExamController.replaceQuestion);
 
 router.delete('/delete-paid-exam/:examId', paidExamController.deletePaidExam);
 
