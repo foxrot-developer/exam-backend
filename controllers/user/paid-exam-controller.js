@@ -2422,21 +2422,25 @@ const replaceQuestion = async (req, res, next) => {
 
     let existingExamAllocation;
     try {
-        existingExamAllocation = QuestionAllocation.find({ examId: examId });
+        existingExamAllocation = await QuestionAllocation.find({ examId: examId });
     }
     catch (error) {
         console.log(error);
         return next(new HttpError('Errir fetching exam allocations from database', 500));
     }
 
+    // console.log({ existingExamAllocation });
+
     if (!existingExamAllocation || !existingExamAllocation.length) {
         return next(new HttpError('No exam allocations found', 404));
     }
 
+    // console.log(existingExamAllocation._id);
+
     // Ar
     let existingArExamAllocation;
     try {
-        existingArExamAllocation = ArQuestionAllocation.find({ enId: examId });
+        existingArExamAllocation = await ArQuestionAllocation.find({ enId: existingExamAllocation[0]._id });
     }
     catch (error) {
         console.log(error);
@@ -2450,7 +2454,7 @@ const replaceQuestion = async (req, res, next) => {
     // Nl
     let existingNlExamAllocation;
     try {
-        existingNlExamAllocation = NlQuestionAllocation.find({ enId: examId });
+        existingNlExamAllocation = await NlQuestionAllocation.find({ enId: existingExamAllocation[0]._id });
     }
     catch (error) {
         console.log(error);
@@ -2462,9 +2466,9 @@ const replaceQuestion = async (req, res, next) => {
     }
 
     if (part === 'part 1') {
-        const part1Questions = JSON.parse(existingExamAllocation.part1);
-        const part1ArQuestions = JSON.parse(existingArExamAllocation.part1);
-        const part1NlQuestions = JSON.parse(existingNlExamAllocation.part1);
+        const part1Questions = JSON.parse(existingExamAllocation[0].part1);
+        const part1ArQuestions = JSON.parse(existingArExamAllocation[0].part1);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation[0].part1);
 
         const replaceQuestion = part1Questions.find(question => question._id === question_id);
         const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
@@ -2498,11 +2502,12 @@ const replaceQuestion = async (req, res, next) => {
             try {
                 const session = await mongoose.startSession();
                 session.startTransaction();
-                await existingExamAllocation.save({ session: session });
-                await existingArExamAllocation.save({ session: session });
-                await existingNlExamAllocation.save({ session: session });
+                await existingExamAllocation[0].save({ session: session });
+                await existingArExamAllocation[0].save({ session: session });
+                await existingNlExamAllocation[0].save({ session: session });
                 await session.commitTransaction();
             } catch (error) {
+                console.log(error);
                 return next(new HttpError('Error replacing question', 500));
             };
 
@@ -2513,9 +2518,9 @@ const replaceQuestion = async (req, res, next) => {
         }
     }
     else if (part === 'part 2') {
-        const part1Questions = JSON.parse(existingExamAllocation.part2);
-        const part1ArQuestions = JSON.parse(existingArExamAllocation.part2);
-        const part1NlQuestions = JSON.parse(existingNlExamAllocation.part2);
+        const part1Questions = JSON.parse(existingExamAllocation[0].part2);
+        const part1ArQuestions = JSON.parse(existingArExamAllocation[0].part2);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation[0].part2);
 
         const replaceQuestion = part1Questions.find(question => question._id === question_id);
         const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
@@ -2549,9 +2554,9 @@ const replaceQuestion = async (req, res, next) => {
             try {
                 const session = await mongoose.startSession();
                 session.startTransaction();
-                await existingExamAllocation.save({ session: session });
-                await existingArExamAllocation.save({ session: session });
-                await existingNlExamAllocation.save({ session: session });
+                await existingExamAllocation[0].save({ session: session });
+                await existingArExamAllocation[0].save({ session: session });
+                await existingNlExamAllocation[0].save({ session: session });
                 await session.commitTransaction();
             } catch (error) {
                 return next(new HttpError('Error replacing question', 500));
@@ -2564,9 +2569,9 @@ const replaceQuestion = async (req, res, next) => {
         }
     }
     else if (part === 'part 3') {
-        const part1Questions = JSON.parse(existingExamAllocation.part3);
-        const part1ArQuestions = JSON.parse(existingArExamAllocation.part3);
-        const part1NlQuestions = JSON.parse(existingNlExamAllocation.part3);
+        const part1Questions = JSON.parse(existingExamAllocation[0].part3);
+        const part1ArQuestions = JSON.parse(existingArExamAllocation[0].part3);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation[0].part3);
 
         const replaceQuestion = part1Questions.find(question => question._id === question_id);
         const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
@@ -2600,11 +2605,12 @@ const replaceQuestion = async (req, res, next) => {
             try {
                 const session = await mongoose.startSession();
                 session.startTransaction();
-                await existingExamAllocation.save({ session: session });
-                await existingArExamAllocation.save({ session: session });
-                await existingNlExamAllocation.save({ session: session });
+                await existingExamAllocation[0].save({ session: session });
+                await existingArExamAllocation[0].save({ session: session });
+                await existingNlExamAllocation[0].save({ session: session });
                 await session.commitTransaction();
             } catch (error) {
+                console.log(error);
                 return next(new HttpError('Error replacing question', 500));
             };
 
