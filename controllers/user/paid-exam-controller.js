@@ -68,144 +68,153 @@ const addPaidExam = async (req, res, next) => {
         name_nl,
         description,
         description_ar,
-        description_nl } = req.body;
+        description_nl,
+        part1,
+        part1_ar,
+        part1_nl,
+        part2,
+        part2_ar,
+        part2_nl,
+        part3,
+        part3_ar,
+        part3_nl } = req.body;
 
-    let existingPaidExam;
-    try {
-        existingPaidExam = await PaidExam.findOne({ name: name });
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error fetching data from database', 500));
-    }
+    // let existingPaidExam;
+    // try {
+    //     existingPaidExam = await PaidExam.findOne({ name: name });
+    // } catch (error) {
+    //     console.log(error);
+    //     return next(new HttpError('Error fetching data from database', 500));
+    // }
 
-    if (existingPaidExam) {
-        return next(new HttpError('Exam already exists', 422));
-    }
-    // Part 1
-    let existingPaidQuestions;
-    try {
-        existingPaidQuestions = await PaidExamQuestion.find({ part: 'part 1' });
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting data from database', 500));
-    };
+    // if (existingPaidExam) {
+    //     return next(new HttpError('Exam already exists', 422));
+    // }
+    // // Part 1
+    // let existingPaidQuestions;
+    // try {
+    //     existingPaidQuestions = await PaidExamQuestion.find({ part: 'part 1' });
+    // } catch (error) {
+    //     console.log(error);
+    //     return next(new HttpError('Error getting data from database', 500));
+    // };
 
-    if (!existingPaidQuestions || existingPaidQuestions.length < 25) {
-        return next(new HttpError('Not enough part 1 questions in the bank', 422));
-    }
+    // if (!existingPaidQuestions || existingPaidQuestions.length < 25) {
+    //     return next(new HttpError('Not enough part 1 questions in the bank', 422));
+    // }
 
-    // Part 2
+    // // Part 2
 
-    let existingPaidQuestions2;
-    try {
-        existingPaidQuestions2 = await PaidExamQuestion.find({ part: 'part 2' });
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting data from database', 500));
-    };
+    // let existingPaidQuestions2;
+    // try {
+    //     existingPaidQuestions2 = await PaidExamQuestion.find({ part: 'part 2' });
+    // } catch (error) {
+    //     console.log(error);
+    //     return next(new HttpError('Error getting data from database', 500));
+    // };
 
-    if (!existingPaidQuestions2 || existingPaidQuestions2.length < 12) {
-        return next(new HttpError('Not enough part 2 questions in the bank', 422));
-    }
+    // if (!existingPaidQuestions2 || existingPaidQuestions2.length < 12) {
+    //     return next(new HttpError('Not enough part 2 questions in the bank', 422));
+    // }
 
-    // Part 3
-    let existingPaidQuestions3;
-    try {
-        existingPaidQuestions3 = await PaidExamQuestion.find({ part: 'part 3' });
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error getting data from database', 500));
-    };
+    // // Part 3
+    // let existingPaidQuestions3;
+    // try {
+    //     existingPaidQuestions3 = await PaidExamQuestion.find({ part: 'part 3' });
+    // } catch (error) {
+    //     console.log(error);
+    //     return next(new HttpError('Error getting data from database', 500));
+    // };
 
-    if (!existingPaidQuestions3 || existingPaidQuestions3.length < 28) {
-        return next(new HttpError('Not enough part 3 questions in the bank', 422));
-    }
+    // if (!existingPaidQuestions3 || existingPaidQuestions3.length < 28) {
+    //     return next(new HttpError('Not enough part 3 questions in the bank', 422));
+    // }
 
-    const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 12);
-    const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 25);
-    const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 28);
+    // const randPart2 = existingPaidQuestions2.sort(() => Math.random() - Math.random()).slice(0, 12);
+    // const randPart1 = existingPaidQuestions.sort(() => Math.random() - Math.random()).slice(0, 25);
+    // const randPart3 = existingPaidQuestions3.sort(() => Math.random() - Math.random()).slice(0, 28);
 
-    let randPart1Ids = [];
-    randPart1.forEach(element => {
-        randPart1Ids.push(element.id);
-    });
+    // let randPart1Ids = [];
+    // randPart1.forEach(element => {
+    //     randPart1Ids.push(element.id);
+    // });
 
-    let randPart2Ids = [];
-    randPart2.forEach(element => {
-        randPart2Ids.push(element.id);
-    });
+    // let randPart2Ids = [];
+    // randPart2.forEach(element => {
+    //     randPart2Ids.push(element.id);
+    // });
 
-    let randPart3Ids = [];
-    randPart3.forEach(element => {
-        randPart3Ids.push(element.id);
-    });
+    // let randPart3Ids = [];
+    // randPart3.forEach(element => {
+    //     randPart3Ids.push(element.id);
+    // });
 
-    // Ar Random part 1
-    let existingArQuestions;
-    try {
-        existingArQuestions = await ArPaidExamQuestion.find({});
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error fetch ar paid questions', 500));
-    };
+    // // Ar Random part 1
+    // let existingArQuestions;
+    // try {
+    //     existingArQuestions = await ArPaidExamQuestion.find({});
+    // } catch (error) {
+    //     console.log(error);
+    //     return next(new HttpError('Error fetch ar paid questions', 500));
+    // };
 
-    if (!existingArQuestions || existingArQuestions.length === 0) {
-        return next(new HttpError('No ar paid questions found', 422));
-    }
+    // if (!existingArQuestions || existingArQuestions.length === 0) {
+    //     return next(new HttpError('No ar paid questions found', 422));
+    // }
 
-    const arRandPart1 = existingArQuestions.filter(question => {
-        return randPart1Ids.find(ide => {
-            return question.enId === ide;
-        })
-    });
+    // const arRandPart1 = existingArQuestions.filter(question => {
+    //     return randPart1Ids.find(ide => {
+    //         return question.enId === ide;
+    //     })
+    // });
 
-    // Ar Random part 2
-    const arRandPart2 = existingArQuestions.filter(question => {
-        return randPart2Ids.find(ide => {
-            return question.enId === ide;
-        })
-    });
+    // // Ar Random part 2
+    // const arRandPart2 = existingArQuestions.filter(question => {
+    //     return randPart2Ids.find(ide => {
+    //         return question.enId === ide;
+    //     })
+    // });
 
-    // Ar Random part 3
-    const arRandPart3 = existingArQuestions.filter(question => {
-        return randPart3Ids.find(ide => {
-            return question.enId === ide;
-        })
-    });
+    // // Ar Random part 3
+    // const arRandPart3 = existingArQuestions.filter(question => {
+    //     return randPart3Ids.find(ide => {
+    //         return question.enId === ide;
+    //     })
+    // });
 
 
-    // Nl Random part 1
-    let existingNlQuestions;
-    try {
-        existingNlQuestions = await NlPaidExamQuestion.find({});
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Error fetch ar paid questions', 500));
-    };
+    // // Nl Random part 1
+    // let existingNlQuestions;
+    // try {
+    //     existingNlQuestions = await NlPaidExamQuestion.find({});
+    // } catch (error) {
+    //     console.log(error);
+    //     return next(new HttpError('Error fetch ar paid questions', 500));
+    // };
 
-    if (!existingNlQuestions || existingNlQuestions.length === 0) {
-        return next(new HttpError('No ar paid questions found', 422));
-    }
+    // if (!existingNlQuestions || existingNlQuestions.length === 0) {
+    //     return next(new HttpError('No ar paid questions found', 422));
+    // }
 
-    const nlRandPart1 = existingNlQuestions.filter(question => {
-        return randPart1Ids.find(ide => {
-            return question.enId === ide;
-        })
-    });
+    // const nlRandPart1 = existingNlQuestions.filter(question => {
+    //     return randPart1Ids.find(ide => {
+    //         return question.enId === ide;
+    //     })
+    // });
 
-    // Nl Random part 2
-    const nlRandPart2 = existingNlQuestions.filter(question => {
-        return randPart2Ids.find(ide => {
-            return question.enId === ide;
-        })
-    });
+    // // Nl Random part 2
+    // const nlRandPart2 = existingNlQuestions.filter(question => {
+    //     return randPart2Ids.find(ide => {
+    //         return question.enId === ide;
+    //     })
+    // });
 
-    // Nl Random part 3
-    const nlRandPart3 = existingNlQuestions.filter(question => {
-        return randPart3Ids.find(ide => {
-            return question.enId === ide;
-        })
-    });
+    // // Nl Random part 3
+    // const nlRandPart3 = existingNlQuestions.filter(question => {
+    //     return randPart3Ids.find(ide => {
+    //         return question.enId === ide;
+    //     })
+    // });
 
     const newPaidExam = new PaidExam({
         name,
@@ -226,25 +235,25 @@ const addPaidExam = async (req, res, next) => {
 
     const newQuestionsAllocation = new QuestionAllocation({
         examId: newPaidExam.id,
-        part1: JSON.stringify(randPart1),
-        part2: JSON.stringify(randPart2),
-        part3: JSON.stringify(randPart3),
+        part1: part1,
+        part2: part2,
+        part3: part3,
     });
 
     const newArQuestionsAllocation = new ArQuestionAllocation({
         enId: newQuestionsAllocation.id,
         examId: newArPaidExam.id,
-        part1: JSON.stringify(arRandPart1),
-        part2: JSON.stringify(arRandPart2),
-        part3: JSON.stringify(arRandPart3),
+        part1: part1_ar,
+        part2: part2_ar,
+        part3: part3_ar,
     });
 
     const newNlQuestionsAllocation = new NlQuestionAllocation({
         enId: newQuestionsAllocation.id,
         examId: newNlPaidExam.id,
-        part1: JSON.stringify(nlRandPart1),
-        part2: JSON.stringify(nlRandPart2),
-        part3: JSON.stringify(nlRandPart3),
+        part1: part1_nl,
+        part2: part2_nl,
+        part3: part3_nl,
     });
 
     try {
@@ -2468,7 +2477,7 @@ const replaceQuestion = async (req, res, next) => {
     if (part === 'part 1') {
         const part1Questions = JSON.parse(existingExamAllocation[0].part1);
         const part1ArQuestions = JSON.parse(existingArExamAllocation[0].part1);
-        const part1NlQuestions = JSON.parse(existingNlExamAllocation[0].part1);
+        const part1NlQuestions = JSON.parse(existingNlExamAllocation[0].part1);;
 
         const replaceQuestion = part1Questions.find(question => question._id === question_id);
         const replaceArQuestion = part1ArQuestions.find(question => question.enId === question_id);
@@ -2482,6 +2491,8 @@ const replaceQuestion = async (req, res, next) => {
             replaceQuestion.options = options;
             replaceQuestion.reason = reason;
             replaceQuestion.draggable = draggable;
+
+            console.log({ replaceQuestion });
 
             replaceArQuestion.enId = new_question_id;
             replaceArQuestion.question = question_ar;
