@@ -14,6 +14,8 @@ const app = express();
 
 app.use(express.json());
 
+app.use(express.bodyParser({ limit: '50mb' }));
+
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
 app.use((req, res, next) => {
