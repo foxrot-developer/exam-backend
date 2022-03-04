@@ -557,6 +557,7 @@ const editPaidExamQuestion = async (req, res, next) => {
         existingFreeExamAllocation.map(exam => {
             JSON.parse(exam.part1).map(async question => {
                 if (question._id === quesId) {
+                    console.log(question._id);
                     question.question = question;
                     question.answer = answer;
                     question.options = options;
@@ -2435,7 +2436,7 @@ const replaceQuestion = async (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        return next(new HttpError('Errir fetching exam allocations from database', 500));
+        return next(new HttpError('Error fetching exam allocations from database', 500));
     }
 
     // console.log({ existingExamAllocation });
@@ -2492,8 +2493,6 @@ const replaceQuestion = async (req, res, next) => {
             replaceQuestion.reason = reason;
             replaceQuestion.draggable = draggable;
 
-            console.log({ replaceQuestion });
-
             replaceArQuestion.enId = new_question_id;
             replaceArQuestion.question = question_ar;
             replaceArQuestion.questionImage = question_img;
@@ -2509,6 +2508,11 @@ const replaceQuestion = async (req, res, next) => {
             replaceNlQuestion.options = options_nl;
             replaceNlQuestion.reason = reason_nl;
             replaceNlQuestion.draggable = draggable;
+
+            existingExamAllocation[0].part1 = JSON.stringify(part1Questions);
+            existingArExamAllocation[0].part1 = JSON.stringify(part1ArQuestions);
+            existingNlExamAllocation[0].part1 = JSON.stringify(part1NlQuestions)
+
 
             try {
                 const session = await mongoose.startSession();
@@ -2562,6 +2566,11 @@ const replaceQuestion = async (req, res, next) => {
             replaceNlQuestion.reason = reason_nl;
             replaceNlQuestion.draggable = draggable;
 
+            existingExamAllocation[0].part2 = JSON.stringify(part1Questions);
+            existingArExamAllocation[0].part2 = JSON.stringify(part1ArQuestions);
+            existingNlExamAllocation[0].part2 = JSON.stringify(part1NlQuestions);
+
+
             try {
                 const session = await mongoose.startSession();
                 session.startTransaction();
@@ -2612,6 +2621,10 @@ const replaceQuestion = async (req, res, next) => {
             replaceNlQuestion.options = options_nl;
             replaceNlQuestion.reason = reason_nl;
             replaceNlQuestion.draggable = draggable;
+
+            existingExamAllocation[0].part3 = JSON.stringify(part1Questions);
+            existingArExamAllocation[0].part3 = JSON.stringify(part1ArQuestions);
+            existingNlExamAllocation[0].part3 = JSON.stringify(part1NlQuestions);
 
             try {
                 const session = await mongoose.startSession();
