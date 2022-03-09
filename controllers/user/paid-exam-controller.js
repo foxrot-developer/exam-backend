@@ -2454,6 +2454,7 @@ const replaceQuestion = async (req, res, next) => {
         const replaceNlQuestion = part1NlQuestions.find(question => question.enId === question_id);
 
         if (replaceQuestion || replaceArQuestion || replaceNlQuestion) {
+            console.log({ new_question_id });
             replaceQuestion._id = new_question_id;
             replaceQuestion.question = question;
             replaceQuestion.questionImage = question_img;
