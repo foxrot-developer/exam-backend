@@ -649,6 +649,8 @@ const editPaidExamQuestion = async (req, res, next) => {
                     questionMain.questionImage = req.file.path;
                     questionMain.draggable = draggable;
                     questionMain.part = part;
+
+                    console.log("Part 1: ", questionMain);
                 }
             })
 
@@ -664,6 +666,9 @@ const editPaidExamQuestion = async (req, res, next) => {
                     questionMain.questionImage = req.file.path;
                     questionMain.draggable = draggable;
                     questionMain.part = part;
+
+                    console.log("Part 2: ", questionMain);
+
                 }
             })
 
@@ -679,6 +684,9 @@ const editPaidExamQuestion = async (req, res, next) => {
                     questionMain.questionImage = req.file.path;
                     questionMain.draggable = draggable;
                     questionMain.part = part;
+
+                    console.log("Part 3: ", questionMain);
+
                 }
             })
 
