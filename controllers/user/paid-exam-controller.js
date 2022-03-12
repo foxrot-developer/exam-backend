@@ -649,8 +649,6 @@ const editPaidExamQuestion = async (req, res, next) => {
                     questionMain.questionImage = req.file.path;
                     questionMain.draggable = draggable;
                     questionMain.part = part;
-
-                    console.log("Part 1: ", questionMain);
                 }
             })
 
@@ -667,8 +665,6 @@ const editPaidExamQuestion = async (req, res, next) => {
                     questionMain.draggable = draggable;
                     questionMain.part = part;
 
-                    console.log("Part 2: ", questionMain);
-
                 }
             })
 
@@ -684,8 +680,6 @@ const editPaidExamQuestion = async (req, res, next) => {
                     questionMain.questionImage = req.file.path;
                     questionMain.draggable = draggable;
                     questionMain.part = part;
-
-                    console.log("Part 3: ", questionMain);
 
                 }
             })
@@ -1290,7 +1284,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1359,7 +1353,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1428,7 +1422,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1586,7 +1580,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1655,7 +1649,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1724,7 +1718,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1882,7 +1876,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partOneQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -1951,7 +1945,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partTwoQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
@@ -2020,7 +2014,7 @@ const paidExamResult = async (req, res, next) => {
             }
             const finalAnswers = partThreeQuestions.find(question => question._id === answer.id);
             if (finalAnswers !== undefined) {
-                if (!finalAnswers.draggable) {
+                if (finalAnswers.draggable == false) {
                     if (answer.answer === finalAnswers.answer) {
                         return {
                             id: answer.id,
