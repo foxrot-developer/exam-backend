@@ -538,6 +538,8 @@ const editPaidExamQuestion = async (req, res, next) => {
             reason,
             draggable } = req.body;
 
+        console.log({ draggable });
+
         const quesId = req.params.quesId;
 
         let existingQuestion;
